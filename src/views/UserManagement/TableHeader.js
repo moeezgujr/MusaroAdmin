@@ -12,6 +12,7 @@ const Header = ({
   icon
 }) => {
   return (
+    
     <div style={styles.container}>
       <div className="dashboard-title">{title}</div>
       <div style={styles.container2}>
