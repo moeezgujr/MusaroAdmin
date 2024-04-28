@@ -1,0 +1,114 @@
+.ticket-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 20px;
+  box-shadow: 0px 2px 1px rgba(16, 24, 40, 0.05);
+}
+
+.ticket-table th,
+.ticket-table td {
+  border-bottom: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+  height: 60px;
+}
+
+.ticket-table th {
+  background-color: #f2f2f2;
+}
+
+.ticket-table tr:nth-child(even) {
+  /* background-color: #f2f2f2; */
+}
+
+.ticket-table tr:hover {
+  background-color: #ddd;
+}
+.cancel-subscription-text {
+  width: 1112px;
+  height: 27px;
+  font-family: "Open Sans";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 27px;
+  color: #101828;
+  flex: none;
+  order: 0;
+  flex-grow: 1;
+  margin-left: 15px;
+}
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  margin: 0;
+  min-width: 1220px !important;
+}
+
+.buttons-container {
+  display: flex;
+}
+
+.button {
+  background-color: #4caf50;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.filter-container {
+  margin-left: auto;
+}
+
+.filter-dropdown {
+  padding: 10px;
+  font-size: 16px;
+}
+
+.revenue-button {
+  /* Button */
+
+  /* Auto layout */
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 12px;
+  gap: 4px;
+
+  height: 40px;
+
+  background: #fafafa;
+  /* sh */
+  box-shadow: 0px 2px 1px rgba(16, 24, 40, 0.05);
+  border-radius: 10px;
+
+  /* Inside auto layout */
+  flex: none;
+  order: 0;
+  flex-grow: 0;
+  margin-left: 10px;
+  border: none;
+  box-shadow: #101828;
+}
+.card-anyaltics {
+  padding: 24px !important;
+  gap: 10px !important;
+  width: 296px !important;
+  height: 114px  !important;
+  background: #ffffff !important;
+  border: 1px solid #f3f4f6 !important;
+  box-shadow: 0px 2px 2px rgba(32, 58, 100, 0.15) !important;
+  border-radius: 4px !important;
+  flex: none !important;
+  order: 0 !important;
+  flex-grow: 1 !important;
+} 

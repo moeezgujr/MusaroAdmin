@@ -1,0 +1,73 @@
+.image-upload-container {
+  display: inline-block;
+}
+
+.image-upload-label {
+  cursor: pointer;
+}
+
+.cloud-icon {
+  margin-right: 5px;
+}
+.uploadtext {
+  /* Text */
+
+  width: 100px;
+  height: 20px;
+
+  font-family: "Open Sans";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+  /* identical to box height, or 143% */
+
+  color: #9d7f2b;
+
+  /* Inside auto layout */
+  flex: none;
+  order: 1;
+  flex-grow: 0;
+  margin-bottom: 0;
+}
+.icon-container {
+  /* Featured icon */
+
+  width: 40px;
+  height: 40px;
+
+  /* Gray/100 */
+  background: #f2f4f7;
+  /* Gray/50 */
+  border: 6px solid #f9fafb;
+  border-radius: 28px;
+
+  /* Inside auto layout */
+  flex: none;
+  order: 0;
+  flex-grow: 0;
+}
+.subtypetext{
+    /* Supporting text */
+
+/* width: 561px; */
+height: 18px;
+
+font-family: 'Open Sans';
+font-style: normal;
+font-weight: 400;
+font-size: 12px;
+line-height: 18px;
+/* identical to box height, or 150% */
+text-align: center;
+
+color: #52525B;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+align-self: stretch;
+flex-grow: 0;
+
+}
