@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import "../ContentManagement/Professionform.css"; // Import your CSS file for styling
+import { Dropdown, Form } from "react-bootstrap";
 // import ImageUploadButton from "components/ImageUploader/Imageuploader";
+import Select from "react-select";
 
 const User = ({ goBack }) => {
   const [title, setTitle] = useState("");
@@ -23,7 +25,11 @@ const User = ({ goBack }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
   };
-
+  const options = [
+    { value: "chocolate", label: "Chocolate" },
+    { value: "strawberry", label: "Strawberry" },
+    { value: "vanilla", label: "Vanilla" },
+  ];
   return (
     <>
       <div className="form-container">
@@ -35,14 +41,19 @@ const User = ({ goBack }) => {
             <div style={styles.title}>{"Add Account"}</div>
             <div style={styles.container2}>
               <div style={styles.cancelButton}>
-                <button className="cancelbtn mr-1" onClick={()=>window.history.back()}>{"Cancel"}</button>
+                <button
+                  className="cancelbtn mr-1"
+                  onClick={() => window.history.back()}
+                >
+                  {"Cancel"}
+                </button>
               </div>
               <div style={styles.addButton}>
                 <button className="addaccountBtn">{"Add Account"}</button>
               </div>
             </div>
           </div>
-          <div className="mt-3 ml-2 form-fields-container">
+          <div className="mt-3 ml-2">
             <div className="form-group">
               <label htmlFor="title">Name*</label>
               <input
@@ -65,7 +76,7 @@ const User = ({ goBack }) => {
                 onChange={handleTitleChange}
               />
             </div>
-           
+
             <div className="form-group">
               <label htmlFor="title">Password*</label>
               <input
@@ -88,13 +99,53 @@ const User = ({ goBack }) => {
                 onChange={handleTitleChange}
               />
             </div>
-           
+            <div className="form-group">
+              <label htmlFor="title">Choose Role</label>
+              <div className="d-flex row " style={{ marginLeft: "2px" }}>
+                <Select styles={colourStyles} options={options} />
+              </div>
+            </div>
+
+            <p className="">Permissions</p>
+
+            {["checkbox", "radio"].map((type) => (
+              <div key={`inline-${type}`} className="mb-3">
+                <Form.Check
+                  inline
+                  label="1"
+                  name="group1"
+                  type={type}
+                  id={`inline-${type}-1`}
+                />
+                <Form.Check
+                  inline
+                  label="2"
+                  name="group1"
+                  type={type}
+                  id={`inline-${type}-2`}
+                />
+                <Form.Check
+                  inline
+                  disabled
+                  label="3 (disabled)"
+                  type={type}
+                  id={`inline-${type}-3`}
+                />
+              </div>
+            ))}
           </div>
-          
         </form>
       </div>
     </>
   );
+};
+const colourStyles = {
+  control: (styles) => ({
+    ...styles,
+    backgroundColor: "white",
+    width: "610px",
+    height: "45px",
+  }),
 };
 const styles = {
   container: {

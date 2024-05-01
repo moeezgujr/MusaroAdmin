@@ -37,18 +37,11 @@ import Setting from "views/Settings/Setting";
 import Support from "views/Support/Support";
 
 const dashboardRoutes = [
-  {
-    upgrade: true,
-    path: "/upgrade",
-    name: "Upgrade to PRO",
-    icon: "nc-icon nc-alien-33",
-    component: Upgrade,
-    layout: "/admin",
-  },
+
   {
     path: "/dashboard",
     name: "Dashboard Overview",
-    icon: "nc-icon nc-chart-pie-35",
+    icon: "dashboard",
     component: Dashboard,
     layout: "/admin",
   },
@@ -56,7 +49,7 @@ const dashboardRoutes = [
   {
     path: "/userlist",
     name: "User Management",
-    icon: "nc-icon nc-circle-09",
+    icon: "user",
     component: UserTable,
     layout: "/admin",
   },
@@ -104,21 +97,21 @@ const dashboardRoutes = [
   {
     path: "/table",
     name: "Content Management",
-    icon: "nc-icon nc-notes",
+    icon: "content",
     component: ContentView,
     layout: "/admin",
   },
   {
     path: "/anaylticsreporting",
     name: "Analytics & Reporting",
-    icon: "nc-icon nc-paper-2",
+    icon: "anaylticsreporting",
     component: AnalyticsReport,
     layout: "/admin",
   },
   {
     path: "/customermanagement",
     name: "Customer Management",
-    icon: "nc-icon nc-paper-2",
+    icon: "customer",
     component: Customer,
     layout: "/admin",
   },
@@ -126,28 +119,28 @@ const dashboardRoutes = [
   {
     path: "/subscriptions",
     name: "New Subscription",
-    icon: "nc-icon nc-atom",
+    icon: "subscriptions",
     component: Subscription,
     layout: "/admin",
   },
   {
     path: "/revenuereport",
     name: "Subscriptions & Revenue",
-    icon: "nc-icon nc-atom",
+    icon: "revenuereport",
     component: Revenue,
     layout: "/admin",
   },
   {
     path: "/maps",
     name: "Settings & Integration",
-    icon: "nc-icon nc-pin-3",
+    icon: "settings",
     component: Setting,
     layout: "/admin",
   },
   {
     path: "/notifications",
     name: "Support and help",
-    icon: "nc-icon nc-bell-55",
+    icon: "support",
     component: Support,
     layout: "/admin",
   },
