@@ -24,7 +24,7 @@ const Support = () => {
     <>
       <Container fluid>
         <Row>
-        <Header btntext={'Add Account'} title={'Support & Help'} onAddAccount={()=> history.push('/admin/adduser') } />
+        <Header filter hideButton btntext={'Add Account'} title={'Support & Help'} onAddAccount={()=> history.push('/admin/adduser') } />
           {flag ? <SupportList />:<NoAccountsFound/>}</Row>
       </Container>
     </>

@@ -24,7 +24,31 @@ body {
 .first {
   padding-right: 10px !important;
 }
+.form{
+  height: 100%;
+}
+.permission-heading{
+      /* margin: 0 auto; */
+      width: 106px;
+      height: 23px;
+      font-family: 'Open Sans';
+      font-style: normal;
+      font-weight: 700;
+      font-size: 18px;
+      line-height: 130%;
+      /* text-align: center; */
+      /* letter-spacing: -0.02em; */
+      color: #1E293B;
+      /* flex: none; */
+      /* order: 0; */
+      /* flex-grow: 0; */
+  }
 
+.user-checkbox {
+  opacity: 1  !important;
+  position: relative !important;
+  visibility: visible !important;
+}
 .filter-text {
   border: none !important;
   width: 80%;
@@ -109,76 +133,71 @@ code {
   align-self: stretch;
   flex-grow: 0;
 }
-.nodatafoundtextindetail{
-    /* Supporting text */
+.nodatafoundtextindetail {
+  /* Supporting text */
 
-width: 388px;
-height: 20px;
+  width: 388px;
+  height: 20px;
 
-font-family: 'Open Sans';
-font-style: normal;
-font-weight: 400;
-font-size: 14px;
-line-height: 20px;
-/* identical to box height, or 143% */
-text-align: center;
+  font-family: "Open Sans";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  /* identical to box height, or 143% */
+  text-align: center;
 
-color: #475569;
+  color: #475569;
 
-
-/* Inside auto layout */
-flex: none;
-order: 1;
-align-self: stretch;
-flex-grow: 0;
-
+  /* Inside auto layout */
+  flex: none;
+  order: 1;
+  align-self: stretch;
+  flex-grow: 0;
 }
-.status-workshop{
+.status-workshop {
   /* Text */
 
-width: 55px;
-height: 20px;
+  width: 55px;
+  height: 20px;
 
-/* Text sm/Medium */
-font-family: 'Inter';
-font-style: normal;
-font-weight: 500;
-font-size: 14px;
-line-height: 20px;
-/* identical to box height, or 143% */
-text-align: center;
+  /* Text sm/Medium */
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  /* identical to box height, or 143% */
+  text-align: center;
 
-/* Warning/700 */
-color: #B54708;
+  /* Warning/700 */
+  color: #b54708;
 
-
-/* Inside auto layout */
-flex: none;
-order: 1;
-flex-grow: 0;
-
+  /* Inside auto layout */
+  flex: none;
+  order: 1;
+  flex-grow: 0;
 }
-.status-workshop-container{
+.status-workshop-container {
   /* Badge */
 
-/* Auto layout */
-display: flex;
-flex-direction: row;
-align-items: center;
-padding: 4px 12px 4px 10px;
-gap: 4px;
+  /* Auto layout */
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 4px 12px 4px 10px;
+  gap: 4px;
 
-width: 77px;
-height: 28px;
+  width: 77px;
+  height: 28px;
 
-/* Warning/50 */
-background: #FFFAEB;
-mix-blend-mode: multiply;
-border-radius: 16px;
+  /* Warning/50 */
+  background: #fffaeb;
+  mix-blend-mode: multiply;
+  border-radius: 16px;
 
-/* Inside auto layout */
-flex: none;
-order: 0;
-flex-grow: 0;
-
+  /* Inside auto layout */
+  flex: none;
+  order: 0;
+  flex-grow: 0;
 }

@@ -1,4 +1,5 @@
 import React from "react";
+import { Dropdown } from "react-bootstrap";
 
 const Header = ({
   onSearch,
@@ -8,6 +9,7 @@ const Header = ({
   hideButton,
   secondarybtn,
   isSearchHide,
+  filter,
 }) => {
   return (
     <div style={styles.container}>
@@ -37,6 +39,25 @@ const Header = ({
               {btntext || "Add Account"}
             </button>
           </div>
+        )}
+        {filter && (
+          // <div style={styles.addButton}>
+          //   <button className="addaccountBtn" onClick={onAddAccount}>
+          //     {btntext || "Add Account"}
+          //   </button>
+          // </div>
+          <>
+            <Dropdown style={{ marginRight: "10px" }}>
+              <Dropdown.Toggle id="dropdown-basic">Posted</Dropdown.Toggle>
+
+              <Dropdown.Menu>
+                <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
+                <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
+                <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+           
+          </>
         )}
       </div>
     </div>
