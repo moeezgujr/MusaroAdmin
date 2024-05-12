@@ -44,7 +44,7 @@ const ProfessionFormComponent = ({ goBack }) => {
               </button>
             </div>
             <div style={styles.addButton}>
-              <button className="addaccountBtn">{"Approve Changes"}</button>
+              <button className="addaccountBtn" style={{width:'200px'}}>{"Approve Changes"}</button>
             </div>
           </div>
         </div>
