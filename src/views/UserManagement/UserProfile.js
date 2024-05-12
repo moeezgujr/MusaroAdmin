@@ -120,7 +120,7 @@ const User = ({ goBack }) => {
               </div>
             </div>
             <div className="d-flex-column">
-              <div className="mb-1">
+              <div className="mb-3">
                 <input
                   type="checkbox"
                   id="vehicle1"
@@ -130,7 +130,7 @@ const User = ({ goBack }) => {
                 />
                 <label for="vehicle1">Permission 1</label>
               </div>
-              <div className="mb-1">
+              <div className="mb-3">
                 <input
                   type="checkbox"
                   id="vehicle1"
@@ -140,7 +140,7 @@ const User = ({ goBack }) => {
                 />
                 <label for="vehicle1">Permission 2</label>
               </div>
-              <div className="mb-1">
+              <div className="mb-3">
                 <input
                   type="checkbox"
                   id="vehicle1"
@@ -150,7 +150,7 @@ const User = ({ goBack }) => {
                 />
                 <label for="vehicle1">Permission 3</label>
               </div>
-              <div className="mb-1">
+              <div className="mb-3">
                 <input
                   type="checkbox"
                   id="vehicle1"

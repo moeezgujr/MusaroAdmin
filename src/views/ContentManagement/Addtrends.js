@@ -30,7 +30,7 @@ const TrendFormComponent = ({ goBack }) => {
 
   return (
     <>
-      <div className="form-container">
+      <div className="form-container" style={{height:'100vh'}}>
         {/* <button className="go-back-button" onClick={goBack}>
           Go Back
         </button> */}
