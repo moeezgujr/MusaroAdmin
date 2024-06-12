@@ -3,143 +3,104 @@ import "react-data-table-component-extensions/dist/index.css";
 
 // A super simple expandable component.
 import "../UserManagement/style.css";
-import { ReactComponent as Detailicon } from "../../assets/img/detailicon.svg"
-
+// import { ReactComponent as Detailicon } from "../../assets/img/detailicon.svg";
+import { useEffect, useState } from "react";
+import { customerList } from "Apis/Customer";
+import { TableWithPagination } from "views/UserManagement/Table";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+import Header from "views/UserManagement/TableHeader";
+import { useHistory } from "react-router";
+import { searchList } from "Apis/Customer";
 
 function CustomerList() {
-  const handleClick = (title) => {
+  const [customer, setCustomer] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [pagination, setPagination] = useState("");
+
+  const fetchTotalCount = async (page) => {
+    try {
+      // const data = await userList();
+      const data = await customerList(page);
+      setCustomer(data.data?.customers);
+      setPagination(data.data.meta);
+    } catch (err) {
+    } finally {
+      setLoading(false);
+    }
   };
-  const columns = [
+  const search = async (text) => {
+    try {
+      // const data = await userList();
+      const data = await searchList(text);
+      setCustomer(data.data?.customers);
+      setPagination(data.data.meta);
+    } catch (err) {
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchTotalCount(0);
+  }, []);
+
+  const column = [
     {
-      name: "Name",
-      selector: (row) => row.name,
+      value: "name",
+      label: "Name",
     },
     {
-      name: "City",
-      selector: (row) => row.email,
+      value: "city",
+      label: "City",
     },
     {
-      name: "Profile Name",
-      selector: (row) => row.role,
+      value: "mobile",
+      label: "Mobile",
     },
     {
-      name: "Contact Mobile Number",
-      selector: (row) => row.createdon,
-    },
-    {
-      name: "Created On",
-      selector: (row) => row.createdon,
-      cell: (d) => [
-        12/11/2222
-      ],
-    },
-    {
-      name: "Status",
-      selector: (row) => row.status,
-      cell: (d) => [
-        <div className="status-workshop-container">
-          <span className="status-workshop">Pending</span>
-        </div>,
-      ],
-    },
-    {
-      name: "Action",
-      selector: (row) => row.action,
-      cell: (d) => [
-        <div className="">
-        <span className=""><Detailicon/>  View Details</span>
-      </div>,
-      ],
+      value: "createdAt",
+      label: "Created On",
     },
   ];
-
-  const data = [
-    {
-      id: 1,
-      name: "John Doe",
-      email: "john_doe123@gmail.com",
-      role: "Admin",
-      createdon: "DD/MM/YYY",
-    },
-    {
-      id: 2,
-      name: "Jane Smith",
-      email: "jane_smith456@yahoo.com",
-      role: "User",
-      createdon: "DD/MM/YYY",
-    },
-    {
-      id: 3,
-      name: "Michael Johnson",
-      email: "michael123@hotmail.com",
-      role: "Moderator",
-      createdon: "DD/MM/YYY",
-    },
-    {
-      id: 4,
-      name: "Emily Williams",
-      email: "emily_williams789@outlook.com",
-      role: "Admin",
-      createdon: "DD/MM/YYY",
-    },
-    {
-      id: 5,
-      name: "James Brown",
-      email: "james_brown234@gmail.com",
-      role: "User",
-      createdon: "DD/MM/YYY",
-    },
-    {
-      id: 6,
-      name: "Emma Davis",
-      email: "emma_davis567@yahoo.com",
-      role: "Moderator",
-      createdon: "DD/MM/YYY",
-    },
-    {
-      id: 7,
-      name: "Matthew Wilson",
-      email: "matthew789@hotmail.com",
-      role: "Admin",
-      createdon: "DD/MM/YYY",
-    },
-    {
-      id: 8,
-      name: "Olivia Taylor",
-      email: "olivia_taylor123@outlook.com",
-      role: "User",
-      createdon: "DD/MM/YYY",
-    },
-    {
-      id: 9,
-      name: "Daniel Martinez",
-      email: "daniel_martinez456@gmail.com",
-      role: "Moderator",
-      createdon: "DD/MM/YYY",
-    },
-    {
-      id: 10,
-      name: "Sophia Anderson",
-      email: "sophia_anderson789@yahoo.com",
-      role: "Admin",
-      createdon: "DD/MM/YYY",
-    },
-  ];
-
+  const history = useHistory();
+  const callback = (e) => {
+    if (e.target.value) search(e.target.value);
+    else fetchTotalCount(0);
+  };
   return (
     // <div className="main">
     // <DataTableExtensions export={false} print={false} {...tableData}>
     <>
-      <DataTable
-        columns={columns}
-        data={data}
-        // noHeader
-        defaultSortField="id"
-        // sortIcon={<SortIcon />}
-        defaultSortAsc={true}
-        pagination
-        highlightOnHover
+      <Header
+        hideButton
+        btntext={"Add Account"}
+        title={"Customer Management"}
+        onAddAccount={() => history.push("/admin/customermanagement")}
+        onSearch={callback}
       />
+
+      {loading ? (
+        <div id="customers" style={{ border: "none" }}>
+          <Skeleton height={40} count={5} style={{ marginBottom: 10 }} />
+          <Skeleton
+            height={40}
+            count={1}
+            style={{ marginBottom: 10, width: "50%" }}
+          />
+        </div>
+      ) : (
+        <TableWithPagination
+          headers={column}
+          data={customer}
+          totalPages={pagination.pages}
+          currentPage={pagination.page}
+          onPageChange={""}
+          callback={""}
+          id={"customer"}
+          isPaginationShow={pagination.pages > 1 && true}
+        />
+      )}
     </>
 
     //  </DataTableExtensions>

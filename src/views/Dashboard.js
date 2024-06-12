@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ChartistGraph from "react-chartist";
 // react-bootstrap components
 import {
@@ -20,8 +20,50 @@ import { ReactComponent as Usericon } from "../assets/img/3 User.svg";
 import { ReactComponent as Charticon } from "../assets/img/chart-line.svg";
 import { ReactComponent as Checkcricleicon } from "../assets/img/check-circle.svg";
 import { ReactComponent as Vectoricon } from "../assets/img/Vector.svg";
+import { totalCountApi } from "Apis/Dashboard";
+import { signupAnalytics } from "Apis/Dashboard";
+import { subscriptionAnalytics } from "Apis/Dashboard";
+import { trefficMetricAnalytics } from "Apis/Dashboard";
 
 function Dashboard() {
+  const [totalCount, setTotalCount] = useState({});
+  const [selectedCity, setSelectedCity] = useState("");
+  const [selectedTime, setSelectedTime] = useState("");
+  const [subscriptionTime, setSubscriptionTime] = useState("");
+  const [newSubTime, setnewSubTime] = useState("");
+  const [subCity, setsubCity] = useState("");
+  useEffect(() => {
+    const fetchTotalCount = async () => {
+      try {
+        const data = await totalCountApi();
+        setTotalCount(data.data);
+      } catch (err) {
+      } finally {
+      }
+    };
+
+    fetchTotalCount();
+  }, []);
+  const handleSelect = (eventKey) => {
+    setSelectedCity(eventKey);
+    signupAnalytics(selectedTime.toUpperCase(), eventKey);
+  };
+  const handleTime = (ev) => {
+    setSelectedTime(ev);
+    signupAnalytics(ev.toUpperCase(), selectedCity);
+  };
+  const handleTimeSubscription = (e) => {
+    setSubscriptionTime(e);
+    subscriptionAnalytics(e.toUpperCase());
+  };
+  const handleMetricsTime = (e) => {
+    setnewSubTime(e);
+    trefficMetricAnalytics(e.toUpperCase(), subCity);
+  };
+  const handleMetricsCity = (e) => {
+    setsubCity(e);
+    trefficMetricAnalytics(newSubTime.toUpperCase(), e);
+  };
   return (
     <>
       <Container fluid>
@@ -37,9 +79,11 @@ function Dashboard() {
                         <Usericon />
                       </div>
                       <div className="ml-2">
-                        <Card.Title as="h4">02</Card.Title>
+                        <Card.Title as="h4">
+                          0{totalCount?.overallCustomerCount}
+                        </Card.Title>
 
-                        <p className="card-category">Overall costumers</p>
+                        <p className="card-category">Overall customers</p>
                       </div>
                     </div>
                   </Col>
@@ -60,9 +104,11 @@ function Dashboard() {
                         <Charticon />
                       </div>
                       <div className="ml-2">
-                        <Card.Title as="h4">02</Card.Title>
+                        <Card.Title as="h4">
+                          0{totalCount?.activeCustomerCount}
+                        </Card.Title>
 
-                        <p className="card-category">Active costumers</p>
+                        <p className="card-category">Active customers</p>
                       </div>
                     </div>
                   </Col>
@@ -83,7 +129,9 @@ function Dashboard() {
                         <Checkcricleicon />
                       </div>
                       <div className="ml-2">
-                        <Card.Title as="h4">02</Card.Title>
+                        <Card.Title as="h4">
+                          0{totalCount?.overallSubscriptionCount}
+                        </Card.Title>
 
                         <p className="card-category">Overall Subscription</p>
                       </div>
@@ -106,7 +154,9 @@ function Dashboard() {
                         <Vectoricon />
                       </div>
                       <div className="ml-2">
-                        <Card.Title as="h4">02</Card.Title>
+                        <Card.Title as="h4">
+                          0{totalCount?.cancelSubscriptionCount}
+                        </Card.Title>
 
                         <p className="card-category">Cancel Subscription</p>
                       </div>
@@ -127,34 +177,32 @@ function Dashboard() {
                     New Signups
                   </Card.Title>
                   <div className="d-flex row mr-4">
-                    <Dropdown style={{ marginRight: "10px" }}>
+                    <Dropdown
+                      style={{ marginRight: "10px" }}
+                      onSelect={handleSelect}
+                    >
                       <Dropdown.Toggle id="dropdown-basic">
-                        City
+                        {selectedCity || "City"}
                       </Dropdown.Toggle>
 
                       <Dropdown.Menu>
-                        <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                        <Dropdown.Item href="#/action-2">
-                          Another action
-                        </Dropdown.Item>
-                        <Dropdown.Item href="#/action-3">
-                          Something else
-                        </Dropdown.Item>
+                        <Dropdown.Item eventKey="Riyadh">Riyadh</Dropdown.Item>
+                        <Dropdown.Item eventKey="Jeddah">Jeddah</Dropdown.Item>
+                        <Dropdown.Item eventKey="ABC">ABC</Dropdown.Item>
                       </Dropdown.Menu>
                     </Dropdown>
-                    <Dropdown>
+                    <Dropdown onSelect={handleTime}>
                       <Dropdown.Toggle id="dropdown-basic">
-                        Monthly
+                        {selectedTime || "Monthly"}
                       </Dropdown.Toggle>
 
                       <Dropdown.Menu>
-                        <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                        <Dropdown.Item href="#/action-2">
-                          Another action
+                        <Dropdown.Item eventKey="Daily">Daily</Dropdown.Item>
+                        <Dropdown.Item eventKey="Weekly">Weekly</Dropdown.Item>
+                        <Dropdown.Item eventKey="Monthly">
+                          Monthly
                         </Dropdown.Item>
-                        <Dropdown.Item href="#/action-3">
-                          Something else
-                        </Dropdown.Item>
+                        <Dropdown.Item eventKey="Yearly">Yearly</Dropdown.Item>
                       </Dropdown.Menu>
                     </Dropdown>
                   </div>
@@ -235,19 +283,18 @@ function Dashboard() {
                     New Subscriptions
                   </Card.Title>
                   <div className="d-flex row mr-3">
-                    <Dropdown style={{ marginRight: "10px" }}>
+                    <Dropdown onSelect={handleTimeSubscription}>
                       <Dropdown.Toggle id="dropdown-basic">
-                        Weekly
+                        {subscriptionTime || "Monthly"}
                       </Dropdown.Toggle>
 
                       <Dropdown.Menu>
-                        <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                        <Dropdown.Item href="#/action-2">
-                          Another action
+                        <Dropdown.Item eventKey="Daily">Daily</Dropdown.Item>
+                        <Dropdown.Item eventKey="Weekly">Weekly</Dropdown.Item>
+                        <Dropdown.Item eventKey="Monthly">
+                          Monthly
                         </Dropdown.Item>
-                        <Dropdown.Item href="#/action-3">
-                          Something else
-                        </Dropdown.Item>
+                        <Dropdown.Item eventKey="Yearly">Yearly</Dropdown.Item>
                       </Dropdown.Menu>
                     </Dropdown>
                   </div>
@@ -311,37 +358,35 @@ function Dashboard() {
               <Card.Header>
                 <div className="d-flex row justify-content-between">
                   <Card.Title as="h4" className="ml-3">
-                    New Subscriptions
+                    Treffic Metrics
                   </Card.Title>
                   <div className="d-flex row mr-4">
-                    <Dropdown style={{ marginRight: "10px" }}>
+                    <Dropdown
+                      style={{ marginRight: "10px" }}
+                      onSelect={handleMetricsTime}
+                    >
                       <Dropdown.Toggle id="dropdown-basic">
-                        Monthly
+                        {newSubTime || "Monthly"}
                       </Dropdown.Toggle>
 
                       <Dropdown.Menu>
-                        <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                        <Dropdown.Item href="#/action-2">
-                          Another action
+                        <Dropdown.Item eventKey="Daily">Daily</Dropdown.Item>
+                        <Dropdown.Item eventKey="Weekly">Weekly</Dropdown.Item>
+                        <Dropdown.Item eventKey="Monthly">
+                          Monthly
                         </Dropdown.Item>
-                        <Dropdown.Item href="#/action-3">
-                          Something else
-                        </Dropdown.Item>
+                        <Dropdown.Item eventKey="Yearly">Yearly</Dropdown.Item>
                       </Dropdown.Menu>
                     </Dropdown>
-                    <Dropdown>
+                    <Dropdown onSelect={handleMetricsCity}>
                       <Dropdown.Toggle id="dropdown-basic">
-                        By City
+                        {subCity || "City"}
                       </Dropdown.Toggle>
 
                       <Dropdown.Menu>
-                        <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                        <Dropdown.Item href="#/action-2">
-                          Another action
-                        </Dropdown.Item>
-                        <Dropdown.Item href="#/action-3">
-                          Something else
-                        </Dropdown.Item>
+                        <Dropdown.Item eventKey="Riyadh">Riyadh</Dropdown.Item>
+                        <Dropdown.Item eventKey="Jeddah">Jeddah</Dropdown.Item>
+                        <Dropdown.Item eventKey="ABC">ABC</Dropdown.Item>
                       </Dropdown.Menu>
                     </Dropdown>
                   </div>

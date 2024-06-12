@@ -1,33 +1,93 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Professionform.css"; // Import your CSS file for styling
 import ImageUploadButton from "components/ImageUploader/Imageuploader";
 import { Container, Form, Row, Col } from "react-bootstrap";
+import { useParams } from "react-router";
+import { getWorkshop } from "Apis/Workshop";
 
 const ProfessionFormComponent = ({ goBack }) => {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [image, setImage] = useState(null);
+  const [formValues, setFormValues] = useState({
+    title: "",
+    owner: "",
+    startDate: "",
+    endDate: "",
+    startTime: "",
+    endTime: "",
+    price: "",
+    maxApplicants: "",
+    city: "",
+    location: "",
+    description: "",
+    image: null,
+  });
+  function convertTo24Hour(time12h) {
+    // Parse the time string to a Date object
+    var date = new Date("2000-01-01 " + time12h);
 
-  const handleTitleChange = (e) => {
-    setTitle(e.target.value);
+    // Format the time to 24-hour format
+    var time24h = date.toLocaleTimeString("en-US", {
+      hour12: false,
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    return time24h;
+  }
+  const mapWorkshopToFormValues = (workshop) => {
+    const startDate = workshop.startDate
+      ? workshop.startDate.split("T")[0]
+      : "";
+    const endDate = workshop.endDate ? workshop.endDate.split("T")[0] : "";
+
+    return {
+      title: workshop.workshopName || "",
+      owner: workshop.createdBy || "",
+      startDate: startDate || "",
+      endDate: endDate || "",
+      startTime: convertTo24Hour(workshop.startTime) || "",
+      endTime: convertTo24Hour(workshop.endTime) || "",
+      price: workshop.pricePerPerson || "",
+      maxApplicants: workshop.maxPeople || "",
+      city: workshop.city || "",
+      location: workshop.location
+        ? `${workshop.location.latitude}, ${workshop.location.longitude}`
+        : "",
+      description: workshop.description || "",
+      image:
+        workshop.media && workshop.media.length > 0 ? workshop.media[0] : null,
+    };
   };
-
-  const handleDescriptionChange = (e) => {
-    setDescription(e.target.value);
+  const { id } = useParams();
+  const fetchWorkshop = async (id) => {
+    const data = await getWorkshop(id);
+    setFormValues(mapWorkshopToFormValues(data.data));
+  };
+  useEffect(() => {
+    fetchWorkshop(id);
+  }, [id]);
+  const handleChange = (e) => {
+    debugger;
+    const { id, value } = e.target;
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      [id]: value,
+    }));
   };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    setImage(file);
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      image: file,
+    }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle form submission here
-    console.log("Title:", title);
-    console.log("Description:", description);
-    console.log("Image:", image);
+    console.log("Form Values:", formValues);
   };
+  const imageUrl = "https://musaro-public.s3.me-south-1.amazonaws.com/";
 
   return (
     <div style={{ background: "#F8FAFC" }}>
@@ -44,7 +104,13 @@ const ProfessionFormComponent = ({ goBack }) => {
               </button>
             </div>
             <div style={styles.addButton}>
-              <button className="addaccountBtn" style={{width:'200px'}}>{"Approve Changes"}</button>
+              <button
+                onClick={handleSubmit}
+                className="addaccountBtn"
+                style={{ width: "200px" }}
+              >
+                {"Approve Changes"}
+              </button>
             </div>
           </div>
         </div>
@@ -94,9 +160,10 @@ const ProfessionFormComponent = ({ goBack }) => {
             type="text"
             className="workshop-input"
             id="title"
+            disabled
             placeholder="Enter Title"
-            value={title}
-            onChange={handleTitleChange}
+            value={formValues.title}
+            onChange={handleChange}
           />
         </div>
         <div className="ml-3">
@@ -104,10 +171,11 @@ const ProfessionFormComponent = ({ goBack }) => {
           <input
             type="text"
             className="workshop-input"
-            id="title"
+            disabled
+            id="owner"
             placeholder="Enter Owner"
-            value={title}
-            onChange={handleTitleChange}
+            value={formValues.owner}
+            onChange={handleChange}
           />
         </div>
       </div>
@@ -119,11 +187,12 @@ const ProfessionFormComponent = ({ goBack }) => {
           <label htmlFor="title">Start Date:</label>
           <input
             type="date"
+            disabled
             className="workshop-input"
-            id="title"
+            id="startDate"
             placeholder="Enter Title"
-            value={title}
-            onChange={handleTitleChange}
+            value={formValues.startDate}
+            onChange={handleChange}
           />
         </div>
         <div className="ml-3">
@@ -131,10 +200,11 @@ const ProfessionFormComponent = ({ goBack }) => {
           <input
             type="date"
             className="workshop-input"
-            id="title"
+            id="endDate"
             placeholder="Enter Owner"
-            value={title}
-            onChange={handleTitleChange}
+            disabled
+            value={formValues.endDate}
+            onChange={handleChange}
           />
         </div>
       </div>
@@ -147,10 +217,11 @@ const ProfessionFormComponent = ({ goBack }) => {
           <input
             type="time"
             className="workshop-input"
-            id="title"
+            id="startTime"
+            disabled
             placeholder="Enter Title"
-            value={title}
-            onChange={handleTitleChange}
+            value={formValues.startTime}
+            onChange={handleChange}
           />
         </div>
         <div className="ml-3">
@@ -158,10 +229,11 @@ const ProfessionFormComponent = ({ goBack }) => {
           <input
             type="time"
             className="workshop-input"
-            id="title"
+            id="endTime"
             placeholder="Enter Owner"
-            value={title}
-            onChange={handleTitleChange}
+            value={formValues.endTime}
+            disabled
+            onChange={handleChange}
           />
         </div>
       </div>
@@ -174,10 +246,11 @@ const ProfessionFormComponent = ({ goBack }) => {
           <input
             type="text"
             className="workshop-input"
-            id="title"
+            disabled
+            id="price"
             placeholder="Enter Price per coupon"
-            value={title}
-            onChange={handleTitleChange}
+            value={formValues.price}
+            onChange={handleChange}
           />
         </div>
         <div className="ml-3">
@@ -185,10 +258,11 @@ const ProfessionFormComponent = ({ goBack }) => {
           <input
             type="text"
             className="workshop-input"
-            id="title"
+            id="maxApplicants"
             placeholder="Enter Max. no of applicants"
-            value={title}
-            onChange={handleTitleChange}
+            disabled
+            value={formValues.maxApplicants}
+            onChange={handleChange}
           />
         </div>
       </div>
@@ -201,10 +275,11 @@ const ProfessionFormComponent = ({ goBack }) => {
           <input
             type="text"
             className="workshop-input"
-            id="title"
+            id="city"
+            disabled
             placeholder="Enter City"
-            value={title}
-            onChange={handleTitleChange}
+            value={formValues.city}
+            onChange={handleChange}
           />
         </div>
         <div className="ml-3">
@@ -212,10 +287,11 @@ const ProfessionFormComponent = ({ goBack }) => {
           <input
             type="text"
             className="workshop-input"
-            id="title"
+            id="location"
             placeholder="Location"
-            value={title}
-            onChange={handleTitleChange}
+            value={formValues.location}
+            onChange={handleChange}
+            disabled
           />
         </div>
       </div>
@@ -228,21 +304,36 @@ const ProfessionFormComponent = ({ goBack }) => {
           <textarea
             id="description"
             className="workshop-input-textarea"
-            value={description}
+            value={formValues.description}
             placeholder="Enter Description"
-            onChange={handleDescriptionChange}
+            onChange={handleChange}
+            disabled
           ></textarea>
         </div>
       </div>
+      <div className="mt-3" style={{ width: "100%", marginLeft: "20px", marginRight: "20px" }}>
+      <label  htmlFor="description">Image:</label>
+      </div>
       <div
-        className="d-flex mt-3"
-        style={{ width: "100%", marginLeft: "20px", marginRight: "20px" }}
+        className="d-flex"
+        style={{
+          width: "96%",
+          marginLeft: "20px",
+          marginRight: "20px",
+        }}
       >
-        <div className="">
-          <label htmlFor="image">Image:</label>
-          {/* <input type="file" id="image"  className="fileinputcontainer" onChange={handleImageChange} /> */}
-          <ImageUploadButton className="fileinputcontainerWorkshop" />
-        </div>
+        {" "}
+          <div className="image-viewer-container">
+            {formValues.image ? (
+              <img
+                src={imageUrl + formValues.image}
+                alt="Workshop"
+                className="workshop-image"
+              />
+            ) : (
+              <p>No image available</p>
+            )}
+          </div>
       </div>
     </div>
   );

@@ -24,7 +24,6 @@ const Customer = () => {
     <>
       <Container fluid>
         <Row>
-        <Header hideButton btntext={'Add Account'} title={'Customer Management'} onAddAccount={()=> history.push('/admin/customermanagement') } />
           {flag ? <CustomerList />:<NoAccountsFound/>}</Row>
       </Container>
     </>

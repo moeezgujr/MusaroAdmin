@@ -17,76 +17,86 @@
   order: 0;
   align-self: stretch;
   flex-grow: 0;
-
 }
 
 .card-content {
   padding: 20px;
 }
-
+.border_zero {
+  border: none;
+  padding: unset;
+}
 .card-content p {
   margin: 0;
 }
-.text-profession-title{
+.text-profession-title {
   /* Heading */
 
-width: 678px;
-height: 32px;
+  width: 678px;
+  height: 32px;
 
-font-family: 'Open Sans';
-font-style: normal;
-font-weight: 600;
-font-size: 24px;
-line-height: 32px;
-/* identical to box height, or 133% */
+  font-family: "Open Sans";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 32px;
+  /* identical to box height, or 133% */
 
-color: #18181B;
+  color: #18181b;
 
-
-/* Inside auto layout */
-flex: none;
-order: 0;
-flex-grow: 1;
-
+  /* Inside auto layout */
+  flex: none;
+  order: 0;
+  flex-grow: 1;
 }
-.paragrahph-text{
+.paragrahph-text {
   /* Supporting text */
 
+  font-family: "Open Sans";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  /* or 150% */
 
-font-family: 'Open Sans';
-font-style: normal;
-font-weight: 400;
-font-size: 16px;
-line-height: 24px;
-/* or 150% */
+  color: #52525b;
 
-color: #52525B;
-
-
-/* Inside auto layout */
-flex: none;
-order: 1;
-align-self: stretch;
-flex-grow: 0;
-
+  /* Inside auto layout */
+  flex: none;
+  order: 1;
+  align-self: stretch;
+  flex-grow: 0;
 }
-.form-fields-container{
+.form-fields-container {
   /* Frame 811877 */
 
-/* Auto layout */
-display: flex;
-flex-direction: column;
-align-items: flex-start;
-padding: 0px;
-gap: 24px;
+  /* Auto layout */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0px;
+  gap: 24px;
 
-width: 609px;
-height: 378px;
+  width: 609px;
+  height: 378px;
 
+  /* Inside auto layout */
+  flex: none;
+  order: 0;
+  flex-grow: 0;
+}
+.image-viewer-container {
+  width: 100%;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px; /* Optional: for spacing around the image */
+  border: 1px solid #ccc; /* Adding a border */
+  border-radius: 10px;
+}
 
-/* Inside auto layout */
-flex: none;
-order: 0;
-flex-grow: 0;
-
+.workshop-image {
+  max-width: 100%;
+  height: auto;
 }

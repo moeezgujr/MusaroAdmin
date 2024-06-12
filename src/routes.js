@@ -61,7 +61,14 @@ const dashboardRoutes = [
     layout: "/admin",
     isNotAvailable: true,
   },
-
+  {
+    path: "/edituser/:id",
+    name: "Edit User",
+    icon: "nc-icon nc-circle-09",
+    component: UserProfile,
+    layout: "/admin",
+    isNotAvailable: true,
+  },
   {
     path: "/subscriptionsdetails",
     name: "Add User",
@@ -79,6 +86,14 @@ const dashboardRoutes = [
     isNotAvailable: true,
   },
   {
+    path: "/editProfession/:id",
+    name: "Edit Profession",
+    icon: "nc-icon nc-circle-09",
+    component: ProfessionFormComponent,
+    layout: "/admin",
+    isNotAvailable: true,
+  },
+  {
     path: "/addtrend",
     name: "Add Trend",
     icon: "nc-icon nc-circle-09",
@@ -87,7 +102,16 @@ const dashboardRoutes = [
     isNotAvailable: true,
   },
   {
-    path: "/addWorkshop",
+    path: "/edittrend/:id",
+    name: "Add Trend",
+    icon: "nc-icon nc-circle-09",
+    component: TrendFormComponent,
+    layout: "/admin",
+    isNotAvailable: true,
+  },
+
+  {
+    path: "/addWorkshop/:id",
     name: "Add Workshop",
     icon: "nc-icon nc-circle-09",
     component: WorkshopFormComponent,

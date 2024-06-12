@@ -1,36 +1,52 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Professionform.css"; // Import your CSS file for styling
 import ImageUploadButton from "components/ImageUploader/Imageuploader";
+import { addTrend } from "Apis/Trend";
+import { useParams } from "react-router";
+import { getTrendByID } from "Apis/Trend";
 
 const TrendFormComponent = ({ goBack }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [image, setImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
 
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
   };
-
+  const { id } = useParams();
+  const fetchTrend = async (id) => {
+    const data = await getTrendByID(id);
+    setDescription(data.data.description);
+    setTitle(data.data.title);
+    setImagePreview(process.env.REACT_APP_IMAGE_SRC + data.data.img);
+    // setImage(data.data.description)
+  };
+  useEffect(() => {
+    if (id) fetchTrend(id);
+  }, [id]);
   const handleDescriptionChange = (e) => {
     setDescription(e.target.value);
   };
 
   const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    setImage(file);
+    setImage(e);
+    setImagePreview(URL.createObjectURL(e));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission here
-    console.log("Title:", title);
-    console.log("Description:", description);
-    console.log("Image:", image);
+    console.log(image)
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("description ", description);
+    formData.append("img ", image);
+    addTrend(formData);
   };
-
+  console.log(process.env.REACT_APP_IMAGE_SRC);
   return (
     <>
-      <div className="form-container" style={{height:'100vh'}}>
+      <div className="form-container" style={{ height: "100vh" }}>
         {/* <button className="go-back-button" onClick={goBack}>
           Go Back
         </button> */}
@@ -39,7 +55,12 @@ const TrendFormComponent = ({ goBack }) => {
             <div style={styles.title}>{"Add Trend"}</div>
             <div style={styles.container2}>
               <div style={styles.cancelButton}>
-                <button className="cancelbtn mr-1" onClick={()=>window.history.back()}>{"Cancel"}</button>
+                <button
+                  className="cancelbtn mr-1"
+                  onClick={() => window.history.back()}
+                >
+                  {"Cancel"}
+                </button>
               </div>
               <div style={styles.addButton}>
                 <button className="addaccountBtn">{"Add Trend"}</button>
@@ -69,7 +90,20 @@ const TrendFormComponent = ({ goBack }) => {
             <div className="form-group">
               <label htmlFor="image">Image:</label>
               {/* <input type="file" id="image"  className="fileinputcontainer" onChange={handleImageChange} /> */}
-              <ImageUploadButton/>
+              <ImageUploadButton handleImageChange={handleImageChange} />
+              {imagePreview && (
+                <div className="image-preview">
+                  <img
+                    src={imagePreview}
+                    alt="Image Preview"
+                    style={{
+                      width: "150px",
+                      height: "150px",
+                      marginTop: "10px",
+                    }}
+                  />
+                </div>
+              )}
             </div>
           </div>
         </form>
@@ -77,6 +111,7 @@ const TrendFormComponent = ({ goBack }) => {
     </>
   );
 };
+
 const styles = {
   container: {
     display: "flex",
@@ -102,4 +137,5 @@ const styles = {
     marginLeft: "auto",
   },
 };
+
 export default TrendFormComponent;

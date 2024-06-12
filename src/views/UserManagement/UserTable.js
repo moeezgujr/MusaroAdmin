@@ -18,14 +18,16 @@ import NoAccountsFound from "./NoDataFound";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 const UserTable = () => {
-  const history =useHistory()
+  const history = useHistory();
   const flag = true;
+
   return (
     <>
       <Container fluid>
         <Row>
-        <Header btntext={'Add Account'} title={'User Management'} icon onAddAccount={()=> history.push('/admin/adduser') } />
-          {flag ? <UserList />:<NoAccountsFound/>}</Row>
+          
+          {flag ? <UserList /> : <NoAccountsFound />}
+        </Row>
       </Container>
     </>
   );

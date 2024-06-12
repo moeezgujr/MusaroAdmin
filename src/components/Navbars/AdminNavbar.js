@@ -43,6 +43,9 @@ function Header() {
     }
     return "Brand";
   };
+  const logout=()=>{
+    localStorage.removeItem('userData')
+  }
   return (
     <Navbar bg="white" expand="lg" style={{height:'12%'}} className="">
       <Container fluid>
@@ -88,8 +91,8 @@ function Header() {
             <Nav.Item>
               <Nav.Link
                 className="m-0"
-                href="#pablo"
-                onClick={(e) => e.preventDefault()}
+                href="/"
+                onClick={(e) => logout()}
               >
                 <span className="no-icon">Log out</span>
               </Nav.Link>

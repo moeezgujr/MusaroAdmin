@@ -1,5 +1,4 @@
 /*!
-
 =========================================================
 * Light Bootstrap Dashboard React - v2.0.1
 =========================================================
@@ -25,19 +24,44 @@ import "./assets/css/animate.min.css";
 import "./assets/scss/light-bootstrap-dashboard-react.scss?v=2.0.0";
 import "./assets/css/demo.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import AdminLayout from "layouts/Admin.js";
 import Login from "views/Login";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
+const isTokenValid = () => {
+  const userData = JSON.parse(localStorage.getItem("userData"));
+  if (!userData) {
+    return false;
+  }
+
+  const { expirationTime } = userData;
+  if (new Date().getTime() > expirationTime) {
+    // Token has expired
+    localStorage.removeItem("userData");
+    return false;
+  }
+
+  return true;
+};
+
+const isAuthenticated = () => {
+  return isTokenValid();
+};
+
 root.render(
   <BrowserRouter>
+    <ToastContainer />
     <Switch>
-      {/* <Route path="/admin/adduser" render={(props) => <User {...props} />} /> */}
-      <Route path="/admin" render={(props) => <AdminLayout {...props} />} />
-      <Route path="/" render={(props) => <Login {...props} />} />
-      {/* <Redirect from="/" to="/admin/dashboard" /> */}
+      {/* Conditional rendering based on authentication */}
+      <Route path="/admin" render={(props) => (
+        isAuthenticated() ? <AdminLayout {...props} /> : <Redirect to="/" />
+      )} />
+      <Route path="/" render={(props) => (
+        isAuthenticated() ? <Redirect to="/admin/dashboard" /> : <Login {...props} />
+      )} />
     </Switch>
   </BrowserRouter>
 );
