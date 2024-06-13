@@ -18,19 +18,17 @@ const ProfessionFormComponent = ({ goBack }) => {
     setDescription(e.target.value);
   };
 
-  const handleImageChange = (e) => {debugger
-    // const file = e.target.files[0];
+  const handleImageChange = (e) => {
     setImage(e);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append("title", title);
-    formData.append("description ", description);
-    debugger
-    formData.append("img ", image);
-    addProfession(formData);
+    // const formData = new FormData();
+    // formData.append("title", title);
+    // formData.append("description ", description);
+    // formData.append("img ", image);
+    addProfession({ title, description, img: image });
   };
   const { id } = useParams();
   const fetchProfession = async (id) => {

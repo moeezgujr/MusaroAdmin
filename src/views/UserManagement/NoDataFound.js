@@ -1,10 +1,14 @@
 import React from "react";
 
-const NoAccountsFound = () => {
+const NoAccountsFound = ({ id }) => {
   return (
     <div style={styles.container}>
-      <p className="nodatafoundtext">No Accounts Found!</p>
-      <p className="nodatafoundtextindetail">You can add account by clicking on Add Account button</p>
+      <p className="nodatafoundtext">No Data Found!</p>
+      {id == "user" && (
+        <p className="nodatafoundtextindetail">
+          You can add account by clicking on Add Account button
+        </p>
+      )}
     </div>
   );
 };
@@ -23,9 +27,7 @@ const styles = {
     borderRadius: "5px",
     zIndex: "999",
   },
-  text:{
-
-  }
+  text: {},
 };
 
 export default NoAccountsFound;

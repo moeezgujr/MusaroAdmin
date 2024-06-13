@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ChartistGraph from "react-chartist";
 // react-bootstrap components
 import {
@@ -20,10 +20,25 @@ import { ReactComponent as Usericon } from "../../assets/img/3 User.svg";
 import { ReactComponent as Charticon } from "../../assets/img/chart-line.svg";
 import { ReactComponent as Checkcricleicon } from "../../assets/img/check-circle.svg";
 import { ReactComponent as Vectoricon } from "../../assets/img/Vector.svg";
+import { totalCountApi } from "Apis/Dashboard";
 // import Header from "views/UserManagement/TableHeader";
 // import TicketTable from "./RevenueTable";
 
 function AnalyticsReport() {
+  const [totalCount, setTotalCount] = useState({});
+
+  useEffect(() => {
+    const fetchTotalCount = async () => {
+      try {
+        const data = await totalCountApi();
+        setTotalCount(data.data);
+      } catch (err) {
+      } finally {
+      }
+    };
+
+    fetchTotalCount();
+  }, []);
   return (
     <>
       <Container fluid>
@@ -202,100 +217,8 @@ function AnalyticsReport() {
               </Card.Body>
             </Card>
           </Col> */}
-          <Col md="6">
-            <Card>
-              <Card.Header>
-                <div className="d-flex row justify-content-between">
-                  <Card.Title as="h4" className="ml-3">
-                    Analytics
-                  </Card.Title>
-                  <div className="d-flex row mr-4">
-                    <Dropdown>
-                      <Dropdown.Toggle id="dropdown-basic">
-                        Monthly
-                      </Dropdown.Toggle>
 
-                      <Dropdown.Menu>
-                        <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                        <Dropdown.Item href="#/action-2">
-                          Another action
-                        </Dropdown.Item>
-                        <Dropdown.Item href="#/action-3">
-                          Something else
-                        </Dropdown.Item>
-                      </Dropdown.Menu>
-                    </Dropdown>
-                  </div>
-                </div>
-              </Card.Header>
-              <Card.Body>
-                <div className="ct-chart" id="chartHours">
-                  <ChartistGraph
-                    data={{
-                      labels: [
-                        "Jan",
-                        "Feb",
-                        "Mar",
-                        "Apr",
-                        "May",
-                        "Jun",
-                        "Jul",
-                        "Aug",
-                        "Sep",
-                        "Oct",
-                        "Nov",
-                        "Dec",
-                      ],
-                      series: [[23, 113, 67, 108, 190, 239, 307, 308]],
-                    }}
-                    type="Line"
-                    options={{
-                      low: 0,
-                      high: 400,
-                      showArea: false,
-                      height: "245px",
-                      axisX: {
-                        showGrid: false,
-                      },
-                      lineSmooth: true,
-                      showLine: true,
-                      showPoint: false,
-                      fullWidth: true,
-                      chartPadding: {
-                        right: 50,
-                      },
-                    }}
-                    responsiveOptions={[
-                      [
-                        "screen and (max-width: 640px)",
-                        {
-                          axisX: {
-                            labelInterpolationFnc: function (value) {
-                              return value[0];
-                            },
-                          },
-                        },
-                      ],
-                    ]}
-                  />
-                </div>
-              </Card.Body>
-              {/* <Card.Footer>
-                <div className="legend">
-                  <i className="fas fa-circle text-info"></i>
-                  Open <i className="fas fa-circle text-danger"></i>
-                  Click <i className="fas fa-circle text-warning"></i>
-                  Click Second Time
-                </div>
-                <hr></hr>
-                <div className="stats">
-                  <i className="fas fa-history"></i>
-                  Updated 3 minutes ago
-                </div>
-              </Card.Footer> */}
-            </Card>
-          </Col>
-          <Col md="3">
+          <Col md="4">
             <Row>
               <Card
                 className="card-stats h-1/2"
@@ -318,7 +241,9 @@ function AnalyticsReport() {
                           <Usericon />
                         </div>
                         <div className="ml-2">
-                          <Card.Title as="h4">02</Card.Title>
+                          <Card.Title as="h4">
+                            {totalCount.overallCustomerCount}
+                          </Card.Title>
 
                           <p className="card-category">Overall Subscriptions</p>
                         </div>
@@ -350,9 +275,48 @@ function AnalyticsReport() {
                           <Checkcricleicon />
                         </div>
                         <div className="ml-2">
-                          <Card.Title as="h4">02</Card.Title>
+                          <Card.Title as="h4">
+                            {totalCount.overallSubscriptionCount}
+                          </Card.Title>
 
                           <p className="card-category">Overall Subscriptions</p>
+                        </div>
+                      </div>
+                    </Col>
+                  </Row>
+                </Card.Body>
+              </Card>
+            </Row>
+          </Col>
+          <Col md="4">
+            <Row>
+              <Card
+                className="card-stats h-1/2"
+                style={{
+                  width: "100%",
+                  height: "120px",
+                  marginRight: "10px",
+                  marginBottom: "12px",
+                }}
+              >
+                <Card.Body>
+                  <Row>
+                    <Col xs="12">
+                      <div className="d-flex card-content-dashboard">
+                        <div
+                          className="usericoncontainer mt-1"
+                          style={{ background: "#FFFBEB" }}
+                        >
+                          <Checkcricleicon />
+                        </div>
+                        <div className="ml-2">
+                          <Card.Title as="h4">
+                            {totalCount.customerAquisitionCount}
+                          </Card.Title>
+
+                          <p className="card-category">
+                            Customer Acquisition Cost
+                          </p>
                         </div>
                       </div>
                     </Col>
@@ -382,7 +346,9 @@ function AnalyticsReport() {
                           <Checkcricleicon />
                         </div>
                         <div className="ml-2">
-                          <Card.Title as="h4">02</Card.Title>
+                          <Card.Title as="h4">
+                            {totalCount.avgTimeSpendCount || 0}
+                          </Card.Title>
 
                           <p className="card-category">Avg. Time spent </p>
                         </div>
@@ -393,7 +359,7 @@ function AnalyticsReport() {
               </Card>
             </Row>
           </Col>
-          <Col md="3">
+          <Col md="4">
             <Row>
               <Card
                 className="card-stats h-1/2"
@@ -416,9 +382,11 @@ function AnalyticsReport() {
                           <Usericon />
                         </div>
                         <div className="ml-2">
-                          <Card.Title as="h4">02</Card.Title>
+                          <Card.Title as="h4">
+                            {totalCount.activeCustomerCount || 0}
+                          </Card.Title>
 
-                          <p className="card-category">Active costumers</p>
+                          <p className="card-category">Active customers</p>
                         </div>
                       </div>
                     </Col>
@@ -448,43 +416,12 @@ function AnalyticsReport() {
                           <Vectoricon />
                         </div>
                         <div className="ml-2">
-                          <Card.Title as="h4">02</Card.Title>
+                          <Card.Title as="h4">
+                            {totalCount.cancelSubscriptionCount || 0}
+                          </Card.Title>
 
                           <p className="card-category">
                             Cancelled Subscriptions
-                          </p>
-                        </div>
-                      </div>
-                    </Col>
-                  </Row>
-                </Card.Body>
-              </Card>
-            </Row>
-            <Row>
-              <Card
-                className="card-stats h-1/2"
-                style={{
-                  width: "100%",
-                  height: "120px",
-                  marginRight: "10px",
-                  marginBottom: "12px",
-                }}
-              >
-                <Card.Body>
-                  <Row>
-                    <Col xs="12">
-                      <div className="d-flex card-content-dashboard">
-                        <div
-                          className="usericoncontainer mt-1"
-                          style={{ background: "#FFFBEB" }}
-                        >
-                          <Checkcricleicon />
-                        </div>
-                        <div className="ml-2">
-                          <Card.Title as="h4">02</Card.Title>
-
-                          <p className="card-category">
-                            Customer Acquisition Cost
                           </p>
                         </div>
                       </div>

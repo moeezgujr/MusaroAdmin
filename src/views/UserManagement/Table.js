@@ -51,7 +51,7 @@ export const TableWithPagination = ({
                   <td key={colIndex}>
                     <p
                       className={
-                        header == "Role" ? "role_td table_text" : "table_text"
+                        header.label == "Role" || header.label === 'Status' ? "role_td table_text" : "table_text"
                       }
                       style={{ marginTop: "10px", marginBottom: "10px" }}
                     >
@@ -61,13 +61,14 @@ export const TableWithPagination = ({
                     </p>
                   </td>
                 ))}
-                {id === "workshop" || id === "customer" ? (
+                {id === "workshop" || id === "customer" || id === "provider" ? (
                   <td key={"actions"}>
                     <span
-                      className=""
+                      className="table_text"
                       onClick={() => callback("detail", item._id)}
                     >
-                      <Detailicon /> View Details
+                      <Detailicon />{" "}
+                      {id === "provider" ? "View Ratings" : "View Details"}
                     </span>
                   </td>
                 ) : (

@@ -12,33 +12,54 @@ import "react-loading-skeleton/dist/skeleton.css";
 import Header from "views/UserManagement/TableHeader";
 import { useHistory } from "react-router";
 import { searchList } from "Apis/Customer";
+import { getProviders } from "Apis/Customer";
+import { searchProviders } from "Apis/Customer";
 import NoAccountsFound from "views/UserManagement/NoDataFound";
-
-function CustomerList({ search }) {
+import Slider from "components/Slider/Slider";
+const column = [
+  {
+    value: "name",
+    label: "Name",
+  },
+  {
+    value: "city",
+    label: "City",
+  },
+  {
+    value: "businessName",
+    label: "Profile Name",
+  },
+  {
+    value: "mobile",
+    label: "Mobile",
+  },
+  {
+    value: "createdAt",
+    label: "Created On",
+  },
+];
+function ProviderList({ search }) {
   const [customer, setCustomer] = useState("");
   const [loading, setLoading] = useState(true);
   const [pagination, setPagination] = useState("");
-
+  const [slideropen, setSliderOpen] = useState(false);
+  const [id, setProviderId] = useState(0);
   const fetchTotalCount = async (page) => {
     try {
       // const data = await userList();
-      const data = await customerList(page);
-      setCustomer(data.data?.customers);
+      const data = await getProviders(page);
+      setCustomer(data.data?.providers);
       setPagination(data.data.meta);
     } catch (err) {
     } finally {
       setLoading(false);
     }
   };
-  useEffect(() => {
-    if (search) searchText(search);
-    else fetchTotalCount(0);
-  }, [search]);
   const searchText = async (text) => {
     try {
       // const data = await userList();
-      const data = await searchList(text);
-      setCustomer(data.data?.customers);
+      const data = await searchProviders(text);
+      setCustomer(data.data?.providers);
       setPagination(data.data.meta);
     } catch (err) {
     } finally {
@@ -49,31 +70,17 @@ function CustomerList({ search }) {
   useEffect(() => {
     fetchTotalCount(0);
   }, []);
+  useEffect(() => {
+    if (search) searchText(search);
+    else fetchTotalCount(0);
+  }, [search]);
 
-  const column = [
-    {
-      value: "name",
-      label: "Name",
-    },
-    {
-      value: "city",
-      label: "City",
-    },
-    {
-      value: "mobile",
-      label: "Mobile",
-    },
-    {
-      value: "createdAt",
-      label: "Created On",
-    },
-  ];
-  const history = useHistory();
-
+  const onpagechange = (id) => {
+    fetchTotalCount(id);
+  };
   return (
-    // <div className="main">
-    // <DataTableExtensions export={false} print={false} {...tableData}>
     <>
+      <Slider callback={setSliderOpen} open={slideropen} id={id} />
       {loading ? (
         <div id="customers" style={{ border: "none" }}>
           <Skeleton height={40} count={5} style={{ marginBottom: 10 }} />
@@ -91,11 +98,9 @@ function CustomerList({ search }) {
               data={customer}
               totalPages={pagination.pages}
               currentPage={pagination.page}
-              onPageChange={""}
-              callback={(type, id) =>
-                history.push("/admin/customerdetails/" + id)
-              }
-              id={"customer"}
+              onPageChange={onpagechange}
+              callback={((type, id) => {setSliderOpen(true);setProviderId(id)})}
+              id={"provider"}
               isPaginationShow={pagination.pages > 1 && true}
             />
           ) : (
@@ -104,9 +109,6 @@ function CustomerList({ search }) {
         </>
       )}
     </>
-
-    //  </DataTableExtensions>
-    // </div>
   );
 }
-export default CustomerList;
+export default ProviderList;

@@ -12,6 +12,7 @@ import { TableWithPagination } from "./Table";
 import { deleteUser } from "Apis/User";
 import { toast } from "react-toastify";
 import { searchUser } from "Apis/User";
+import NoAccountsFound from "./NoDataFound";
 
 function UserList() {
   const handleClick = (title) => {
@@ -90,18 +91,18 @@ function UserList() {
             style={{ marginBottom: 10, width: "50%" }}
           />
         </div>
+      ) : users.length > 0 ? (
+        <TableWithPagination
+          data={users}
+          headers={columns}
+          onPageChange={paginationCallback}
+          totalPages={pagination.pages}
+          currentPage={pagination.page}
+          callback={actionCallback}
+          isPaginationShow={pagination.pages > 1 && true}
+        />
       ) : (
-        users.length > 0 && (
-          <TableWithPagination
-            data={users}
-            headers={columns}
-            onPageChange={paginationCallback}
-            totalPages={pagination.pages}
-            currentPage={pagination.page}
-            callback={actionCallback}
-            isPaginationShow={pagination.pages > 1 && true}
-          />
-        )
+        <NoAccountsFound id="user" />
       )}
     </>
   );

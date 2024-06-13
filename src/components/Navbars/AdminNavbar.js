@@ -18,7 +18,7 @@
 import React, { Component } from "react";
 import { useLocation } from "react-router-dom";
 import { Navbar, Container, Nav, Dropdown, Button } from "react-bootstrap";
-import iconsun from '../../assets/img/headersunlogo.png'
+import iconsun from "../../assets/img/headersunlogo.png";
 import routes from "routes.js";
 
 function Header() {
@@ -43,11 +43,13 @@ function Header() {
     }
     return "Brand";
   };
-  const logout=()=>{
-    localStorage.removeItem('userData')
-  }
+  const name = JSON.parse(localStorage.getItem("userData")).data.user.name || 'Faris';
+
+  const logout = () => {
+    localStorage.removeItem("userData");
+  };
   return (
-    <Navbar bg="white" expand="lg" style={{height:'12%'}} className="">
+    <Navbar bg="white" expand="lg" style={{ height: "12%" }} className="">
       <Container fluid>
         <div className="d-flex justify-content-center align-items-center ml-2 ml-lg-0">
           <Button
@@ -63,9 +65,9 @@ function Header() {
             className="mr-2"
           >
             <div className="d-flex mt-4">
-              <img src={iconsun} height={30} className="mt-4 mr-3"/>
+              <img src={iconsun} height={30} className="mt-4 mr-3" />
               <div className="mb-4">
-                <h3 className="userintrotext">Welcome back, Faris</h3>
+                <h3 className="userintrotext">Welcome back, {name}</h3>
                 <p>Hope you are having good day</p>
               </div>
             </div>
@@ -78,7 +80,7 @@ function Header() {
         </Navbar.Toggle>
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ml-auto" navbar>
-            <Nav.Item>
+            {/* <Nav.Item>
               <Nav.Link
                 className="m-0"
                 href="#pablo"
@@ -86,14 +88,10 @@ function Header() {
               >
                 <span className="no-icon">Account</span>
               </Nav.Link>
-            </Nav.Item>
+            </Nav.Item> */}
 
             <Nav.Item>
-              <Nav.Link
-                className="m-0"
-                href="/"
-                onClick={(e) => logout()}
-              >
+              <Nav.Link className="m-0" href="/" onClick={(e) => logout()}>
                 <span className="no-icon">Log out</span>
               </Nav.Link>
             </Nav.Item>

@@ -70,7 +70,7 @@ function Admin() {
           <div className="content" style={{backgroundColor:'white'}}>
             <Switch>{getRoutes(routes)}</Switch>
           </div>
-          <Footer />
+          {/* <Footer /> */}
         </div>
       </div>
       <FixedPlugin

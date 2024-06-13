@@ -60,7 +60,7 @@ const ProfessionFormComponent = ({ goBack }) => {
   const { id } = useParams();
   const fetchWorkshop = async (id) => {
     const data = await getWorkshop(id);
-    setFormValues(mapWorkshopToFormValues(data.data));
+    setFormValues(mapWorkshopToFormValues(data.data[0]));
   };
   useEffect(() => {
     fetchWorkshop(id);

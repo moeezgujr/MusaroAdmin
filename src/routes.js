@@ -35,6 +35,7 @@ import Revenue from "views/RevenueManagement/Revenue";
 import AnalyticsReport from "views/AnalyticsReporting/AnalyticsReport";
 import Setting from "views/Settings/Setting";
 import Support from "views/Support/Support";
+import CustomerFormComponent from "views/CustomerManagement/CustomerDetails";
 
 const dashboardRoutes = [
 
@@ -109,7 +110,14 @@ const dashboardRoutes = [
     layout: "/admin",
     isNotAvailable: true,
   },
-
+  {
+    path: "/customerdetails/:id",
+    name: "Customer Detail",
+    icon: "nc-icon nc-circle-09",
+    component: CustomerFormComponent,
+    layout: "/admin",
+    isNotAvailable: true,
+  },
   {
     path: "/addWorkshop/:id",
     name: "Add Workshop",

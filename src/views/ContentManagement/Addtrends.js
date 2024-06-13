@@ -41,6 +41,7 @@ const TrendFormComponent = ({ goBack }) => {
     formData.append("title", title);
     formData.append("description ", description);
     formData.append("img ", image);
+    debugger
     addTrend(formData);
   };
   console.log(process.env.REACT_APP_IMAGE_SRC);

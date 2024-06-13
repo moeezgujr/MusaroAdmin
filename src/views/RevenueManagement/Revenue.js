@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ChartistGraph from "react-chartist";
 // react-bootstrap components
 import {
@@ -21,12 +21,27 @@ import { ReactComponent as Charticon } from "../../assets/img/chart-line.svg";
 import { ReactComponent as Checkcricleicon } from "../../assets/img/check-circle.svg";
 import { ReactComponent as Vectoricon } from "../../assets/img/Vector.svg";
 import TicketTable from "./RevenueTable";
+import { totalCountApi } from "Apis/Dashboard";
 
 function Revenue() {
+  const [totalCount, setTotalCount] = useState({});
+
+  useEffect(() => {
+    const fetchTotalCount = async () => {
+      try {
+        const data = await totalCountApi();
+        setTotalCount(data.data);
+      } catch (err) {
+      } finally {
+      }
+    };
+
+    fetchTotalCount();
+  }, []);
   return (
     <>
       <Container fluid>
-      <p className="dashboard-title">Subscription & Revenue</p>
+        <p className="dashboard-title">Subscription & Revenue</p>
 
         <Row>
           <Col lg="4" sm="6">
@@ -39,7 +54,9 @@ function Revenue() {
                         <Usericon />
                       </div>
                       <div className="ml-2">
-                        <Card.Title as="h4">02</Card.Title>
+                        <Card.Title as="h4">
+                          {totalCount.cancelSubscriptionCount}
+                        </Card.Title>
 
                         <p className="card-category">Overall costumers</p>
                       </div>
@@ -62,7 +79,9 @@ function Revenue() {
                         <Checkcricleicon />
                       </div>
                       <div className="ml-2">
-                        <Card.Title as="h4">02</Card.Title>
+                        <Card.Title as="h4">
+                          {totalCount.overallSubscriptionCount || 0}
+                        </Card.Title>
 
                         <p className="card-category">Overall Subscriptions</p>
                       </div>
@@ -85,7 +104,9 @@ function Revenue() {
                         <Vectoricon />
                       </div>
                       <div className="ml-2">
-                        <Card.Title as="h4">02</Card.Title>
+                        <Card.Title as="h4">
+                          {totalCount.cancelSubscriptionCount || 0}
+                        </Card.Title>
 
                         <p className="card-category">Cancelled Subscriptions</p>
                       </div>
@@ -104,7 +125,7 @@ function Revenue() {
               <button className="revenue-button">Active Subscriptions</button>
             </div>
             <div className="filter-container">
-              <Dropdown >
+              <Dropdown>
                 <Dropdown.Toggle id="dropdown-basic">Date</Dropdown.Toggle>
                 <Dropdown.Menu>
                   <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
@@ -124,12 +145,12 @@ function Revenue() {
           <TicketTable />
         </Row>
         <Row>
-        <Col md="6">
+          <Col md="6">
             <Card>
               <Card.Header>
                 <div className="d-flex row justify-content-between">
                   <Card.Title as="h4" className="ml-3">
-                  Subscription Revenue
+                    Subscription Revenue
                   </Card.Title>
                   <div className="d-flex row mr-3">
                     <Dropdown style={{ marginRight: "10px" }}>
@@ -206,10 +227,9 @@ function Revenue() {
               <Card.Header>
                 <div className="d-flex row justify-content-between">
                   <Card.Title as="h4" className="ml-3">
-                  Adds Revenue
+                    Adds Revenue
                   </Card.Title>
                   <div className="d-flex row mr-4">
-          
                     <Dropdown>
                       <Dropdown.Toggle id="dropdown-basic">
                         Monthly
@@ -295,7 +315,6 @@ function Revenue() {
               </Card.Footer> */}
             </Card>
           </Col>
-        
         </Row>
       </Container>
     </>

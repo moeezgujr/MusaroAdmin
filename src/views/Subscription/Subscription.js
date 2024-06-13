@@ -24,7 +24,7 @@ const Subscription = () => {
     <>
       <Container fluid>
         <Row>
-        <Header hideButton btntext={'Add Account'} title={'New Subscriptions'} onAddAccount={()=> history.push('/admin/customermanagement') } />
+       
           {flag ? <SubscriptionList />:<NoAccountsFound/>}</Row>
       </Container>
     </>

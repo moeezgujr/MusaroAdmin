@@ -1,0 +1,74 @@
+.ratingcard {
+  /* Frame 46 */
+
+  box-sizing: border-box;
+
+  /* Auto layout */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 12px;
+  gap: 10px;
+
+  width: 1376px;
+  height: 106px;
+
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+
+  /* Inside auto layout */
+  flex: none;
+  order: 0;
+  align-self: stretch;
+  flex-grow: 0;
+}
+.ratingname {
+  margin-left: 15px;
+
+  width: 1214px;
+  height: 15px;
+
+  font-family: "Chesna Grotesk";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 6px;
+
+  color: #262626;
+
+  /* Inside auto layout */
+  flex: none;
+  order: 0;
+  flex-grow: 1;
+}
+
+.raatingstartext {
+    margin-left: 16px;
+    /* width: 35px; */
+    /* height: 20px; */
+    font-family: "Chesna Grotesk";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 6px;
+    color: #262626;
+    flex: none;
+    height: 15px;
+
+
+}
+.rating-img {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0px;
+  width: 48px;
+  height: 48px;
+  /* background: url(olivia-rhye); */
+  border-radius: 200px;
+  flex: none;
+  order: 0;
+  flex-grow: 0;
+}

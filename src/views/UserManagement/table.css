@@ -48,9 +48,9 @@
   border: 1px solid #ddd;
 }
 .table_text {
-  font-family: 'Open Sans';
-  font-size: 15px;
-  font-weight: 500;
+  font-family: sans-serif;
+    font-size: 14px;
+    font-weight: 100;
 }
 .role_td {
   background-color: #ecfdf3;
