@@ -28,8 +28,8 @@ const FullScreenWrapper = styled.div`
 const SliderWrapper = styled.div`
   position: relative;
   top: 20%; /* Leave space from the top */
-  left: 15%; /* Leave space from the left */
-  width: 85%; /* Cover 3 quarters of the screen width */
+  left: 17%; /* Leave space from the left */
+  width: 82%; /* Cover 3 quarters of the screen width */
   height: 80%; /* Cover 3 quarters of the screen height */
   background-color: #fff;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
