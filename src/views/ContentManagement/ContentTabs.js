@@ -48,7 +48,7 @@ const Tabs = () => {
   const history = useHistory();
   const editCallback = (id) => {
     if (activeTab == 2) history.push("/admin/edittrend/" + id);
-    else history.push("/admin/editProfession/" + id)
+    else history.push("/admin/editProfession/" + id);
   };
   return (
     <div className="tabs-container">
@@ -92,6 +92,7 @@ const Tabs = () => {
               profession.map((item) => {
                 return (
                   <ProfessionCard
+                    createdOn={item.createdAt}
                     title={item.name}
                     imageUrl={imageUrl + item.img}
                     paragraph={item.description}
@@ -114,6 +115,7 @@ const Tabs = () => {
               trend.map((item) => {
                 return (
                   <ProfessionCard
+                    createdOn={item.createdAt}
                     title={item.title}
                     imageUrl={imageUrl + item.img}
                     paragraph={item.description}

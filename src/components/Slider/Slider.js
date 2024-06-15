@@ -107,10 +107,10 @@ const Slider = ({ open, callback, id }) => {
             <p className="raatingstartext">5/5</p>
             <p className="raatingstartext">description</p>
           </div>
-          <div>
+          {/* <div>
             <p className="">Verified</p>
             <span className="">4 years experience</span>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
@@ -129,9 +129,9 @@ const Slider = ({ open, callback, id }) => {
         </CloseButton>
         <animated.div style={{ ...slideStyles, width: "100%", height: "100%" }}>
           <SliderWrapper>
-            <Content style={{ background: "#f6f9fc" }}>
-              <h2>Ratings</h2>
-              <p>You are viewing the latest 10 reviews of the service provider</p>
+            <Content style={{ background: "#f6f9fc" , borderRadius:'20px'}}>
+              <h2 className="rating_heading">Ratings</h2>
+              <p  className="heading_text">You are viewing the latest 10 reviews of the service provider</p>
               {Array.from({ length: 7 }).map((_, index) => (
                 <RatingCard key={index} />
               ))}

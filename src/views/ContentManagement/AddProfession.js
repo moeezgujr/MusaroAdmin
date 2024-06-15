@@ -4,6 +4,8 @@ import ImageUploadButton from "components/ImageUploader/Imageuploader";
 import { useParams } from "react-router";
 import { getProfessionsbyId } from "Apis/Profession";
 import { addProfession } from "Apis/Profession";
+import { updateProfession } from "Apis/Profession";
+import { toast } from "react-toastify";
 
 const ProfessionFormComponent = ({ goBack }) => {
   const [title, setTitle] = useState("");
@@ -20,15 +22,25 @@ const ProfessionFormComponent = ({ goBack }) => {
 
   const handleImageChange = (e) => {
     setImage(e);
+    setImagePreview(URL.createObjectURL(e));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // const formData = new FormData();
-    // formData.append("title", title);
-    // formData.append("description ", description);
-    // formData.append("img ", image);
-    addProfession({ title, description, img: image });
+    const formData = new FormData();
+    formData.append("name", title);
+    formData.append("description", description);
+    if (id) {
+      if (image) {
+        formData.append("img", image);
+      }
+      updateProfession(id, formData);
+      toast.success("Profession updated sucessfully");
+    } else {
+      addProfession(formData);
+      toast.success("Profession added sucessfully");
+    }
+    window.history.back();
   };
   const { id } = useParams();
   const fetchProfession = async (id) => {
@@ -36,7 +48,6 @@ const ProfessionFormComponent = ({ goBack }) => {
     setDescription(data.data.description);
     setTitle(data.data.name);
     setImagePreview(process.env.REACT_APP_IMAGE_SRC + data.data.img);
-    // setImage(data.data.description)
   };
   useEffect(() => {
     if (id) fetchProfession(id);

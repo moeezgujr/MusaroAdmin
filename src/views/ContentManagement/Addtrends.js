@@ -4,6 +4,8 @@ import ImageUploadButton from "components/ImageUploader/Imageuploader";
 import { addTrend } from "Apis/Trend";
 import { useParams } from "react-router";
 import { getTrendByID } from "Apis/Trend";
+import { updateTrend } from "Apis/Trend";
+import { toast } from "react-toastify";
 
 const TrendFormComponent = ({ goBack }) => {
   const [title, setTitle] = useState("");
@@ -23,7 +25,9 @@ const TrendFormComponent = ({ goBack }) => {
     // setImage(data.data.description)
   };
   useEffect(() => {
-    if (id) fetchTrend(id);
+    if (id) {
+      fetchTrend(id);
+    }
   }, [id]);
   const handleDescriptionChange = (e) => {
     setDescription(e.target.value);
@@ -36,15 +40,23 @@ const TrendFormComponent = ({ goBack }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(image)
+    console.log(image);
     const formData = new FormData();
     formData.append("title", title);
-    formData.append("description ", description);
-    formData.append("img ", image);
-    debugger
-    addTrend(formData);
+    formData.append("description", description);
+    if (id) {
+      if (image) {
+        formData.append("img", image);
+      }
+      updateTrend(id, formData);
+      toast.success("Trend Updated sucessfully");
+    } else {
+      formData.append("img", image);
+      addTrend(formData);
+      toast.success("Trend added sucessfully");
+    }
+    window.history.back();
   };
-  console.log(process.env.REACT_APP_IMAGE_SRC);
   return (
     <>
       <div className="form-container" style={{ height: "100vh" }}>
@@ -53,7 +65,7 @@ const TrendFormComponent = ({ goBack }) => {
         </button> */}
         <form onSubmit={handleSubmit} className="form">
           <div style={styles.container}>
-            <div style={styles.title}>{"Add Trend"}</div>
+            <div style={styles.title}>{id ? "Edit Trend" : "Add Trend"}</div>
             <div style={styles.container2}>
               <div style={styles.cancelButton}>
                 <button
@@ -64,7 +76,9 @@ const TrendFormComponent = ({ goBack }) => {
                 </button>
               </div>
               <div style={styles.addButton}>
-                <button className="addaccountBtn">{"Add Trend"}</button>
+                <button className="addaccountBtn">
+                  {id ? "Edit Trend" : "Add Trend"}
+                </button>
               </div>
             </div>
           </div>

@@ -30,9 +30,13 @@ export const deleteTrend = async (id) => {
     }
   }
 };
-export const updateTrend = async (id, dto) => {
+export const updateProfession = async (id, dto) => {
   try {
-    const response = await api.put("/trend=" + id, dto);
+    const response = await api.patch("/general/profession/" +id, dto, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     return response.data;
   } catch (error) {
     // Check if the error has a response property
