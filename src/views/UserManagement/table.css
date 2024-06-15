@@ -39,7 +39,6 @@
   float: right;
   width: 100%;
 }
-
 .pagination button {
   background: #ffffff;
   color: black;
@@ -52,6 +51,7 @@
     font-size: 14px;
     font-weight: 100;
 }
+
 .role_td {
   background-color: #ecfdf3;
   color: #027a48;

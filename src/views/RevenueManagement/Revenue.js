@@ -25,6 +25,7 @@ import { totalCountApi } from "Apis/Dashboard";
 
 function Revenue() {
   const [totalCount, setTotalCount] = useState({});
+  const [tab, setTab] = useState(1);
 
   useEffect(() => {
     const fetchTotalCount = async () => {
@@ -32,12 +33,17 @@ function Revenue() {
         const data = await totalCountApi();
         setTotalCount(data.data);
       } catch (err) {
-      } finally {
+        console.error(err);
       }
     };
 
     fetchTotalCount();
   }, []);
+  
+  const handleTab = (e) => {
+    setTab(e);
+  };
+
   return (
     <>
       <Container fluid>
@@ -55,10 +61,10 @@ function Revenue() {
                       </div>
                       <div className="ml-2">
                         <Card.Title as="h4">
-                          {totalCount.cancelSubscriptionCount}
+                          {totalCount.overallCustomerCount}
                         </Card.Title>
 
-                        <p className="card-category">Overall costumers</p>
+                        <p className="card-category">Overall Customers</p>
                       </div>
                     </div>
                   </Col>
@@ -120,9 +126,19 @@ function Revenue() {
         <Row>
           <div className="container mb-3">
             <div className="buttons-container">
-              <button className="revenue-button">All Subscriptions</button>
-              <button className="revenue-button">Canceled Subscriptions</button>
-              <button className="revenue-button">Active Subscriptions</button>
+              <button
+                className={`revenue-button ${tab === 1 ? "active" : ""}`}
+                onClick={() => handleTab(1)}
+              >
+                Active Subscriptions
+              </button>
+
+              <button
+                className={`revenue-button ${tab === 2 ? "active" : ""}`}
+                onClick={() => handleTab(2)}
+              >
+                Canceled Subscriptions
+              </button>
             </div>
             <div className="filter-container">
               <Dropdown>
@@ -142,7 +158,7 @@ function Revenue() {
         </Row>
         <Row className="mb-5">
           <p className="cancel-subscription-text">Cancel Subscription</p>
-          <TicketTable />
+          <TicketTable tab={tab} />
         </Row>
         <Row>
           <Col md="6">

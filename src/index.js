@@ -24,10 +24,13 @@ import "./assets/css/animate.min.css";
 import "./assets/scss/light-bootstrap-dashboard-react.scss?v=2.0.0";
 import "./assets/css/demo.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import AdminLayout from "layouts/Admin.js";
 import Login from "views/Login";
+import Forget from "views/ForgetPassword/Forget";
+import Otp from "views/ForgetPassword/Otp";
+import CreatePassword from "views/ForgetPassword/CreatePassword";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -55,13 +58,26 @@ root.render(
   <BrowserRouter>
     <ToastContainer />
     <Switch>
-      {/* Conditional rendering based on authentication */}
-      <Route path="/admin" render={(props) => (
-        isAuthenticated() ? <AdminLayout {...props} /> : <Redirect to="/" />
-      )} />
-      <Route path="/" render={(props) => (
-        isAuthenticated() ? <Redirect to="/admin/dashboard" /> : <Login {...props} />
-      )} />
+      <Route path="/forgetpassword" render={(props) => <CreatePassword {...props} />} />
+      <Route path="/otp" render={(props) => <Otp {...props} />} />
+      <Route path="/otp" render={(props) => <Otp {...props} />} />
+
+      <Route
+        path="/admin"
+        render={(props) =>
+          isAuthenticated() ? <AdminLayout {...props} /> : <Redirect to="/" />
+        }
+      />
+      <Route
+        path="/"
+        render={(props) =>
+          isAuthenticated() ? (
+            <Redirect to="/admin/dashboard" />
+          ) : (
+            <Login {...props} />
+          )
+        }
+      />
     </Switch>
   </BrowserRouter>
 );

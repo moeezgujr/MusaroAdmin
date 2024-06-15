@@ -21,13 +21,17 @@ export const TableWithPagination = ({
     return value;
   };
   function capitalizeFirstLetterOnly(str) {
-    console.log(str);
+    try{
     return str
       ?.split(" ")
       ?.map(
         (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
       )
       ?.join(" ");
+    }
+    catch{
+      return str
+    }
   }
   return (
     <>
@@ -38,7 +42,7 @@ export const TableWithPagination = ({
               {headers?.map((header, index) => (
                 <th key={index}>{header.label}</th>
               ))}
-              <th key={"-1"}>{"Actions"}</th>
+              {id !== "cancel" && <th key={"-1"}>{"Actions"}</th>}
             </>
           </tr>
         </thead>
@@ -51,7 +55,9 @@ export const TableWithPagination = ({
                   <td key={colIndex}>
                     <p
                       className={
-                        header.label == "Role" || header.label === 'Status' ? "role_td table_text" : "table_text"
+                        header.label == "Role" || header.label === "Status"
+                          ? "role_td table_text"
+                          : "table_text"
                       }
                       style={{ marginTop: "10px", marginBottom: "10px" }}
                     >
@@ -72,13 +78,19 @@ export const TableWithPagination = ({
                     </span>
                   </td>
                 ) : (
-                  <td key={"actions"}>
-                    <EditIcon
-                      style={{ marginRight: "5px" }}
-                      onClick={() => callback("edit", item._id)}
-                    />
-                    <DeleteIcon onClick={() => callback("delete", item._id)} />
-                  </td>
+                  <>
+                    {id != "cancel" && (
+                      <td key={"actions"}>
+                        <EditIcon
+                          style={{ marginRight: "5px" }}
+                          onClick={() => callback("edit", item._id)}
+                        />
+                        <DeleteIcon
+                          onClick={() => callback("delete", item._id)}
+                        />
+                      </td>
+                    )}
+                  </>
                 )}
               </>
             </tr>

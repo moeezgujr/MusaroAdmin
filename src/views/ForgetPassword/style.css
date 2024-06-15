@@ -1,0 +1,120 @@
+/* Forget.css */
+.app-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.forgetpasswordcontainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 48px 32px;
+  gap: 32px;
+  width: 590px;
+  height: 340px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Add shadow */
+  margin: auto;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  /* width: 800px; */
+  /* height: 100px; */
+  /* background-color: green; */
+
+}
+.password-heading {
+  /* Text */
+  margin-bottom: 0;
+  width: 526px;
+  height: 20px;
+
+  font-family: "Open Sans";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 30px;
+  /* identical to box height, or 127% */
+  text-align: center;
+
+  color: #0f172a;
+
+  /* Inside auto layout */
+  flex: none;
+  order: 0;
+  align-self: stretch;
+  flex-grow: 0;
+}
+.password-subheading {
+  margin-top: 25px;
+  margin-bottom: 30px;
+  width: 526px;
+  height: 24px;
+  font-family: "Open Sans";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  text-align: center;
+
+  color: #64748b;
+
+  /* Inside auto layout */
+  flex: none;
+  order: 1;
+  align-self: stretch;
+  flex-grow: 0;
+}
+.input___otp {
+    display: block;
+    margin: 28px auto;
+    border: none;
+    padding: 0;
+    width: 5.6ch;
+    background: repeating-linear-gradient(
+        90deg,
+        dimgrey 0,
+        dimgrey 1ch,
+        transparent 0,
+        transparent 1.4ch
+      )
+      0 100%/5.2ch 2px no-repeat;
+    font: 7ch droid sans mono, consolas, monospace;
+    letter-spacing: 0.4ch;
+  }
+  
+  .input___otp:focus {
+    outline: none;
+    color: #222222;
+  }
+  .instruction-password{
+        /* width: 788px; */
+        height: 20px;
+        font-family: 'Chesna Grotesk';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 20px;
+        color: #525252;
+        flex: none;
+        order: 1;
+        align-self: stretch;
+    
+  }
+  .otp_recieve_text{
+    width: 223px;
+    height: 22px;
+    font-style: normal;
+    font-weight: 450;
+    font-size: 16px;
+    line-height: 22px;
+    color: #525252;
+    flex: none;
+    order: 1;
+    margin: auto;
+
+  }

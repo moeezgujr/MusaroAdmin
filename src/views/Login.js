@@ -69,7 +69,7 @@ function Login() {
               <Row className="align-items-center">
                 <Col xs={6}></Col>
                 <Col xs={6} className="forgot-password">
-                  <a href="#forgot-password" style={{ color: "#cba640" }}>
+                  <a href="/forgetpassword" style={{ color: "#cba640" }}>
                     Forgot password?
                   </a>
                 </Col>
