@@ -14,9 +14,12 @@ export const TableWithPagination = ({
   id,
   isPaginationShow,
 }) => {
-  const renderCell = (value) => {
+  const renderCell = (value, label) => {
     if (typeof value === "object" && value !== null) {
       return JSON.stringify(value);
+    }
+    if(label === 'createdAt'){
+      return new Date(value).toLocaleDateString()
     }
     return value;
   };
@@ -62,7 +65,7 @@ export const TableWithPagination = ({
                       style={{ marginTop: "10px", marginBottom: "10px" }}
                     >
                       {capitalizeFirstLetterOnly(
-                        renderCell(item[header.value])
+                        renderCell(item[header.value], header.value)
                       )}
                     </p>
                   </td>

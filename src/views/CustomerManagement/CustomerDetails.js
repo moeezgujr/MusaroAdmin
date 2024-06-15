@@ -62,30 +62,21 @@ const CustomerFormComponent = ({ goBack }) => {
     // Handle form submission here
     console.log("Form Values:", formValues);
   };
-  const imageUrl = "https://musaro-public.s3.me-south-1.amazonaws.com/";
 
   return (
     <div style={{ background: "#F8FAFC", height:'100vh' }}>
       <Container fluid className="d-flex justify-content-center">
         <div style={styles.container}>
-          <div style={styles.title}>{"View Workshop Details"}</div>
+          <div style={styles.title}>{"Customer Details"}</div>
           <div style={styles.container2}>
-            <div style={styles.cancelButton}>
-              <button
-                className="rejectbtn mr-1"
-                style={{width:'200px'}}
-                onClick={() => window.history.back()}
-              >
-                {"Reject with Note"}
-              </button>
-            </div>
+           
             <div style={styles.addButton}>
               <button
                 onClick={handleSubmit}
                 className="addaccountBtn"
                 style={{ width: "200px" }}
               >
-                {"Approve Changes"}
+                {"Delete Account"}
               </button>
             </div>
           </div>

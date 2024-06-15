@@ -13,11 +13,14 @@ import Header from "views/UserManagement/TableHeader";
 import { useHistory } from "react-router";
 import { searchList } from "Apis/Customer";
 import NoAccountsFound from "views/UserManagement/NoDataFound";
+import CustomerSlider from "components/Slider/CustomerDetailSlider";
 
 function CustomerList({ search }) {
   const [customer, setCustomer] = useState("");
   const [loading, setLoading] = useState(true);
   const [pagination, setPagination] = useState("");
+  const [customerid, setCustomerId] = useState("");
+  const [slideropen, setSliderOpen] = useState(false);
 
   const fetchTotalCount = async (page) => {
     try {
@@ -74,6 +77,8 @@ function CustomerList({ search }) {
     // <div className="main">
     // <DataTableExtensions export={false} print={false} {...tableData}>
     <>
+      {" "}
+      <CustomerSlider callback={setSliderOpen} open={slideropen} id={customerid} />
       {loading ? (
         <div id="customers" style={{ border: "none" }}>
           <Skeleton height={40} count={5} style={{ marginBottom: 10 }} />
@@ -92,9 +97,10 @@ function CustomerList({ search }) {
               totalPages={pagination.pages}
               currentPage={pagination.page}
               onPageChange={""}
-              callback={(type, id) =>
-                history.push("/admin/customerdetails/" + id)
-              }
+              callback={(type, id) => {
+                setSliderOpen(true);
+                setCustomerId(id);
+              }}
               id={"customer"}
               isPaginationShow={pagination.pages > 1 && true}
             />

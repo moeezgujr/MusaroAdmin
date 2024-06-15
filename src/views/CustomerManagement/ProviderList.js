@@ -15,7 +15,7 @@ import { searchList } from "Apis/Customer";
 import { getProviders } from "Apis/Customer";
 import { searchProviders } from "Apis/Customer";
 import NoAccountsFound from "views/UserManagement/NoDataFound";
-import Slider from "components/Slider/Slider";
+import Slider from "components/Slider/ProviderRatings";
 const column = [
   {
     value: "name",
@@ -76,7 +76,9 @@ function ProviderList({ search }) {
   }, [search]);
 
   const onpagechange = (id) => {
-    fetchTotalCount(id);
+    if(id>0){
+      fetchTotalCount(id-1);
+    }
   };
   return (
     <>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 // react-bootstrap components
 import {
@@ -23,16 +23,22 @@ const Customer = () => {
   const [activeTab, setActiveTab] = useState(1);
   const [tabtitle, setTabTitle] = useState("Customer Management");
   const [search, setSearch] = useState("");
+  const storedTab = localStorage.getItem("customerTab");
 
   const handleTabClick = (tabNumber) => {
+    localStorage.setItem("customerTab", tabNumber);
+
     setSearch("");
     setActiveTab(tabNumber);
-    if (tabNumber === 1) {
+    if (tabNumber == 1) {
       setTabTitle("Customer Management");
-    } else if (tabNumber === 2) {
+    } else if (tabNumber == 2) {
       setTabTitle("Service Provider");
     }
   };
+  useEffect(() => {
+    setActiveTab(parseInt(storedTab));
+  }, [storedTab]);
   const callback = (e) => {
     setSearch(e.target.value);
   };
@@ -48,13 +54,13 @@ const Customer = () => {
       />
       <div className="tabs mt-3">
         <div
-          className={`tab-1 tab ${activeTab === 1 ? "active" : ""}`}
+          className={`tab-1 tab ${activeTab === 1 ? "activeTab" : ""}`}
           onClick={() => handleTabClick(1)}
         >
           Customers
         </div>
         <div
-          className={`tab ${activeTab === 2 ? "active" : ""}`}
+          className={`tab ${activeTab === 2 ? "activeTab" : ""}`}
           onClick={() => handleTabClick(2)}
         >
           Service Provider

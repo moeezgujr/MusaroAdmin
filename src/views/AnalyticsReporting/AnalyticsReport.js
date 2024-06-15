@@ -227,6 +227,8 @@ function AnalyticsReport() {
                   height: "120px",
                   marginRight: "10px",
                   marginBottom: "12px",
+                  marginLeft: "15px",
+
                 }}
               >
                 {" "}
@@ -257,10 +259,12 @@ function AnalyticsReport() {
               <Card
                 className="card-stats h-1/2"
                 style={{
+
                   width: "100%",
                   height: "120px",
                   marginRight: "10px",
-                  marginBottom: "12px",
+                  marginBottom: "12px",                  marginLeft: "15px",
+
                 }}
               >
                 {" "}
@@ -366,7 +370,7 @@ function AnalyticsReport() {
                 style={{
                   width: "100%",
                   height: "120px",
-                  marginRight: "10px",
+                  marginRight: "15px",
                   marginBottom: "12px",
                 }}
               >
@@ -400,7 +404,7 @@ function AnalyticsReport() {
                 style={{
                   width: "100%",
                   height: "120px",
-                  marginRight: "10px",
+                  marginRight: "15px",
                   marginBottom: "12px",
                 }}
               >

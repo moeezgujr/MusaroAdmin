@@ -100,3 +100,8 @@
   max-width: 100%;
   height: auto;
 }
+
+.activeTab{
+  border: 2px solid var(--Primary-600, #9D7F2B);
+  background: rgb(255, 251, 235);
+}

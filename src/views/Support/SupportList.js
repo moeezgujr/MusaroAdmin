@@ -6,6 +6,7 @@ import "react-data-table-component-extensions/dist/index.css";
 import "./style.css";
 import Header from "./TableHeader";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { TableWithPagination } from "views/UserManagement/Table";
 
 function SupportList() {
   const handleClick = (title) => {
@@ -13,37 +14,28 @@ function SupportList() {
   };
   const columns = [
     {
-      name: "Ticket ID",
-      selector: (row) => row.ticket,
-      cell: (d) => [ 1
-        // <div className="status-workshop-container">
-         
-        // </div>,
-      ]
+      label: "Ticket ID",
+      value: "id",
     },
     {
-      name: "Name",
-      selector: (row) => row.name,
+      label: "Name",
+      value: "name",
     },
     {
-      name: "Email",
-      selector: (row) => row.email,
+      label: "Email",
+      value: "email",
     },
     {
-      name: "Cancellation Reason",
-      selector: (row) => row.role,
-      cell: (d) => [
-        'Reason for cancellation will go here',
-      ]
+      label: "Role",
+      value: "role",
     },
     {
-      name: "Cancelled",
-      selector: (row) => row.role,
-      cell: (d) => [
-        <div className="status-workshop-container">
-        <span className="status-workshop">2 min ago</span>
-      </div>,,
-      ]
+      label: "Cancellation Reason",
+      value: "reason",
+    },
+    {
+      label: "Cancelled",
+      value: "cancelled",
     },
   ];
 
@@ -53,10 +45,14 @@ function SupportList() {
       name: "John Doe",
       email: "john_doe123@gmail.com",
       role: "Admin",
+      reason:'Reason of cancellattion',
+      cancelled:'2 min ago',
     },
     {
       id: 2,
       name: "Jane Smith",
+      reason:'Reason of cancellattion',
+      cancelled:'2 min ago',
       email: "jane_smith456@yahoo.com",
       role: "User",
     },
@@ -64,42 +60,45 @@ function SupportList() {
       id: 3,
       name: "Michael Johnson",
       email: "michael123@hotmail.com",
+      reason:'Reason of cancellattion',
+      cancelled:'2 min ago',
       role: "Moderator",
     },
     {
       id: 4,
       name: "Emily Williams",
       email: "emily_williams789@outlook.com",
+      reason:'Reason of cancellattion',
+      cancelled:'2 min ago',
       role: "Admin",
     },
     {
       id: 5,
       name: "James Brown",
       email: "james_brown234@gmail.com",
+      reason:'Reason of cancellattion',
+      cancelled:'2 min ago',
       role: "User",
     },
     {
       id: 6,
       name: "Emma Davis",
       email: "emma_davis567@yahoo.com",
+      reason:'Reason of cancellattion',
+      cancelled:'2 min ago',
       role: "Moderator",
     },
-
   ];
 
   return (
     // <div className="main">
     // <DataTableExtensions export={false} print={false} {...tableData}>
     <>
-      <DataTable
-        columns={columns}
+      <TableWithPagination
+        headers={columns}
         data={data}
+        id="cancel"
         // noHeader
-        defaultSortField="id"
-        // sortIcon={<SortIcon />}
-        defaultSortAsc={true}
-        pagination
-        highlightOnHover
       />
     </>
 

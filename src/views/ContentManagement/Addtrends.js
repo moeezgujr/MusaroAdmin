@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./Professionform.css"; // Import your CSS file for styling
 import ImageUploadButton from "components/ImageUploader/Imageuploader";
 import { addTrend } from "Apis/Trend";
-import { useParams } from "react-router";
+import { useHistory, useParams } from "react-router";
 import { getTrendByID } from "Apis/Trend";
 import { updateTrend } from "Apis/Trend";
 import { toast } from "react-toastify";
@@ -37,7 +37,7 @@ const TrendFormComponent = ({ goBack }) => {
     setImage(e);
     setImagePreview(URL.createObjectURL(e));
   };
-
+  const history = useHistory();
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(image);
@@ -55,7 +55,7 @@ const TrendFormComponent = ({ goBack }) => {
       addTrend(formData);
       toast.success("Trend added sucessfully");
     }
-    window.history.back();
+    history.push("/admin/content");
   };
   return (
     <>
@@ -70,7 +70,7 @@ const TrendFormComponent = ({ goBack }) => {
               <div style={styles.cancelButton}>
                 <button
                   className="cancelbtn mr-1"
-                  onClick={() => window.history.back()}
+                  onClick={() => history.push("/admin/content")}
                 >
                   {"Cancel"}
                 </button>

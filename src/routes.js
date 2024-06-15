@@ -127,7 +127,7 @@ const dashboardRoutes = [
     isNotAvailable: true,
   },
   {
-    path: "/table",
+    path: "/content",
     name: "Content Management",
     icon: "content",
     component: ContentView,

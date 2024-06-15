@@ -3,6 +3,8 @@ import { useSpring, animated } from "react-spring";
 import styled from "styled-components";
 import "./Slider.css";
 import { getRatings } from "Apis/Customer";
+import { ReactComponent as Staricon } from "../../assets/img/star.svg";
+import { ReactComponent as DotIcon } from "../../assets/img/dot.svg";
 
 const Container = styled.div`
   display: flex;
@@ -63,7 +65,7 @@ const CloseButton = styled.button`
   position: fixed;
   top: 100px;
   right: 10px;
-  color:white;
+  color: white;
   padding: 10px;
   background-color: transparent;
   border: none;
@@ -77,7 +79,7 @@ const CloseButton = styled.button`
 
 const Slider = ({ open, callback, id }) => {
   const [isOpen, setIsOpen] = useState(open);
-  
+
   const ratings = async (id) => {
     await getRatings(id);
   };
@@ -99,18 +101,29 @@ const Slider = ({ open, callback, id }) => {
       <div className="d-flex">
         <img
           className="rating-img"
-          src="https://kpcmsprostorage.blob.core.windows.net/content/d2620a33-3c62-4085-a2ae-2a7a935288d9/picture69.png"
+          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6tWkfCJfejkeaq78A0p6L5CZWFFVwxyz0DA&s"
         />
-        <div className="d-flex">
+        <div
+          className="d-flex mt-2"
+          style={{ width: "1130px", justifyContent: "space-between" }}
+        >
           <div>
-            <p className="ratingname">Text</p>
-            <p className="raatingstartext">5/5</p>
-            <p className="raatingstartext">description</p>
+            <p className="ratingname">Ahmad Bandooq</p>
+            <p className="raatingstartext">
+              <Staricon style={{ marginTop: "-5px" }} /> 4.5/5
+            </p>
+            <p className="raatingstartext">
+              Lorem ipsum dolor sit amet consectetur.{" "}
+            </p>
           </div>
-          {/* <div>
-            <p className="">Verified</p>
-            <span className="">4 years experience</span>
-          </div> */}
+          <div>
+            <p className="verified_text">
+              <DotIcon /> Verified
+            </p>
+            <div className="experience_text">
+              <p>4 years experience</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -127,11 +140,24 @@ const Slider = ({ open, callback, id }) => {
         >
           &times;
         </CloseButton>
-        <animated.div style={{ ...slideStyles, width: "100%", height: "100%" }}>
+        <animated.div
+          style={{
+            ...slideStyles,
+            width: "100%",
+            height: "100%",
+          }}
+        >
           <SliderWrapper>
-            <Content style={{ background: "#f6f9fc" , borderRadius:'20px'}}>
+            <Content
+              style={{
+                background: "#f6f9fc",
+                borderRadius: "20px",
+              }}
+            >
               <h2 className="rating_heading">Ratings</h2>
-              <p  className="heading_text">You are viewing the latest 10 reviews of the service provider</p>
+              <p className="heading_text">
+                You are viewing the latest 10 reviews of the service provider
+              </p>
               {Array.from({ length: 7 }).map((_, index) => (
                 <RatingCard key={index} />
               ))}

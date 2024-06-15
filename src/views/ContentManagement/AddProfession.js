@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./Professionform.css"; // Import your CSS file for styling
 import ImageUploadButton from "components/ImageUploader/Imageuploader";
-import { useParams } from "react-router";
+import { useHistory, useParams } from "react-router";
 import { getProfessionsbyId } from "Apis/Profession";
 import { addProfession } from "Apis/Profession";
 import { updateProfession } from "Apis/Profession";
@@ -24,7 +24,7 @@ const ProfessionFormComponent = ({ goBack }) => {
     setImage(e);
     setImagePreview(URL.createObjectURL(e));
   };
-
+  const history=useHistory()
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData();
@@ -40,7 +40,7 @@ const ProfessionFormComponent = ({ goBack }) => {
       addProfession(formData);
       toast.success("Profession added sucessfully");
     }
-    window.history.back();
+    history.push('/admin/content')
   };
   const { id } = useParams();
   const fetchProfession = async (id) => {
@@ -65,7 +65,7 @@ const ProfessionFormComponent = ({ goBack }) => {
               <div style={styles.cancelButton}>
                 <button
                   className="cancelbtn mr-1"
-                  onClick={() => window.history.back()}
+                  onClick={() => history.push("/admin/content")}
                 >
                   {"Cancel"}
                 </button>

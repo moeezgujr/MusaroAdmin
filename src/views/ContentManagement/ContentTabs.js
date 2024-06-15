@@ -26,6 +26,7 @@ const Tabs = () => {
     } else {
       setTabTitle("Workshop");
     }
+    localStorage.setItem("tab", tabNumber);
   };
   const getTrends = async () => {
     const data = await getAllTrend(0);
@@ -37,14 +38,19 @@ const Tabs = () => {
     setProfession(data.data.professions);
     setLoading(false); // Set loading to false when data is fetched
   };
+  const storedTab = localStorage.getItem("tab");
   useEffect(() => {
+    if (storedTab) {
+      setActiveTab(parseInt(storedTab));
+    }
     setLoading(true); // Set loading to true when tab changes
-    if (activeTab === 1) {
+    let tab = storedTab || activeTab;
+    if (tab == 1) {
       getProfessions();
     } else {
       getTrends();
     }
-  }, [activeTab]);
+  }, [activeTab, storedTab]);
   const history = useHistory();
   const editCallback = (id) => {
     if (activeTab == 2) history.push("/admin/edittrend/" + id);
@@ -62,19 +68,19 @@ const Tabs = () => {
       />
       <div className="tabs">
         <div
-          className={`tab-1 tab ${activeTab === 1 ? "active" : ""}`}
+          className={`tab-1 tab ${activeTab === 1 ? "activeTab" : ""}`}
           onClick={() => handleTabClick(1)}
         >
           Professions
         </div>
         <div
-          className={`tab ${activeTab === 2 ? "active" : ""}`}
+          className={`tab ${activeTab === 2 ? "activeTab" : ""}`}
           onClick={() => handleTabClick(2)}
         >
           Trends
         </div>
         <div
-          className={`tab ${activeTab === 3 ? "active" : ""}`}
+          className={`tab ${activeTab === 3 ? "activeTab" : ""}`}
           onClick={() => handleTabClick(3)}
         >
           Workshops

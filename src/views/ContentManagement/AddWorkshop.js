@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./Professionform.css"; // Import your CSS file for styling
 import ImageUploadButton from "components/ImageUploader/Imageuploader";
 import { Container, Form, Row, Col } from "react-bootstrap";
-import { useParams } from "react-router";
+import { useHistory, useParams } from "react-router";
 import { getWorkshop } from "Apis/Workshop";
 
 const ProfessionFormComponent = ({ goBack }) => {
@@ -66,7 +66,6 @@ const ProfessionFormComponent = ({ goBack }) => {
     fetchWorkshop(id);
   }, [id]);
   const handleChange = (e) => {
-    debugger;
     const { id, value } = e.target;
     setFormValues((prevValues) => ({
       ...prevValues,
@@ -74,14 +73,7 @@ const ProfessionFormComponent = ({ goBack }) => {
     }));
   };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    setFormValues((prevValues) => ({
-      ...prevValues,
-      image: file,
-    }));
-  };
-
+  const history=useHistory()
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle form submission here
@@ -98,7 +90,7 @@ const ProfessionFormComponent = ({ goBack }) => {
             <div style={styles.cancelButton}>
               <button
                 className="rejectbtn mr-1"
-                onClick={() => window.history.back()}
+                onClick={() => history.push("/admin/content")}
               >
                 {"Reject with Note"}
               </button>
@@ -311,8 +303,11 @@ const ProfessionFormComponent = ({ goBack }) => {
           ></textarea>
         </div>
       </div>
-      <div className="mt-3" style={{ width: "100%", marginLeft: "20px", marginRight: "20px" }}>
-      <label  htmlFor="description">Image:</label>
+      <div
+        className="mt-3"
+        style={{ width: "100%", marginLeft: "20px", marginRight: "20px" }}
+      >
+        <label htmlFor="description">Image:</label>
       </div>
       <div
         className="d-flex"
@@ -323,17 +318,17 @@ const ProfessionFormComponent = ({ goBack }) => {
         }}
       >
         {" "}
-          <div className="image-viewer-container">
-            {formValues.image ? (
-              <img
-                src={imageUrl + formValues.image}
-                alt="Workshop"
-                className="workshop-image"
-              />
-            ) : (
-              <p>No image available</p>
-            )}
-          </div>
+        <div className="image-viewer-container">
+          {formValues.image ? (
+            <img
+              src={imageUrl + formValues.image}
+              alt="Workshop"
+              className="workshop-image"
+            />
+          ) : (
+            <p>No image available</p>
+          )}
+        </div>
       </div>
     </div>
   );
