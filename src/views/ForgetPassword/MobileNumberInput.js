@@ -9,7 +9,7 @@ const countryCodes = [
   // Add more country codes as needed
 ];
 
-const MobileNumberInput = () => {
+const MobileNumberInput = ({onChange}) => {
   const [selectedCode, setSelectedCode] = useState(countryCodes[0].code);
   const [phoneNumber, setPhoneNumber] = useState("");
 
@@ -26,7 +26,7 @@ const MobileNumberInput = () => {
       inputStyle={{ width: "100%" }}
       country={"sa"}
       value={phoneNumber}
-      onChange={(phone) => setPhoneNumber(phone)}
+      onChange={(phone) => onChange(phone)}
     />
   );
 };

@@ -26,3 +26,16 @@ export const resetPassword = async (dto) => {
     }
   }
 };
+export const forgetPassword = async (dto) => {
+  try {
+    const response = await api.post("/auth/forgot-password", dto);
+    return response.data;
+  } catch (error) {
+    // Check if the error has a response property
+    if (error.response) {
+      return error.response.data;
+    } else {
+      return { error: error.message };
+    }
+  }
+};

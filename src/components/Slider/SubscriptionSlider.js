@@ -77,10 +77,9 @@ const SubscriptionSlider = ({ open, callback, id, data }) => {
     image: "",
   });
 
-  useEffect(() => {debugger
+  useEffect(() => {
     if (data && id) {
       const form = data.find((item) => item._id === id);
-      debugger
       if (form) {
         setFormValues({
           name: form.name,
@@ -185,6 +184,7 @@ const SubscriptionSlider = ({ open, callback, id, data }) => {
                       placeholder="Business"
                       value={formValues.business}
                       onChange={handleChange}
+                      disabled
                     />
                   </div>
                   <div className="ml-3">
@@ -196,6 +196,7 @@ const SubscriptionSlider = ({ open, callback, id, data }) => {
                       placeholder="14654165456"
                       value={formValues.igama}
                       onChange={handleChange}
+                      disabled
                     />
                   </div>
                 </div>
@@ -217,6 +218,7 @@ const SubscriptionSlider = ({ open, callback, id, data }) => {
                       placeholder="City"
                       value={formValues.city}
                       onChange={handleChange}
+                      disabled
                     />
                   </div>
                   <div className="ml-3">
@@ -230,6 +232,7 @@ const SubscriptionSlider = ({ open, callback, id, data }) => {
                       placeholder="Contact Mobile Number"
                       value={formValues.contactMobile}
                       onChange={handleChange}
+                      disabled
                     />
                   </div>
                 </div>
@@ -246,6 +249,7 @@ const SubscriptionSlider = ({ open, callback, id, data }) => {
                     <input
                       type="text"
                       className="subscription-input"
+                      disabled
                       id="whatsapp"
                       placeholder="Whatsapp Contact Number"
                       value={formValues.whatsapp}
@@ -261,6 +265,7 @@ const SubscriptionSlider = ({ open, callback, id, data }) => {
                       placeholder="Work Force Number"
                       value={formValues.workforce}
                       onChange={handleChange}
+                      disabled
                     />
                   </div>
                   <div className="ml-3">
@@ -271,6 +276,7 @@ const SubscriptionSlider = ({ open, callback, id, data }) => {
                       id="experience"
                       placeholder="Years of Experience"
                       value={formValues.experience}
+                      disabled
                       onChange={handleChange}
                     />
                   </div>
@@ -291,6 +297,7 @@ const SubscriptionSlider = ({ open, callback, id, data }) => {
                       value={formValues.description}
                       placeholder="Enter Description"
                       // onChange={handleDescriptionChange}
+                      disabled
                     ></textarea>
                   </div>
                 </div>
@@ -304,19 +311,22 @@ const SubscriptionSlider = ({ open, callback, id, data }) => {
                 >
                   <div className="">
                     <label htmlFor="description">Image:</label>{" "}
-                    <div className="image-viewer-container" style={{width:'1190px'}}>
-                    {formValues.image ? (
+                    <div
+                      className="image-viewer-container"
+                      style={{ width: "1190px" }}
+                    >
+                      {formValues.image ? (
                         <img
-                          src={'formValues.image'}
+                          src={"formValues.image"}
                           alt="Workshop"
                           className="workshop-image"
                         />
                       ) : (
                         <p>No image available</p>
                       )}
+                    </div>
                   </div>
-                </div>
-                {/* <div className="d-flex">
+                  {/* <div className="d-flex">
                   <div className="">
                      
                     </div>

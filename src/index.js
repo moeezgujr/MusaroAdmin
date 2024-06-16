@@ -58,8 +58,8 @@ root.render(
   <BrowserRouter>
     <ToastContainer />
     <Switch>
-      <Route path="/forgetpassword" render={(props) => <CreatePassword {...props} />} />
-      <Route path="/otp" render={(props) => <Otp {...props} />} />
+      <Route path="/forgetpassword" render={(props) => <Forget {...props} />} />
+      <Route path="/createpassword" render={(props) => <CreatePassword {...props} />} />
       <Route path="/otp" render={(props) => <Otp {...props} />} />
 
       <Route

@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 
-const OTPInput = () => {
+const OTPInput = ({onChange}) => {
   const [otpValue, setOtpValue] = useState("");
 
   const handleChange = (e) => {
     const value = e.target.value.slice(0, 4);
     setOtpValue(value);
+    onChange(value);
   };
 
   return (

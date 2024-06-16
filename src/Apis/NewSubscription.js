@@ -15,7 +15,7 @@ export const subscriptionList = async (page) => {
     }
   }
 };
-export const searchList = async (text) => {
+export const searchListSubscription = async (text) => {
   try {
     const response = await api.get(
       "/subscription/list-pending?limit=10&offset=0&search=" + text

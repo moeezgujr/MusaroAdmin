@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
 import "react-data-table-component-extensions/dist/index.css";
 import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
+
 import "../UserManagement/style.css";
 import { TableWithPagination } from "views/UserManagement/Table";
 import { getWorkshopList } from "Apis/Workshop";

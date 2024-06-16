@@ -6,6 +6,8 @@ import { useHistory } from "react-router";
 import OTPInput from "./OtpInput";
 
 function Otp() {
+  const onChange=(value)=>{
+  }
   const history = useHistory();
   return (
     <div className="forgetpasswordcontainer">
@@ -15,13 +17,13 @@ function Otp() {
         An sms containing a One-Time password (OTP) has been sent to your registered mobile number.
         </p>
         <div className="mt-3">
-          <OTPInput />
+          <OTPInput onChange={onChange} />
         </div>
         <div>
           <Button
             variant="primary"
             className="login-btn-submit mt-3 "
-            onClick={() => history.push("/forgetpassword")}
+            onClick={() => history.push("/createpassword")}
             block
           >
             Verify

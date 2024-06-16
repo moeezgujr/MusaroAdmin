@@ -9,6 +9,9 @@ import { subscriptionList } from "Apis/NewSubscription";
 import { useEffect, useState } from "react";
 import { TableWithPagination } from "views/UserManagement/Table";
 import SubscriptionSlider from "components/Slider/SubscriptionSlider";
+import { searchList } from "Apis/Customer";
+import { searchListSubscription } from "Apis/NewSubscription";
+import NoAccountsFound from "views/UserManagement/NoDataFound";
 
 function SubscriptionList() {
   const history = useHistory();
@@ -38,8 +41,8 @@ function SubscriptionList() {
   const search = async (text) => {
     try {
       // const data = await userList();
-      const data = await searchList(text);
-      setCustomer(
+      const data = await searchListSubscription(text);
+      setSubscription(
         data.data?.users.map((e) => {
           return {
             ...e,
@@ -80,8 +83,11 @@ function SubscriptionList() {
       label: "Status",
     },
   ];
-  const callback = (title) => {
-    setSliderOpen(false)
+  const callback = () => {
+    setSliderOpen(false);
+  };
+  const onSearchCallback = (e) => {
+    search(e.target.value);
   };
 
   return (
@@ -97,6 +103,7 @@ function SubscriptionList() {
       <Header
         hideButton
         btntext={"Add Account"}
+        onSearch={onSearchCallback}
         title={"New Subscriptions"}
         onAddAccount={() => history.push("/admin/customermanagement")}
       />
@@ -109,20 +116,22 @@ function SubscriptionList() {
             style={{ marginBottom: 10, width: "50%" }}
           />
         </div>
-      ) : (
+      ) : subscritions.length > 0 ? (
         <TableWithPagination
           headers={column}
           data={subscritions}
           totalPages={pagination.pages}
           currentPage={pagination.page}
           onPageChange={""}
-          callback={(type, id) => {debugger
+          callback={(type, id) => {
             setSliderOpen(true);
             setID(id);
           }}
           id={"subscription"}
           isPaginationShow={pagination.pages > 1 && true}
         />
+      ) : (
+        <NoAccountsFound />
       )}
     </>
 

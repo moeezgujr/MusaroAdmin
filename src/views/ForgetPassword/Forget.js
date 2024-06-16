@@ -3,10 +3,18 @@ import "./style.css"; // Ensure to import your CSS file
 import { Button, Form } from "react-bootstrap";
 import MobileNumberInput from "./MobileNumberInput";
 import { useHistory } from "react-router";
+import { forgetPassword } from "Apis/Auth";
 
 function Forget() {
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [number, setNumber] = useState("");
+  const onSubmit = async () => {
+    // history.push("/otp")
+    const response = await forgetPassword({ mobile: number });
+    console.log(response);
+  };
+  const callback = (value) => {
+    setNumber(value);
+  };
   const history = useHistory();
   return (
     <div className="forgetpasswordcontainer">
@@ -16,13 +24,13 @@ function Forget() {
           Please enter your mobile number to create new password{" "}
         </p>
         <div className="mt-3">
-          <MobileNumberInput />
+          <MobileNumberInput onChange={callback} />
         </div>
         <div>
           <Button
             variant="primary"
             className="login-btn-submit mt-3 "
-            onClick={() => history.push("/otp")}
+            onClick={() => onSubmit()}
             block
           >
             Send Otp
