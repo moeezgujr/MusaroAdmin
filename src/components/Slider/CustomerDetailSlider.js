@@ -6,6 +6,8 @@ import { getRatings } from "Apis/Customer";
 import { ReactComponent as Staricon } from "../../assets/img/star.svg";
 import { ReactComponent as DotIcon } from "../../assets/img/dot.svg";
 import { getcustomerbyid } from "Apis/Customer";
+import { deleteCustomer } from "Apis/Customer";
+import { toast } from "react-toastify";
 
 const Container = styled.div`
   display: flex;
@@ -77,10 +79,7 @@ const CloseButton = styled.button`
     color: red;
   }
 `;
-const handleChange=()=>{
-
-}
-const CustomerSlider = ({ open, callback, id }) => {
+const CustomerSlider = ({ open, callback, id, data }) => {
   const [isOpen, setIsOpen] = useState(open);
   const [formValues, setFormValues] = useState({
     name: "",
@@ -88,33 +87,19 @@ const CustomerSlider = ({ open, callback, id }) => {
     mobile: "",
     createdAt: "",
   });
-  function convertTo24Hour(time12h) {
-    // Parse the time string to a Date object
-    var date = new Date("2000-01-01 " + time12h);
-
-    // Format the time to 24-hour format
-    var time24h = date.toLocaleTimeString("en-US", {
-      hour12: false,
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-
-    return time24h;
-  }
-  const mapCustomerToFormValues = (data) => {
-    return {
-      title: data?.name || "",
-      city: data?.city || "",
-      mobile: data?.mobile || "",
-    };
-  };
-  const fetchCustomer = async (id) => {
-    const data = await getcustomerbyid(id);
-    setFormValues(mapCustomerToFormValues(data.data));
-  };
   useEffect(() => {
-    fetchCustomer(id);
-  }, [id]);
+    if (data && id) {
+      const form = data.find((item) => item._id == id);
+      if (form) {
+        setFormValues({
+          name: form.name,
+          city: form.city,
+          mobile: form.mobile,
+          createdAt: form.createdAt.split("T")[0],
+        });
+      }
+    }
+  }, [id, data]);
   const handleChange = (e) => {
     const { id, value } = e.target;
     setFormValues((prevValues) => ({
@@ -123,19 +108,6 @@ const CustomerSlider = ({ open, callback, id }) => {
     }));
   };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    setFormValues((prevValues) => ({
-      ...prevValues,
-      image: file,
-    }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Handle form submission here
-    console.log("Form Values:", formValues);
-  };
   const ratings = async (id) => {
     await getRatings(id);
   };
@@ -151,7 +123,13 @@ const CustomerSlider = ({ open, callback, id }) => {
     transform: isOpen ? "translateY(0%)" : "translateY(100%)",
     from: { transform: "translateY(100%)" },
   });
-
+  const handleSubmit = async () => {
+    const res = await deleteCustomer(id);
+    if (!res.error) {
+      toast.success("Customer deleted successfully");
+      callback();
+    }
+  };
   return (
     <>
       <FullScreenWrapper isOpen={isOpen}>
@@ -179,78 +157,88 @@ const CustomerSlider = ({ open, callback, id }) => {
             >
               {" "}
               <div className="d-flex">
-                <div style={{marginLeft:'20px'}}>
+                <div style={{ marginLeft: "20px" }}>
                   <h2 className="rating_heading">Customer Details</h2>
-                  <p className="heading_customer_text">View the customer details</p>
+                  <p className="heading_customer_text">
+                    View the customer details
+                  </p>
                 </div>
                 <div style={styles.addButton}>
                   <button
-                    // onClick={handleSubmit}
+                    onClick={handleSubmit}
                     className="addaccountBtn"
-                    style={{ width: "200px", marginRight:'10px' }}
+                    style={{ width: "200px", marginRight: "10px" }}
                   >
                     {"Delete Account"}
                   </button>
                 </div>
               </div>
               <div
-        className="d-flex"
-        style={{ width: "100%", marginLeft: "20px", marginRight: "20px" }}
-      >
-        <div className="">
-          <label htmlFor="title">Name:</label>
-          <input
-            type="text"
-            className="workshop-input"
-            id="name"
-            disabled
-            placeholder="Enter Name"
-            value={formValues.name}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="ml-3">
-          <label htmlFor="title">City:</label>
-          <input
-            type="text"
-            className="workshop-input"
-            disabled
-            id="city"
-            placeholder="Enter City"
-            value={formValues.city}
-            onChange={handleChange}
-          />
-        </div>
-      </div>
-      <div
-        className="d-flex mt-3"
-        style={{ width: "100%", marginLeft: "20px", marginRight: "20px" }}
-      >
-        <div className="">
-          <label htmlFor="title">Contact Mobile Number:</label>
-          <input
-            type="text"
-            disabled
-            className="workshop-input"
-            id="mobile"
-            placeholder="Enter Mobile#"
-            value={formValues.mobile}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="ml-3">
-          <label htmlFor="title">Created On:</label>
-          <input
-            type="date"
-            className="workshop-input"
-            id="createdAt"
-            placeholder="Enter Date"
-            disabled
-            value={formValues.createdAt}
-            onChange={handleChange}
-          />
-        </div>
-      </div>
+                className="d-flex"
+                style={{
+                  width: "100%",
+                  marginLeft: "20px",
+                  marginRight: "20px",
+                }}
+              >
+                <div className="">
+                  <label htmlFor="title">Name:</label>
+                  <input
+                    type="text"
+                    className="workshop-input"
+                    id="name"
+                    disabled
+                    placeholder="Enter Name"
+                    value={formValues.name}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className="ml-3">
+                  <label htmlFor="title">City:</label>
+                  <input
+                    type="text"
+                    className="workshop-input"
+                    disabled
+                    id="city"
+                    placeholder="Enter City"
+                    value={formValues.city}
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
+              <div
+                className="d-flex mt-3"
+                style={{
+                  width: "100%",
+                  marginLeft: "20px",
+                  marginRight: "20px",
+                }}
+              >
+                <div className="">
+                  <label htmlFor="title">Contact Mobile Number:</label>
+                  <input
+                    type="text"
+                    disabled
+                    className="workshop-input"
+                    id="mobile"
+                    placeholder="Enter Mobile#"
+                    value={formValues.mobile}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className="ml-3">
+                  <label htmlFor="title">Created On:</label>
+                  <input
+                    type="date"
+                    className="workshop-input"
+                    id="createdAt"
+                    placeholder="Enter Date"
+                    disabled
+                    value={formValues.createdAt}
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
             </Content>
           </SliderWrapper>
         </animated.div>
@@ -259,29 +247,29 @@ const CustomerSlider = ({ open, callback, id }) => {
   );
 };
 const styles = {
-    container: {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "space-between",
-      padding: "10px",
-      borderBottom: "1px solid #ccc",
-      width: "100%",
-      height: "50px",
-      borderBlockEnd: "none",
-    },
-    container2: {
-      display: "flex",
-    },
-    title: {
-      fontSize: "24px",
-      fontWeight: "bold",
-    },
-    search: {
-      marginRight: "10px",
-    },
-    addButton: {
-      marginLeft: "auto",
-    },
-  };
+  container: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: "10px",
+    borderBottom: "1px solid #ccc",
+    width: "100%",
+    height: "50px",
+    borderBlockEnd: "none",
+  },
+  container2: {
+    display: "flex",
+  },
+  title: {
+    fontSize: "24px",
+    fontWeight: "bold",
+  },
+  search: {
+    marginRight: "10px",
+  },
+  addButton: {
+    marginLeft: "auto",
+  },
+};
 
 export default CustomerSlider;

@@ -79,6 +79,13 @@
   order: 0;
   flex-grow: 1;
 }
+.sub_p_text{
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 20px;
+  color: #475467;
+}
 .verified_text {
   margin-left: 90px;
   width: 65px;

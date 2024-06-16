@@ -76,9 +76,20 @@ export const searchProviders = async (text) => {
 };
 export const getRatings = async (id) => {
   try {
-    const response = await api.get(
-      "review/list-reviews/"+id
-    );
+    const response = await api.get("review/list-reviews/" + id);
+    return response.data;
+  } catch (error) {
+    // Check if the error has a response property
+    if (error.response) {
+      return error.response.data;
+    } else {
+      return { error: error.message };
+    }
+  }
+};
+export const deleteCustomer = async (id) => {
+  try {
+    const response = await api.delete("customer/delete-customer/" + id);
     return response.data;
   } catch (error) {
     // Check if the error has a response property

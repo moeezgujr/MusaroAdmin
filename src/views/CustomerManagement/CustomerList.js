@@ -16,6 +16,7 @@ import NoAccountsFound from "views/UserManagement/NoDataFound";
 import CustomerSlider from "components/Slider/CustomerDetailSlider";
 
 function CustomerList({ search }) {
+  
   const [customer, setCustomer] = useState("");
   const [loading, setLoading] = useState(true);
   const [pagination, setPagination] = useState("");
@@ -72,13 +73,21 @@ function CustomerList({ search }) {
     },
   ];
   const history = useHistory();
-
+  const callback = () => {
+    setSliderOpen(false);
+    fetchTotalCount(0);
+  };
   return (
     // <div className="main">
     // <DataTableExtensions export={false} print={false} {...tableData}>
     <>
       {" "}
-      <CustomerSlider callback={setSliderOpen} open={slideropen} id={customerid} />
+      <CustomerSlider
+        callback={callback}
+        open={slideropen}
+        id={customerid}
+        data={customer}
+      />
       {loading ? (
         <div id="customers" style={{ border: "none" }}>
           <Skeleton height={40} count={5} style={{ marginBottom: 10 }} />

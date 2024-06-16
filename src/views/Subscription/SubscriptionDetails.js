@@ -49,40 +49,7 @@ const SubscriptionDetail = ({ goBack }) => {
           </div>
         </div>
 
-        {/* <Row>
-          <Col>
-            <Form style={{ width: "500px" }}>
-              <Form.Group controlId="input1">
-                <Form.Label>Title:</Form.Label>
-                <Form.Control type="text" placeholder="Wood CNC Workshop" />
-              </Form.Group>
-            </Form>
-          </Col>
-          <Col>
-            <Form style={{ width: "500px" }}>
-              <Form.Group controlId="input2">
-                <Form.Label>Owner of Workshop:</Form.Label>
-                <Form.Control type="text" placeholder="Owner Name" />
-              </Form.Group>
-            </Form>
-          </Col>
-          <Col>
-            <Form style={{ width: "500px" }}>
-              <Form.Group controlId="input1">
-                <Form.Label>Start Date:</Form.Label>
-                <Form.Control type="date" placeholder="Wood CNC Workshop" />
-              </Form.Group>
-            </Form>
-          </Col>
-          <Col>
-            <Form style={{ width: "500px" }}>
-              <Form.Group controlId="input2">
-                <Form.Label>End Date:</Form.Label>
-                <Form.Control type="date" placeholder="Owner Name" />
-              </Form.Group>
-            </Form>
-          </Col>
-        </Row> */}
+   
       </Container>
       <div
         className="d-flex"

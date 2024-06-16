@@ -1,33 +1,88 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ".././ContentManagement/Professionform.css"; // Import your CSS file for styling
 import { Container, Form, Row, Col } from "react-bootstrap";
 import Header from "views/UserManagement/TableHeader";
+import { patchUser } from "Apis/User";
+import { toast } from "react-toastify";
+import { resetPassword } from "Apis/Auth";
 
 const Setting = ({ goBack }) => {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [image, setImage] = useState(null);
+  const [fname, setfname] = useState("");
+  const [lname, setlname] = useState("");
+
+  const [username, setusername] = useState("");
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState("");
 
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
   };
 
-  const handleDescriptionChange = (e) => {
-    setDescription(e.target.value);
+  const handleusernameChange = (e) => {
+    setusername(e.target.value);
   };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    setImage(file);
+  const handleFnameChange = (e) => {
+    setfname(e.target.value);
+  };
+  const handleLnameChange = (e) => {
+    setlname(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleOldPasswordChange = (e) => {
+    setOldPassword(e.target.value);
+  };
+
+  const handleNewPasswordChange = (e) => {
+    setNewPassword(e.target.value);
+  };
+
+  const handleConfirmNewPasswordChange = (e) => {
+    setConfirmNewPassword(e.target.value);
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission here
-    console.log("Title:", title);
-    console.log("Description:", description);
-    console.log("Image:", image);
+    const form = {
+      username,
+      name: fname + " " + lname,
+      // oldPassword,
+      // newPassword,
+    };
+    const res = await patchUser(form);
+    if (res.message === "Success") {
+      toast.success("User updated successfully");
+    } else {
+      toast.error("Error occurred while updating user");
+    }
+    if (
+      newPassword &&
+      confirmNewPassword &&
+      newPassword !== confirmNewPassword
+    ) {
+      toast.error("New password and confirm password do not match");
+    }
+    if (
+      newPassword &&
+      confirmNewPassword &&
+      newPassword === confirmNewPassword
+    ) {
+      const response = await resetPassword({ oldPassword, newPassword });
+      if (response.message === "Password updated!") {
+        toast.success("Password updated successfully");
+      } else {
+        toast.error("Error occurred while updating password");
+      }
+    }
   };
+
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("userData"));
+    setfname(userData.data.user.name.split(" ")[0]);
+    setlname(userData.data.user.name.split(" ")[1]);
+    setusername(userData.data.user.username);
+  }, []);
 
   return (
     <>
@@ -36,11 +91,9 @@ const Setting = ({ goBack }) => {
         secondarybtn={"Cancel"}
         isSearchHide
         title={"Settings & Integration"}
-        onAddAccount={() => history.push("/admin/adduser")}
+        onAddAccount={(e) => handleSubmit(e)}
       />
-      {/* <Row> */}
       <p className="ml-3 mt-2">Personal Info</p>
-      {/* </Row> */}
       <Row className="mt-1 ml-1">
         <div
           style={{
@@ -53,26 +106,26 @@ const Setting = ({ goBack }) => {
             className="d-flex mt-3"
             style={{ width: "100%", marginLeft: "20px", marginRight: "20px" }}
           >
-            <div className="">
-              <label htmlFor="title">First Name:</label>
+            <div>
+              <label htmlFor="fname">First Name:</label>
               <input
                 type="text"
                 className="workshop-input"
-                id="title"
+                id="fname"
                 placeholder="Enter First Name"
-                value={title}
-                onChange={handleTitleChange}
+                value={fname}
+                onChange={handleFnameChange}
               />
             </div>
             <div className="ml-3">
-              <label htmlFor="title">Last Name:</label>
+              <label htmlFor="lname">Last Name:</label>
               <input
                 type="text"
                 className="workshop-input"
-                id="title"
+                id="lname"
                 placeholder="Enter Last Name"
-                value={title}
-                onChange={handleTitleChange}
+                value={lname}
+                onChange={handleLnameChange}
               />
             </div>
           </div>
@@ -81,74 +134,22 @@ const Setting = ({ goBack }) => {
             className="d-flex mt-3"
             style={{ width: "100%", marginLeft: "20px", marginRight: "20px" }}
           >
-            <div className="">
-              <label htmlFor="title">Email Address:</label>
+            <div>
+              <label htmlFor="username">User Name:</label>
               <input
                 style={{ width: "1195px" }}
-                type="email"
+                type="text"
                 className="workshop-input"
-                id="title"
-                placeholder="Enter Email"
-                value={title}
-                onChange={handleTitleChange}
+                id="username"
+                placeholder="Enter UserName"
+                value={username}
+                onChange={handleusernameChange}
               />
             </div>
           </div>
-          {/* <div
-          className="d-flex mt-3"
-          style={{ width: "100%", marginLeft: "20px", marginRight: "20px" }}
-        >
-          <div className="">
-            <label htmlFor="title">Whatsapp Contact Number:</label>
-            <input
-              type="text"
-              className="subscription-input"
-              id="title"
-              placeholder="City"
-              value={title}
-              onChange={handleTitleChange}
-            />
-          </div>
-          <div className="ml-3">
-            <label htmlFor="title">Work Force Number:</label>
-            <input
-              type="text"
-              className="subscription-input"
-              id="title"
-              placeholder="Contact Mobile Number"
-              value={title}
-              onChange={handleTitleChange}
-            />
-          </div>
-          <div className="ml-3">
-            <label htmlFor="title">Years of experience:</label>
-            <input
-              type="text"
-              className="subscription-input"
-              id="title"
-              placeholder="Contact Mobile Number"
-              value={title}
-              onChange={handleTitleChange}
-            />
-          </div>
-        </div> */}
-          {/* <div
-          className="d-flex mt-3"
-          style={{ width: "100%", marginLeft: "20px", marginRight: "20px" }}
-        >
-          <div className="">
-            <label htmlFor="description">Server Description:</label>
-            <textarea
-              id="description"
-              className="workshop-input-textarea"
-              value={description}
-              placeholder="Enter Description"
-              onChange={handleDescriptionChange}
-            ></textarea>
-          </div>
-        </div> */}
         </div>
       </Row>
+
       <p className="ml-3 mt-2">Change Password</p>
       <Row className="mt-1 ml-1">
         <div
@@ -162,15 +163,15 @@ const Setting = ({ goBack }) => {
             className="d-flex mt-3"
             style={{ width: "100%", marginLeft: "20px", marginRight: "20px" }}
           >
-            <div className="">
-              <label htmlFor="title">Old Password:</label>
+            <div>
+              <label htmlFor="oldPassword">Old Password:</label>
               <input
                 type="password"
                 className="workshop-input"
-                id="title"
+                id="oldPassword"
                 placeholder="Enter your old password"
-                value={title}
-                onChange={handleTitleChange}
+                value={oldPassword}
+                onChange={handleOldPasswordChange}
               />
             </div>
           </div>
@@ -178,15 +179,15 @@ const Setting = ({ goBack }) => {
             className="d-flex mt-3"
             style={{ width: "100%", marginLeft: "20px", marginRight: "20px" }}
           >
-            <div className="">
-              <label htmlFor="title">Confirm New Password:</label>
+            <div>
+              <label htmlFor="newPassword">New Password:</label>
               <input
                 type="password"
                 className="workshop-input"
-                id="Confirm New Password"
-                placeholder="Enter Email"
-                value={title}
-                onChange={handleTitleChange}
+                id="newPassword"
+                placeholder="Enter new password"
+                value={newPassword}
+                onChange={handleNewPasswordChange}
               />
             </div>
           </div>
@@ -194,77 +195,24 @@ const Setting = ({ goBack }) => {
             className="d-flex mt-3"
             style={{ width: "100%", marginLeft: "20px", marginRight: "20px" }}
           >
-            <div className="">
-              <label htmlFor="title">Confirm New Password:</label>
+            <div>
+              <label htmlFor="confirmNewPassword">Confirm New Password:</label>
               <input
                 type="password"
                 className="workshop-input"
-                id="Confirm New Password"
-                placeholder="Enter Email"
-                value={title}
-                onChange={handleTitleChange}
+                id="confirmNewPassword"
+                placeholder="Confirm new password"
+                value={confirmNewPassword}
+                onChange={handleConfirmNewPasswordChange}
               />
             </div>
           </div>
-
-          {/* <div
-          className="d-flex mt-3"
-          style={{ width: "100%", marginLeft: "20px", marginRight: "20px" }}
-        >
-          <div className="">
-            <label htmlFor="title">Whatsapp Contact Number:</label>
-            <input
-              type="text"
-              className="subscription-input"
-              id="title"
-              placeholder="City"
-              value={title}
-              onChange={handleTitleChange}
-            />
-          </div>
-          <div className="ml-3">
-            <label htmlFor="title">Work Force Number:</label>
-            <input
-              type="text"
-              className="subscription-input"
-              id="title"
-              placeholder="Contact Mobile Number"
-              value={title}
-              onChange={handleTitleChange}
-            />
-          </div>
-          <div className="ml-3">
-            <label htmlFor="title">Years of experience:</label>
-            <input
-              type="text"
-              className="subscription-input"
-              id="title"
-              placeholder="Contact Mobile Number"
-              value={title}
-              onChange={handleTitleChange}
-            />
-          </div>
-        </div> */}
-          {/* <div
-          className="d-flex mt-3"
-          style={{ width: "100%", marginLeft: "20px", marginRight: "20px" }}
-        >
-          <div className="">
-            <label htmlFor="description">Server Description:</label>
-            <textarea
-              id="description"
-              className="workshop-input-textarea"
-              value={description}
-              placeholder="Enter Description"
-              onChange={handleDescriptionChange}
-            ></textarea>
-          </div>
-        </div> */}
         </div>
       </Row>
     </>
   );
 };
+
 const styles = {
   container: {
     display: "flex",
@@ -290,4 +238,5 @@ const styles = {
     marginLeft: "auto",
   },
 };
+
 export default Setting;

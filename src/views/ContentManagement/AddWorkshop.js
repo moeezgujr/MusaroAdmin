@@ -79,7 +79,7 @@ const ProfessionFormComponent = ({ goBack }) => {
     // Handle form submission here
     console.log("Form Values:", formValues);
   };
-  const imageUrl = "https://musaro-public.s3.me-south-1.amazonaws.com/";
+  const imageUrl = process.env.REACT_APP_IMAGE_SRC;
 
   return (
     <div style={{ background: "#F8FAFC" }}>

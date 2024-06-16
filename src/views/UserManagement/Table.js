@@ -18,22 +18,21 @@ export const TableWithPagination = ({
     if (typeof value === "object" && value !== null) {
       return JSON.stringify(value);
     }
-    if(label === 'createdAt'){
-      return new Date(value).toLocaleDateString()
+    if (label === "createdAt") {
+      return new Date(value).toLocaleDateString();
     }
     return value;
   };
   function capitalizeFirstLetterOnly(str) {
-    try{
-    return str
-      ?.split(" ")
-      ?.map(
-        (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-      )
-      ?.join(" ");
-    }
-    catch{
+    try {
       return str
+        ?.split(" ")
+        ?.map(
+          (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+        )
+        ?.join(" ");
+    } catch {
+      return str;
     }
   }
   return (
@@ -70,7 +69,10 @@ export const TableWithPagination = ({
                     </p>
                   </td>
                 ))}
-                {id === "workshop" || id === "customer" || id === "provider" ? (
+                {id === "workshop" ||
+                id === "customer" ||
+                id === "provider" ||
+                id === "subscription" ? (
                   <td key={"actions"}>
                     <span
                       className="table_text"

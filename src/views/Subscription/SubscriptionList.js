@@ -8,18 +8,27 @@ import Skeleton from "react-loading-skeleton";
 import { subscriptionList } from "Apis/NewSubscription";
 import { useEffect, useState } from "react";
 import { TableWithPagination } from "views/UserManagement/Table";
+import SubscriptionSlider from "components/Slider/SubscriptionSlider";
 
 function SubscriptionList() {
   const history = useHistory();
   const [subscritions, setSubscription] = useState("");
   const [loading, setLoading] = useState(true);
   const [pagination, setPagination] = useState("");
-
+  const [slideropen, setSliderOpen] = useState(false);
+  const [id, setID] = useState(0);
   const fetchTotalCount = async (page) => {
     try {
       // const data = await userList();
       const data = await subscriptionList(page);
-      setSubscription(data.data?.users);
+      setSubscription(
+        data.data?.users.map((e) => {
+          return {
+            ...e,
+            status: "Pending",
+          };
+        })
+      );
       setPagination(data.data.meta);
     } catch (err) {
     } finally {
@@ -30,7 +39,14 @@ function SubscriptionList() {
     try {
       // const data = await userList();
       const data = await searchList(text);
-      setCustomer(data.data?.customers);
+      setCustomer(
+        data.data?.users.map((e) => {
+          return {
+            ...e,
+            status: "Pending",
+          };
+        })
+      );
       setPagination(data.data.meta);
     } catch (err) {
     } finally {
@@ -45,7 +61,7 @@ function SubscriptionList() {
   const column = [
     {
       value: "name",
-      label: "Name",
+      label: "Business Name",
     },
     {
       value: "city",
@@ -59,13 +75,25 @@ function SubscriptionList() {
       value: "createdAt",
       label: "Created On",
     },
+    {
+      value: "status",
+      label: "Status",
+    },
   ];
-  const handleClick = (title) => {};
+  const callback = (title) => {
+    setSliderOpen(false)
+  };
 
   return (
     // <div className="main">
     // <DataTableExtensions export={false} print={false} {...tableData}>
     <>
+      <SubscriptionSlider
+        callback={callback}
+        open={slideropen}
+        id={id}
+        data={subscritions}
+      />
       <Header
         hideButton
         btntext={"Add Account"}
@@ -88,7 +116,10 @@ function SubscriptionList() {
           totalPages={pagination.pages}
           currentPage={pagination.page}
           onPageChange={""}
-          callback={""}
+          callback={(type, id) => {debugger
+            setSliderOpen(true);
+            setID(id);
+          }}
           id={"subscription"}
           isPaginationShow={pagination.pages > 1 && true}
         />
