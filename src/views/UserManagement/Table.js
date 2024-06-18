@@ -56,11 +56,11 @@ export const TableWithPagination = ({
                 {headers?.map((header, colIndex) => (
                   <td key={colIndex}>
                     <p
-                      className={
-                        header.label == "Role" || header.label === "Status"
-                          ? "role_td table_text"
-                          : "table_text"
+                      className={`
+                        ${header.label == "Role" && "role_td"} ${
+                        header.label === "Status" && "subsrctiption_status"
                       }
+                         table_text`}
                       style={{ marginTop: "10px", marginBottom: "10px" }}
                     >
                       {capitalizeFirstLetterOnly(

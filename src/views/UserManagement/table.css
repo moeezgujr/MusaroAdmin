@@ -59,6 +59,17 @@
   margin-bottom: 10px;
   border-radius: 40px;
   width: fit-content;
+  padding: 5px
+}
+.subsrctiption_status{
+  color: #B54708;
+  background-color: #FFFAEB;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-radius: 40px;
+  width: fit-content;
+  padding: 5px
+  
 }
 .pagination button.active {
   background-color: #ddd;

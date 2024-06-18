@@ -8,6 +8,7 @@ import { getAllTrend } from "Apis/Trend";
 import { getAllProfession } from "Apis/Profession";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import Pagination from "views/UserManagement/Pagination";
 
 const Tabs = () => {
   const [activeTab, setActiveTab] = useState(1);
@@ -15,6 +16,7 @@ const Tabs = () => {
   const [trend, setTrend] = useState([]);
   const [profession, setProfession] = useState([]);
   const [loading, setLoading] = useState(true); // State for loading indicator
+  const [pagination, setPagination] = useState(""); // State for loading indicator
 
   const imageUrl = process.env.REACT_APP_IMAGE_SRC;
   const handleTabClick = (tabNumber) => {
@@ -28,14 +30,16 @@ const Tabs = () => {
     }
     localStorage.setItem("tab", tabNumber);
   };
-  const getTrends = async () => {
-    const data = await getAllTrend(0);
+  const getTrends = async (page) => {
+    const data = await getAllTrend(page);
     setTrend(data.data.trends);
+    setPagination(data.data.meta);
     setLoading(false); // Set loading to false when data is fetched
   };
-  const getProfessions = async () => {
-    const data = await getAllProfession(0);
+  const getProfessions = async (page) => {
+    const data = await getAllProfession(page);
     setProfession(data.data.professions);
+    setPagination(data.data.meta);
     setLoading(false); // Set loading to false when data is fetched
   };
   const storedTab = localStorage.getItem("tab");
@@ -46,15 +50,30 @@ const Tabs = () => {
     setLoading(true); // Set loading to true when tab changes
     let tab = storedTab || activeTab;
     if (tab == 1) {
-      getProfessions();
+      getProfessions(0);
     } else {
-      getTrends();
+      getTrends(0);
     }
   }, [activeTab, storedTab]);
   const history = useHistory();
   const editCallback = (id) => {
     if (activeTab == 2) history.push("/admin/edittrend/" + id);
     else history.push("/admin/editProfession/" + id);
+  };
+  const onPageChange = (val) => {
+    if (val - 1 > pagination.pages - 1) {
+      return;
+    }
+    if (val - 1 < 0) {
+      return;
+    }
+    let tab = activeTab;
+
+    if (tab == 1) {
+      getProfessions(val - 1);
+    } else {
+      getTrends(val - 1);
+    }
   };
   return (
     <div className="tabs-container">
@@ -108,6 +127,27 @@ const Tabs = () => {
                 );
               })
             )}
+            {pagination?.pages > 1 && (
+              <div className="pagination" style={{ margin: 0, float: "unset" }}>
+                <>
+                  <button onClick={() => onPageChange(pagination.page - 1)}>
+                    Previous
+                  </button>
+                  {Array.from({ length: pagination.pages }, (_, index) => (
+                    <button
+                      key={index}
+                      className={index + 1 === pagination.page ? "active" : ""}
+                      onClick={() => onPageChange(index + 1)}
+                    >
+                      {index + 1}
+                    </button>
+                  ))}
+                  <button onClick={() => onPageChange(pagination.page + 1)}>
+                    Next
+                  </button>
+                </>
+              </div>
+            )}
           </div>
         )}
         {activeTab === 2 && (
@@ -130,6 +170,27 @@ const Tabs = () => {
                   />
                 );
               })
+            )}
+            {pagination?.pages > 1 && (
+              <div className="pagination" style={{ margin: 0, float: "unset" }}>
+                <>
+                  <button onClick={() => onPageChange(pagination.page - 1)}>
+                    Previous
+                  </button>
+                  {Array.from({ length: pagination.pages }, (_, index) => (
+                    <button
+                      key={index}
+                      className={index + 1 === pagination.page ? "active" : ""}
+                      onClick={() => onPageChange(index + 1)}
+                    >
+                      {index + 1}
+                    </button>
+                  ))}
+                  <button onClick={() => onPageChange(pagination.page + 1)}>
+                    Next
+                  </button>
+                </>
+              </div>
             )}
           </div>
         )}
