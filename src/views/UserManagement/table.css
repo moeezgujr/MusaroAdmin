@@ -74,7 +74,20 @@
 .pagination button.active {
   background-color: #ddd;
 }
+.customer_metric_text{
+  width: auto;
+  padding-left: 10px;
+  
+  padding-top: 20px;
 
+    height: 20px;
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    color: #475467;
+}
 .pagination button:hover:not(.active) {
   background-color: #ddd;
   color: black;

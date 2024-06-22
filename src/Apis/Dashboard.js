@@ -13,14 +13,26 @@ export const totalCountApi = async () => {
     }
   }
 };
+export const subscriptionCustomerGraph = async (type, time, cityA, cityB) => {
+  try {
+    const response = await api.get(
+      `/admin/analytics/customer-subscription-graph?type=${type}&cityA=${cityA}&cityB=${cityB}&option=${time.toUpperCase()}`
+    );
+    return response.data;
+  } catch (error) {
+    // Check if the error has a response property
+    if (error.response) {
+      return error.response.data;
+    } else {
+      return { error: error.message };
+    }
+  }
+};
 
 export const signupAnalytics = async (time, city) => {
   try {
     const response = await api.get(
-      "/admin/analytics/new-signup-graph?option=" +
-        time +
-        "&city=" +
-        city
+      "/admin/analytics/new-signup-graph?option=" + time + "&city=" + city
     );
     return response.data;
   } catch (error) {
@@ -50,10 +62,7 @@ export const subscriptionAnalytics = async (time) => {
 export const trefficMetricAnalytics = async (time, city) => {
   try {
     const response = await api.get(
-      "/admin/analytics/traffic-metrics-graph?&startDate=2024-03-01T00%3A00%3A00.000Z&endDate=2024-03-01T00%3A00%3A00.000Z&option=" +
-        time +
-        "&city=" +
-        city
+      "/admin/analytics/traffic-metrics-graph?option=" + time + "&city=" + city
     );
     return response.data;
   } catch (error) {

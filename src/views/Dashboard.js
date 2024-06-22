@@ -20,6 +20,9 @@ import { ReactComponent as Usericon } from "../assets/img/3 User.svg";
 import { ReactComponent as Charticon } from "../assets/img/chart-line.svg";
 import { ReactComponent as Checkcricleicon } from "../assets/img/check-circle.svg";
 import { ReactComponent as Vectoricon } from "../assets/img/Vector.svg";
+import { ReactComponent as ColorIcon } from "../assets/img/Color.svg";
+import { ReactComponent as SecondColoricon } from "../assets/img/2nd-color.svg";
+
 import { totalCountApi } from "Apis/Dashboard";
 import { signupAnalytics } from "Apis/Dashboard";
 import { subscriptionAnalytics } from "Apis/Dashboard";
@@ -28,11 +31,12 @@ import { trefficMetricAnalytics } from "Apis/Dashboard";
 function Dashboard() {
   const [totalCount, setTotalCount] = useState({});
   const [selectedCity, setSelectedCity] = useState("");
-  const [selectedTime, setSelectedTime] = useState("");
+  const [selectedTime, setSelectedTime] = useState("Monthly");
   const [subscriptionTime, setSubscriptionTime] = useState("");
   const [newSubTime, setnewSubTime] = useState("");
   const [graphData, setGraphData] = useState("");
   const [subscriptiondata, setsubscriptiondata] = useState("");
+  const [metricdata, setmetricdata] = useState("");
 
   const [subCity, setsubCity] = useState("");
   useEffect(() => {
@@ -46,16 +50,20 @@ function Dashboard() {
     };
     fetchTotalCount();
     signupGraphData("MONTHLY", "");
+    metricGraphData("MONTHLY", "");
     subscriptionGraphData("MONTHLY");
   }, []);
   const signupGraphData = async (time, city) => {
     const data = await signupAnalytics(time, city);
     setGraphData(addAndAccumulateMonths(data.data));
-    console.log(addAndAccumulateMonths(data.data));
   };
   const subscriptionGraphData = async (time) => {
     const data = await subscriptionAnalytics(time);
     setsubscriptiondata(addMissingMonths(data.data));
+  };
+  const metricGraphData = async (time, city) => {
+    const data = await trefficMetricAnalytics(time, city);
+    setmetricdata(addAndAccumulateMonths(data.data));
   };
   const handleSelect = (eventKey) => {
     setSelectedCity(eventKey);
@@ -71,13 +79,17 @@ function Dashboard() {
   };
   const handleMetricsTime = (e) => {
     setnewSubTime(e);
-    trefficMetricAnalytics(e.toUpperCase(), subCity);
+    metricGraphData(e.toUpperCase(), subCity);
   };
   const handleMetricsCity = (e) => {
     setsubCity(e);
-    trefficMetricAnalytics(newSubTime.toUpperCase(), e);
+    metricGraphData(newSubTime.toUpperCase(), e);
   };
   function addAndAccumulateMonths(data) {
+    if (data?.length === 0 || !data) {
+      return [];
+    }
+
     // Create a map to accumulate totals for each month
     const monthMap = new Map();
 
@@ -86,6 +98,9 @@ function Dashboard() {
         // If the month exists, accumulate totals
         const existing = monthMap.get(item.month);
         existing.total += item.total;
+        existing.providers += item.providers;
+        existing.customers += item.customers;
+
         existing.users += item.users;
         if (item.week !== undefined) {
           existing.week = item.week; // Assume the latest week value should be kept
@@ -98,6 +113,8 @@ function Dashboard() {
           total: item.total,
           users: item.users,
           week: item.week,
+          providers: item.providers,
+          customers: item.customers,
         });
       }
     });
@@ -120,6 +137,8 @@ function Dashboard() {
           month: month,
           total: 0,
           users: 0,
+          providers: 0,
+          customers: 0,
         });
       }
     }
@@ -144,6 +163,8 @@ function Dashboard() {
           month: month,
           total: 0,
           users: 0,
+          customers: 0,
+          providers: 0,
         });
       }
     });
@@ -273,7 +294,8 @@ function Dashboard() {
                       </Dropdown.Toggle>
 
                       <Dropdown.Menu>
-                        <Dropdown.Item eventKey="Riyadh">Riyadh</Dropdown.Item>
+                      <Dropdown.Item eventKey="">Reset</Dropdown.Item>
+                      <Dropdown.Item eventKey="Riyadh">Riyadh</Dropdown.Item>
                         <Dropdown.Item eventKey="Jeddah">Jeddah</Dropdown.Item>
                         <Dropdown.Item eventKey="ABC">ABC</Dropdown.Item>
                       </Dropdown.Menu>
@@ -493,12 +515,21 @@ function Dashboard() {
                       </Dropdown.Toggle>
 
                       <Dropdown.Menu>
+                        <Dropdown.Item eventKey="">Reset</Dropdown.Item>
                         <Dropdown.Item eventKey="Riyadh">Riyadh</Dropdown.Item>
                         <Dropdown.Item eventKey="Jeddah">Jeddah</Dropdown.Item>
                         <Dropdown.Item eventKey="ABC">ABC</Dropdown.Item>
                       </Dropdown.Menu>
                     </Dropdown>
                   </div>
+                </div>
+                <div className="d-flex col justify-content-end">
+                  <p className="customer_metric_text">
+                    <ColorIcon /> Customer Registered{" "}
+                  </p>
+                  <p className="customer_metric_text">
+                    <SecondColoricon /> Service Provider Registered{" "}
+                  </p>
                 </div>
               </Card.Header>
               <Card.Body>
@@ -510,7 +541,7 @@ function Dashboard() {
                         "Feb",
                         "Mar",
                         "Apr",
-                        "Mai",
+                        "May",
                         "Jun",
                         "Jul",
                         "Aug",
@@ -520,15 +551,19 @@ function Dashboard() {
                         "Dec",
                       ],
                       series: [
-                        [287, 385, 490, 492, 554, 586, 698, 695],
-                        [67, 152, 143, 240, 287, 335, 435, 437],
+                        metricdata?.length > 0
+                          ? metricdata.map((item) => item.customers)
+                          : [287, 385, 490, 492, 554, 586, 698, 695],
+                        metricdata?.length > 0
+                          ? metricdata.map((item) => item.providers)
+                          : [67, 152, 143, 240, 287, 335, 435, 437],
                       ],
                     }}
                     type="Line"
                     options={{
                       low: 0,
                       high: 100,
-                      showArea: false,
+                      showArea: true,
                       height: "245px",
                       axisX: {
                         showGrid: false,
@@ -536,7 +571,7 @@ function Dashboard() {
                       axisY: {
                         labelInterpolationFnc: function (value, index) {
                           return index % 2 === 0 ? value : null;
-                        }
+                        },
                       },
                       lineSmooth: true,
                       showLine: true,

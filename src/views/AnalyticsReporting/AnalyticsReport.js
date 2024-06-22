@@ -18,14 +18,23 @@ import {
 } from "react-bootstrap";
 import { ReactComponent as Usericon } from "../../assets/img/3 User.svg";
 import { ReactComponent as Charticon } from "../../assets/img/chart-line.svg";
+import { ReactComponent as ColorIcon } from "../../assets/img/Color.svg";
+import { ReactComponent as SecondColoricon } from "../../assets/img/2nd-color.svg";
 import { ReactComponent as Checkcricleicon } from "../../assets/img/check-circle.svg";
 import { ReactComponent as Vectoricon } from "../../assets/img/Vector.svg";
 import { totalCountApi } from "Apis/Dashboard";
+import "./AnalyticsReport.css";
+import { subscriptionCustomerGraph } from "Apis/Dashboard";
 // import Header from "views/UserManagement/TableHeader";
 // import TicketTable from "./RevenueTable";
 
 function AnalyticsReport() {
   const [totalCount, setTotalCount] = useState({});
+  const [cityA, setSelectedACity] = useState("");
+  const [cityB, setSelectedBCity] = useState("");
+  const [time, setTime] = useState("");
+  const [graphtype, setGraphType] = useState("");
+  const [graph1Data, setGraph1Data] = useState("");
 
   useEffect(() => {
     const fetchTotalCount = async () => {
@@ -39,185 +48,31 @@ function AnalyticsReport() {
 
     fetchTotalCount();
   }, []);
+  const handleSelect = (e, type) => {
+    if (type === "cityb") {
+      setSelectedBCity(e);
+      customerGraph(graphtype, time, cityA, e);
+    } else {
+      setSelectedACity(e);
+      customerGraph(graphtype, time, e, cityB);
+    }
+  };
+  const customerGraph = async (graphtype, time, cityA, cityB) => {
+    const data = await subscriptionCustomerGraph(graphtype, time, cityA, cityB);
+    setGraph1Data(data.data);
+  };
+  const handleType = (type) => {
+    setGraphType(type);
+    customerGraph(type, time, cityA, cityB);
+  };
+  const handleTime = (e) => {
+    customerGraph(graphtype, e, cityA, cityB);
+  };
   return (
     <>
       <Container fluid>
         <p className="dashboard-title">Analytics & Reporting</p>
-        {/* <Row>
-          <Col lg="4" sm="6">
-            <Card className="card-stats" style={{ height: "80%" }}>
-              <Card.Body>
-                <Row>
-                  <Col xs="12">
-                    <div className="d-flex card-content-dashboard">
-                      <div className="usericoncontainer mt-1">
-                        <Usericon />
-                      </div>
-                      <div className="ml-2">
-                        <Card.Title as="h4">02</Card.Title>
-
-                        <p className="card-category">Overall costumers</p>
-                      </div>
-                    </div>
-                  </Col>
-                </Row>
-              </Card.Body>
-            </Card>
-          </Col>
-          <Col lg="4" sm="6">
-            <Card className="card-stats h-1/2" style={{ height: "80%" }}>
-              <Card.Body>
-                <Row>
-                  <Col xs="12">
-                    <div className="d-flex card-content-dashboard">
-                      <div
-                        className="usericoncontainer mt-1"
-                        style={{ background: "#FFFBEB" }}
-                      >
-                        <Checkcricleicon />
-                      </div>
-                      <div className="ml-2">
-                        <Card.Title as="h4">02</Card.Title>
-
-                        <p className="card-category">Overall Subscriptions</p>
-                      </div>
-                    </div>
-                  </Col>
-                </Row>
-              </Card.Body>
-            </Card>
-          </Col>
-          <Col lg="4" sm="6">
-            <Card className="card-stats h-1/2" style={{ height: "80%" }}>
-              <Card.Body>
-                <Row>
-                  <Col xs="12">
-                    <div className="d-flex card-content-dashboard">
-                      <div
-                        className="usericoncontainer mt-1"
-                        style={{ background: "#FEF1F1" }}
-                      >
-                        <Vectoricon />
-                      </div>
-                      <div className="ml-2">
-                        <Card.Title as="h4">02</Card.Title>
-
-                        <p className="card-category">Cancelled Subscriptions</p>
-                      </div>
-                    </div>
-                  </Col>
-                </Row>
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row> */}
-        {/* <Row>
-          <div className="container mb-3">
-            <div className="buttons-container">
-              <button className="revenue-button">All Subscriptions</button>
-              <button className="revenue-button">Canceled Subscriptions</button>
-              <button className="revenue-button">Active Subscriptions</button>
-            </div>
-            <div className="filter-container">
-              <Dropdown >
-                <Dropdown.Toggle id="dropdown-basic">Date</Dropdown.Toggle>
-                <Dropdown.Menu>
-                  <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                  <Dropdown.Item href="#/action-2">
-                    Another action
-                  </Dropdown.Item>
-                  <Dropdown.Item href="#/action-3">
-                    Something else
-                  </Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
-            </div>
-          </div>
-        </Row> */}
-        {/* <Row className="mb-5">
-          <p className="cancel-subscription-text">Cancel Subscription</p>
-          <TicketTable />
-        </Row> */}
-        {/* <Header Title/> */}
         <Row>
-          {/* <Col md="6">
-            <Card>
-              <Card.Header>
-                <div className="d-flex row justify-content-between">
-                  <Card.Title as="h4" className="ml-3">
-                  Subscription Revenue
-                  </Card.Title>
-                  <div className="d-flex row mr-3">
-                    <Dropdown style={{ marginRight: "10px" }}>
-                      <Dropdown.Toggle id="dropdown-basic">
-                        Weekly
-                      </Dropdown.Toggle>
-
-                      <Dropdown.Menu>
-                        <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                        <Dropdown.Item href="#/action-2">
-                          Another action
-                        </Dropdown.Item>
-                        <Dropdown.Item href="#/action-3">
-                          Something else
-                        </Dropdown.Item>
-                      </Dropdown.Menu>
-                    </Dropdown>
-                  </div>
-                </div>
-              </Card.Header>
-              <Card.Body>
-                <div className="ct-chart" id="chartActivity">
-                  <ChartistGraph
-                    data={{
-                      labels: [
-                        "Jan",
-                        "Feb",
-                        "Mar",
-                        "Apr",
-                        "Mai",
-                        "Jun",
-                        "Jul",
-                        "Aug",
-                        "Sep",
-                        "Oct",
-                        "Nov",
-                        "Dec",
-                      ],
-                      series: [
-                        [
-                          542, 443, 320, 780, 553, 453, 326, 434, 568, 610, 756,
-                          895,
-                        ],
-                      ],
-                    }}
-                    type="Bar"
-                    options={{
-                      seriesBarDistance: 10,
-                      axisX: {
-                        showGrid: false,
-                      },
-                      height: "245px",
-                    }}
-                    responsiveOptions={[
-                      [
-                        "screen and (max-width: 640px)",
-                        {
-                          seriesBarDistance: 5,
-                          axisX: {
-                            labelInterpolationFnc: function (value) {
-                              return value[0];
-                            },
-                          },
-                        },
-                      ],
-                    ]}
-                  />
-                </div>
-              </Card.Body>
-            </Card>
-          </Col> */}
-
           <Col md="4">
             <Row>
               <Card
@@ -228,7 +83,6 @@ function AnalyticsReport() {
                   marginRight: "10px",
                   marginBottom: "12px",
                   marginLeft: "15px",
-
                 }}
               >
                 {" "}
@@ -259,12 +113,11 @@ function AnalyticsReport() {
               <Card
                 className="card-stats h-1/2"
                 style={{
-
                   width: "100%",
                   height: "120px",
                   marginRight: "10px",
-                  marginBottom: "12px",                  marginLeft: "15px",
-
+                  marginBottom: "12px",
+                  marginLeft: "15px",
                 }}
               >
                 {" "}
@@ -442,57 +295,104 @@ function AnalyticsReport() {
               <Card.Header>
                 <div className="d-flex row justify-content-between">
                   <Card.Title as="h4" className="ml-3">
-                    New Subscriptions
+                    <Button
+                      className="anayltics_action_btn"
+                      onClick={() => handleType("SUBSCRIPTION")}
+                    >
+                      Subscriptions
+                    </Button>
+                    <Button
+                      className="anayltics_action_btn"
+                      onClick={() => handleType("CUSTOMER")}
+                    >
+                      Customers
+                    </Button>
                   </Card.Title>
                   <div className="d-flex row mr-3">
-                    <Dropdown style={{ marginRight: "10px" }}>
+                    <Dropdown
+                      onSelect={handleTime}
+                      style={{ marginRight: "10px" }}
+                    >
                       <Dropdown.Toggle id="dropdown-basic">
-                        Weekly
+                        {time || "Monthly"}
                       </Dropdown.Toggle>
 
                       <Dropdown.Menu>
-                        <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                        <Dropdown.Item href="#/action-2">
-                          Another action
+                        <Dropdown.Item eventKey="">Reset</Dropdown.Item>
+
+                        <Dropdown.Item eventKey="Daily">Daily</Dropdown.Item>
+                        <Dropdown.Item eventKey="Weekly">Weekly</Dropdown.Item>
+                        <Dropdown.Item eventKey="Monthly">
+                          Monthly
                         </Dropdown.Item>
-                        <Dropdown.Item href="#/action-3">
-                          Something else
-                        </Dropdown.Item>
+                        <Dropdown.Item eventKey="Yearly">Yearly</Dropdown.Item>
+                      </Dropdown.Menu>
+                    </Dropdown>
+                    <Dropdown
+                      style={{ marginRight: "10px" }}
+                      onSelect={(e) => handleSelect(e, "citya")}
+                    >
+                      <Dropdown.Toggle id="dropdown-basic">
+                        {cityA || "City"}
+                      </Dropdown.Toggle>
+
+                      <Dropdown.Menu>
+                        <Dropdown.Item eventKey="">Reset</Dropdown.Item>
+                        <Dropdown.Item eventKey="Riyadh">Riyadh</Dropdown.Item>
+                        <Dropdown.Item eventKey="Jeddah">Jeddah</Dropdown.Item>
+                        <Dropdown.Item eventKey="Madina">Madina</Dropdown.Item>
+                        <Dropdown.Item eventKey="Makka">Makka</Dropdown.Item>
+                      </Dropdown.Menu>
+                    </Dropdown>
+                    <Dropdown
+                      style={{ marginRight: "10px" }}
+                      onSelect={(e) => handleSelect(e, "cityb")}
+                    >
+                      <Dropdown.Toggle id="dropdown-basic">
+                        {cityB || "To City"}
+                      </Dropdown.Toggle>
+                      <Dropdown.Menu>
+                        <Dropdown.Item eventKey="">Reset</Dropdown.Item>
+                        <Dropdown.Item eventKey="Riyadh">Riyadh</Dropdown.Item>
+                        <Dropdown.Item eventKey="Jeddah">Jeddah</Dropdown.Item>
+                        <Dropdown.Item eventKey="Madina">Madina</Dropdown.Item>
+                        <Dropdown.Item eventKey="Makka">Makka</Dropdown.Item>
                       </Dropdown.Menu>
                     </Dropdown>
                   </div>
+                </div>
+                <div className="d-flex col justify-content-end">
+                  <p className="customer_metric_text">
+                    <SecondColoricon /> Total
+                  </p>
+                  <p className="customer_metric_text">
+                    <ColorIcon /> City
+                  </p>
                 </div>
               </Card.Header>
               <Card.Body>
                 <div className="ct-chart" id="chartActivity">
                   <ChartistGraph
                     data={{
-                      labels: [
-                        "Jan",
-                        "Feb",
-                        "Mar",
-                        "Apr",
-                        "Mai",
-                        "Jun",
-                        "Jul",
-                        "Aug",
-                        "Sep",
-                        "Oct",
-                        "Nov",
-                        "Dec",
-                      ],
+                      labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
                       series: [
-                        [
-                          542, 443, 320, 780, 553, 453, 326, 434, 568, 610, 756,
-                          895,
-                        ],
+                        [78, 56, 24, 65, 47, 21],
+                        [78, 56, 24, 65, 47, 21],
                       ],
                     }}
                     type="Bar"
                     options={{
-                      seriesBarDistance: 10,
+                      high: 100,
+                      low: 0,
+                      seriesBarDistance: 30,
                       axisX: {
                         showGrid: false,
+                      },
+                      axisY: {
+                        showGrid: true,
+                        labelInterpolationFnc: function (value, index) {
+                          return index % 2 === 0 ? value : null;
+                        },
                       },
                       height: "245px",
                     }}
@@ -500,10 +400,10 @@ function AnalyticsReport() {
                       [
                         "screen and (max-width: 640px)",
                         {
-                          seriesBarDistance: 5,
+                          seriesBarDistance: 20,
                           axisX: {
                             labelInterpolationFnc: function (value) {
-                              return value[0];
+                              return index % 2 === 0 ? value : null;
                             },
                           },
                         },
@@ -521,40 +421,79 @@ function AnalyticsReport() {
               <Card.Header>
                 <div className="d-flex row justify-content-between">
                   <Card.Title as="h4" className="ml-3">
-                    New Subscriptions
+                  <Button
+                      className="anayltics_action_btn"
+                      onClick={() => handleType("SUBSCRIPTION")}
+                    >
+                      Ads Revenue
+                    </Button>
+                    <Button
+                      className="anayltics_action_btn"
+                      onClick={() => handleType("CUSTOMER")}
+                    >
+                      RFQs
+                    </Button>
                   </Card.Title>
-                  <div className="d-flex row mr-4">
-                    <Dropdown style={{ marginRight: "10px" }}>
+                  <div className="d-flex row mr-3">
+                    <Dropdown
+                      onSelect={handleTime}
+                      style={{ marginRight: "10px" }}
+                    >
                       <Dropdown.Toggle id="dropdown-basic">
-                        Monthly
+                        {time || "Monthly"}
                       </Dropdown.Toggle>
 
                       <Dropdown.Menu>
-                        <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                        <Dropdown.Item href="#/action-2">
-                          Another action
+                        <Dropdown.Item eventKey="">Reset</Dropdown.Item>
+
+                        <Dropdown.Item eventKey="Daily">Daily</Dropdown.Item>
+                        <Dropdown.Item eventKey="Weekly">Weekly</Dropdown.Item>
+                        <Dropdown.Item eventKey="Monthly">
+                          Monthly
                         </Dropdown.Item>
-                        <Dropdown.Item href="#/action-3">
-                          Something else
-                        </Dropdown.Item>
+                        <Dropdown.Item eventKey="Yearly">Yearly</Dropdown.Item>
                       </Dropdown.Menu>
                     </Dropdown>
-                    <Dropdown>
+                    <Dropdown
+                      style={{ marginRight: "10px" }}
+                      onSelect={(e) => handleSelect(e, "citya")}
+                    >
                       <Dropdown.Toggle id="dropdown-basic">
-                        By City
+                        {cityA || "City"}
                       </Dropdown.Toggle>
 
                       <Dropdown.Menu>
-                        <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                        <Dropdown.Item href="#/action-2">
-                          Another action
-                        </Dropdown.Item>
-                        <Dropdown.Item href="#/action-3">
-                          Something else
-                        </Dropdown.Item>
+                        <Dropdown.Item eventKey="">Reset</Dropdown.Item>
+                        <Dropdown.Item eventKey="Riyadh">Riyadh</Dropdown.Item>
+                        <Dropdown.Item eventKey="Jeddah">Jeddah</Dropdown.Item>
+                        <Dropdown.Item eventKey="Madina">Madina</Dropdown.Item>
+                        <Dropdown.Item eventKey="Makka">Makka</Dropdown.Item>
+                      </Dropdown.Menu>
+                    </Dropdown>
+                    <Dropdown
+                      style={{ marginRight: "10px" }}
+                      onSelect={(e) => handleSelect(e, "cityb")}
+                    >
+                      <Dropdown.Toggle id="dropdown-basic">
+                        {cityB || "To City"}
+                      </Dropdown.Toggle>
+                      <Dropdown.Menu>
+                        <Dropdown.Item eventKey="">Reset</Dropdown.Item>
+                        <Dropdown.Item eventKey="Riyadh">Riyadh</Dropdown.Item>
+                        <Dropdown.Item eventKey="Jeddah">Jeddah</Dropdown.Item>
+                        <Dropdown.Item eventKey="Madina">Madina</Dropdown.Item>
+                        <Dropdown.Item eventKey="Makka">Makka</Dropdown.Item>
                       </Dropdown.Menu>
                     </Dropdown>
                   </div>
+                </div>
+                <div className="d-flex col justify-content-end">
+                  <p className="customer_metric_text">
+                    <SecondColoricon /> Trends  revenue
+                  </p>
+                  <p className="customer_metric_text">
+                    <ColorIcon /> Workshops  revenue
+                  </p>
                 </div>
               </Card.Header>
               <Card.Body>
@@ -574,7 +513,6 @@ function AnalyticsReport() {
                       series: [
                         [287, 385, 490, 492, 554, 586, 698, 695],
                         [67, 152, 143, 240, 287, 335, 435, 437],
-                        [23, 113, 67, 108, 190, 239, 307, 308],
                       ],
                     }}
                     type="Line"
@@ -582,6 +520,12 @@ function AnalyticsReport() {
                       low: 0,
                       high: 800,
                       showArea: false,
+                      axisY: {
+                        showGrid: true,
+                        labelInterpolationFnc: function (value, index) {
+                          return index % 2 === 0 ? value + "$" : null;
+                        },
+                      },
                       height: "245px",
                       axisX: {
                         showGrid: false,
