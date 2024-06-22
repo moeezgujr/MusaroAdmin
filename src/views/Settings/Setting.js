@@ -88,10 +88,13 @@ const Setting = ({ goBack }) => {
     <>
       <Header
         btntext={"Save Changes"}
-        secondarybtn={"Cancel"}
+        // secondarybtn={"Cancel"}
         isSearchHide
         title={"Settings & Integration"}
         onAddAccount={(e) => handleSubmit(e)}
+        onSecondarybtnCallback={(e) => {
+          handleCancel();
+        }}
       />
       <p className="ml-3 mt-2">Personal Info</p>
       <Row className="mt-1 ml-1">

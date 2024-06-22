@@ -106,7 +106,18 @@
   }
 
   .#{$ct-class-slice-pie}, .#{$ct-class-area} {
-    fill: $color;
+    fill: #CBA640;
+    /* Fill */
+
+position: absolute;
+left: 0px;
+right: 0.27px;
+top: 8.24%;
+bottom: 0.24%;
+
+background: linear-gradient(180deg, #CBA640 0%, #FCFBF5 100%);
+opacity: 0.1;
+
   }
 }
 

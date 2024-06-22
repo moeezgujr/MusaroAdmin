@@ -31,6 +31,9 @@ function Dashboard() {
   const [selectedTime, setSelectedTime] = useState("");
   const [subscriptionTime, setSubscriptionTime] = useState("");
   const [newSubTime, setnewSubTime] = useState("");
+  const [graphData, setGraphData] = useState("");
+  const [subscriptiondata, setsubscriptiondata] = useState("");
+
   const [subCity, setsubCity] = useState("");
   useEffect(() => {
     const fetchTotalCount = async () => {
@@ -41,20 +44,30 @@ function Dashboard() {
       } finally {
       }
     };
-
     fetchTotalCount();
+    signupGraphData("MONTHLY", "");
+    subscriptionGraphData("MONTHLY");
   }, []);
+  const signupGraphData = async (time, city) => {
+    const data = await signupAnalytics(time, city);
+    setGraphData(addAndAccumulateMonths(data.data));
+    console.log(addAndAccumulateMonths(data.data));
+  };
+  const subscriptionGraphData = async (time) => {
+    const data = await subscriptionAnalytics(time);
+    setsubscriptiondata(addMissingMonths(data.data));
+  };
   const handleSelect = (eventKey) => {
     setSelectedCity(eventKey);
-    signupAnalytics(selectedTime.toUpperCase(), eventKey);
+    signupGraphData(selectedTime.toUpperCase(), eventKey);
   };
   const handleTime = (ev) => {
     setSelectedTime(ev);
-    signupAnalytics(ev.toUpperCase(), selectedCity);
+    signupGraphData(ev.toUpperCase(), selectedCity);
   };
   const handleTimeSubscription = (e) => {
     setSubscriptionTime(e);
-    subscriptionAnalytics(e.toUpperCase());
+    subscriptionGraphData(e.toUpperCase());
   };
   const handleMetricsTime = (e) => {
     setnewSubTime(e);
@@ -64,6 +77,80 @@ function Dashboard() {
     setsubCity(e);
     trefficMetricAnalytics(newSubTime.toUpperCase(), e);
   };
+  function addAndAccumulateMonths(data) {
+    // Create a map to accumulate totals for each month
+    const monthMap = new Map();
+
+    data.forEach((item) => {
+      if (monthMap.has(item.month)) {
+        // If the month exists, accumulate totals
+        const existing = monthMap.get(item.month);
+        existing.total += item.total;
+        existing.users += item.users;
+        if (item.week !== undefined) {
+          existing.week = item.week; // Assume the latest week value should be kept
+        }
+      } else {
+        // If the month does not exist, add a new entry
+        monthMap.set(item.month, {
+          year: item.year,
+          month: item.month,
+          total: item.total,
+          users: item.users,
+          week: item.week,
+        });
+      }
+    });
+
+    // Find the largest month value in the data
+    const maxMonth = Math.max(...data.map((item) => item.month));
+
+    // Initialize the result array
+    const result = [];
+
+    // Loop through all months from 1 to maxMonth
+    for (let month = 1; month <= maxMonth; month++) {
+      if (monthMap.has(month)) {
+        // If the month exists, add the accumulated entry
+        result.push(monthMap.get(month));
+      } else {
+        // If the month does not exist, add a new entry with total 0 and users 0
+        result.push({
+          year: 2024,
+          month: month,
+          total: 0,
+          users: 0,
+        });
+      }
+    }
+
+    return result;
+  }
+  function addMissingMonths(data) {
+    const months = Array.from({ length: 12 }, (_, i) => i + 1);
+    const result = [];
+
+    // Create a set of existing months for quick lookup
+    const existingMonths = new Set(data.map((item) => item.month));
+
+    months.forEach((month) => {
+      if (existingMonths.has(month)) {
+        // If the month exists, add the existing entry
+        result.push(...data.filter((item) => item.month === month));
+      } else {
+        // If the month does not exist, add a new entry with total 0 and users 0
+        result.push({
+          year: 2024,
+          month: month,
+          total: 0,
+          users: 0,
+        });
+      }
+    });
+
+    return result;
+  }
+
   return (
     <>
       <Container fluid>
@@ -226,16 +313,26 @@ function Dashboard() {
                         "Nov",
                         "Dec",
                       ],
-                      series: [[23, 113, 67, 108, 190, 239, 307, 308]],
+                      series:
+                        graphData?.length > 0
+                          ? [graphData?.map((Item) => Item.total)]
+                          : [[23, 113, 67, 108, 190, 239, 307, 308]],
                     }}
                     type="Line"
                     options={{
                       low: 0,
                       high: 400,
-                      showArea: false,
+                      showArea: true,
+
                       height: "245px",
                       axisX: {
                         showGrid: false,
+                      },
+                      axisY: {
+                        showGrid: true,
+                        labelInterpolationFnc: function (value, index) {
+                          return index % 2 === 0 ? value : null;
+                        },
                       },
                       lineSmooth: true,
                       showLine: true,
@@ -318,18 +415,30 @@ function Dashboard() {
                         "Nov",
                         "Dec",
                       ],
-                      series: [
-                        [
-                          542, 443, 320, 780, 553, 453, 326, 434, 568, 610, 756,
-                          895,
-                        ],
-                      ],
+                      series:
+                        subscriptiondata?.length > 0
+                          ? [subscriptiondata.map((item) => item.total)]
+                          : [
+                              [
+                                542, 443, 320, 780, 553, 453, 326, 434, 568,
+                                610, 756, 895,
+                              ],
+                            ],
                     }}
                     type="Bar"
                     options={{
-                      seriesBarDistance: 10,
+                      seriesBarDistance: 5,
+                      low: 0,
+                      high: 100,
                       axisX: {
                         showGrid: false,
+                      },
+                      axisY: {
+                        showGrid: true,
+
+                        labelInterpolationFnc: function (value, index) {
+                          return index % 2 === 0 ? value : null;
+                        },
                       },
                       height: "245px",
                     }}
@@ -397,29 +506,37 @@ function Dashboard() {
                   <ChartistGraph
                     data={{
                       labels: [
-                        "9:00AM",
-                        "12:00AM",
-                        "3:00PM",
-                        "6:00PM",
-                        "9:00PM",
-                        "12:00PM",
-                        "3:00AM",
-                        "6:00AM",
+                        "Jan",
+                        "Feb",
+                        "Mar",
+                        "Apr",
+                        "Mai",
+                        "Jun",
+                        "Jul",
+                        "Aug",
+                        "Sep",
+                        "Oct",
+                        "Nov",
+                        "Dec",
                       ],
                       series: [
                         [287, 385, 490, 492, 554, 586, 698, 695],
                         [67, 152, 143, 240, 287, 335, 435, 437],
-                        [23, 113, 67, 108, 190, 239, 307, 308],
                       ],
                     }}
                     type="Line"
                     options={{
                       low: 0,
-                      high: 800,
+                      high: 100,
                       showArea: false,
                       height: "245px",
                       axisX: {
                         showGrid: false,
+                      },
+                      axisY: {
+                        labelInterpolationFnc: function (value, index) {
+                          return index % 2 === 0 ? value : null;
+                        }
                       },
                       lineSmooth: true,
                       showLine: true,

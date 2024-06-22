@@ -17,7 +17,7 @@ export const totalCountApi = async () => {
 export const signupAnalytics = async (time, city) => {
   try {
     const response = await api.get(
-      "/admin/analytics/new-signup-graph?&startDate=2024-03-01T00%3A00%3A00.000Z&endDate=2024-03-01T00%3A00%3A00.000Z&option=" +
+      "/admin/analytics/new-signup-graph?option=" +
         time +
         "&city=" +
         city
@@ -35,7 +35,7 @@ export const signupAnalytics = async (time, city) => {
 export const subscriptionAnalytics = async (time) => {
   try {
     const response = await api.get(
-      `/admin/analytics/new-subscription-graph?option=${time}&startDate=2024-03-01T00%3A00%3A00.000Z&endDate=2024-03-01T00%3A00%3A00.000Z`
+      `/admin/analytics/new-subscription-graph?option=${time}`
     );
     return response.data;
   } catch (error) {

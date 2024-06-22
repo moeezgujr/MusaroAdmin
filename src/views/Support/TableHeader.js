@@ -10,6 +10,7 @@ const Header = ({
   secondarybtn,
   isSearchHide,
   filter,
+  onSecondarybtnCallback
 }) => {
   return (
     <div style={styles.container}>
@@ -28,7 +29,7 @@ const Header = ({
         )}
         {secondarybtn && (
           <div style={styles.addButton}>
-            <button className="rejectbtn mr-1" onClick={onAddAccount}>
+            <button className="rejectbtn mr-1" onClick={onSecondarybtnCallback}>
               {secondarybtn}
             </button>
           </div>
