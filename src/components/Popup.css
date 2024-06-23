@@ -1,0 +1,74 @@
+/* Popup container */
+.popup {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Black background with opacity */
+}
+
+/* Popup content */
+.popup-content {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0px;
+  gap: 24px;
+  width: 640px;
+  height: 380px;
+  background: #ffffff;
+  border-left: 1px solid #f1f5f9;
+  box-shadow: 0px 20px 24px -4px rgba(16, 24, 40, 0.08),
+    0px 8px 8px -4px rgba(16, 24, 40, 0.03);
+  border-radius: 8px;
+  flex: none;
+  order: 0;
+  flex-grow: 0;
+}
+
+/* Close button */
+.close {
+  /* position: absolute;
+    top: 10px;
+    right: 10px; */
+  color: #aaa;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  width: 100%;
+  /* float: right; */
+  justify-content: end;
+  padding-right: 10px;
+}
+.reject_text_2 {
+  font-family: "Chesna Grotesk";
+  font-style: normal;
+  font-weight: 450;
+  font-size: 16px;
+  line-height: 22px;
+  color: #525252;
+}
+.reject_text {
+  /* width: 735px; */
+  /* height: 28px; */
+  /* font-family: 'Chesna Grotesk'; */
+  font-style: normal;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 28px;
+  color: #262626;
+  /* flex: none; */
+  /* order: 0; */
+  /* align-self: stretch; */
+  flex-grow: 0;
+}
+.close:hover {
+  color: black;
+}

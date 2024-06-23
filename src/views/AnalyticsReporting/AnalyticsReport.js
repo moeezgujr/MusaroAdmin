@@ -37,6 +37,7 @@ function AnalyticsReport() {
   const [graphtype, setGraphType] = useState("SUBSCRIPTION");
   const [graph1Data, setGraph1Data] = useState("");
   const [loading, setLoading] = useState(true);
+  const [totalCountLoading, setTotalCountLoading] = useState(true);
 
   useEffect(() => {
     const fetchTotalCount = async () => {
@@ -45,11 +46,12 @@ function AnalyticsReport() {
         setTotalCount(data.data);
       } catch (err) {
       } finally {
+        setTotalCountLoading(false);
       }
     };
 
     fetchTotalCount();
-    customerGraph(graphtype,time,cityA,cityB)
+    customerGraph(graphtype, time, cityA, cityB);
   }, []);
   const handleSelect = (e, type) => {
     if (type === "cityb") {
@@ -134,7 +136,11 @@ function AnalyticsReport() {
                         </div>
                         <div className="ml-2">
                           <Card.Title as="h4">
-                            {totalCount.overallCustomerCount}
+                            {totalCountLoading ? (
+                              <Skeleton width={100} height={20} />
+                            ) : (
+                              totalCount.overallCustomerCount
+                            )}
                           </Card.Title>
 
                           <p className="card-category">Overall Subscriptions</p>
@@ -169,7 +175,11 @@ function AnalyticsReport() {
                         </div>
                         <div className="ml-2">
                           <Card.Title as="h4">
-                            {totalCount.overallSubscriptionCount}
+                            {totalCountLoading ? (
+                              <Skeleton width={100} height={20} />
+                            ) : (
+                              totalCount.overallSubscriptionCount
+                            )}
                           </Card.Title>
 
                           <p className="card-category">Overall Subscriptions</p>
@@ -204,7 +214,11 @@ function AnalyticsReport() {
                         </div>
                         <div className="ml-2">
                           <Card.Title as="h4">
-                            {totalCount.customerAquisitionCount}
+                            {totalCountLoading ? (
+                              <Skeleton width={100} height={20} />
+                            ) : (
+                              totalCount.customerAquisitionCount
+                            )}
                           </Card.Title>
 
                           <p className="card-category">
@@ -240,7 +254,11 @@ function AnalyticsReport() {
                         </div>
                         <div className="ml-2">
                           <Card.Title as="h4">
-                            {totalCount.avgTimeSpendCount || 0}
+                            {totalCountLoading ? (
+                              <Skeleton width={100} height={20} />
+                            ) : (
+                              totalCount.avgTimeSpendCount || 0
+                            )}
                           </Card.Title>
 
                           <p className="card-category">Avg. Time spent </p>
@@ -276,7 +294,11 @@ function AnalyticsReport() {
                         </div>
                         <div className="ml-2">
                           <Card.Title as="h4">
-                            {totalCount.activeCustomerCount || 0}
+                            {totalCountLoading ? (
+                              <Skeleton width={100} height={20} />
+                            ) : (
+                              totalCount.activeCustomerCount || 0
+                            )}
                           </Card.Title>
 
                           <p className="card-category">Active customers</p>
@@ -310,7 +332,10 @@ function AnalyticsReport() {
                         </div>
                         <div className="ml-2">
                           <Card.Title as="h4">
-                            {totalCount.cancelSubscriptionCount || 0}
+                          {totalCountLoading ? (
+                              <Skeleton width={100} height={20} />
+                            ) : (
+                            totalCount.cancelSubscriptionCount || 0)}
                           </Card.Title>
 
                           <p className="card-category">
@@ -414,65 +439,65 @@ function AnalyticsReport() {
               </Card.Header>
               <Card.Body>
                 <div className="ct-chart" id="chartActivity">
-                {loading ? (
-                  <Skeleton height={50} count={4} />
-                ) : (
-                  <ChartistGraph
-                    data={{
-                      labels: [
-                        "Jan",
-                        "Feb",
-                        "Mar",
-                        "Apr",
-                        "May",
-                        "Jun",
-                        "Jul",
-                        "Aug",
-                        "Sep",
-                        "Oct",
-                        "Nov",
-                        "Dec",
-                      ],
-                      series: [
-                        graph1Data?.length > 0
-                          ? graph1Data.map((item) => item.cityA)
-                          : [],
-                        graph1Data?.length > 0
-                          ? graph1Data.map((item) => item.cityB)
-                          : [],
-                      ],
-                    }}
-                    type="Bar"
-                    options={{
-                      high: 100,
-                      low: 0,
-                      seriesBarDistance: 30,
-                      axisX: {
-                        showGrid: false,
-                      },
-                      axisY: {
-                        showGrid: true,
-                        labelInterpolationFnc: function (value, index) {
-                          return index % 2 === 0 ? value : null;
+                  {loading ? (
+                    <Skeleton height={50} count={4} />
+                  ) : (
+                    <ChartistGraph
+                      data={{
+                        labels: [
+                          "Jan",
+                          "Feb",
+                          "Mar",
+                          "Apr",
+                          "May",
+                          "Jun",
+                          "Jul",
+                          "Aug",
+                          "Sep",
+                          "Oct",
+                          "Nov",
+                          "Dec",
+                        ],
+                        series: [
+                          graph1Data?.length > 0
+                            ? graph1Data.map((item) => item.cityA)
+                            : [],
+                          graph1Data?.length > 0
+                            ? graph1Data.map((item) => item.cityB)
+                            : [],
+                        ],
+                      }}
+                      type="Bar"
+                      options={{
+                        high: 100,
+                        low: 0,
+                        seriesBarDistance: 30,
+                        axisX: {
+                          showGrid: false,
                         },
-                      },
-                      height: "245px",
-                    }}
-                    responsiveOptions={[
-                      [
-                        "screen and (max-width: 640px)",
-                        {
-                          seriesBarDistance: 20,
-                          axisX: {
-                            labelInterpolationFnc: function (value) {
-                              return index % 2 === 0 ? value : null;
-                            },
+                        axisY: {
+                          showGrid: true,
+                          labelInterpolationFnc: function (value, index) {
+                            return index % 2 === 0 ? value : null;
                           },
                         },
-                      ],
-                    ]}
-                  />
-                )}
+                        height: "245px",
+                      }}
+                      responsiveOptions={[
+                        [
+                          "screen and (max-width: 640px)",
+                          {
+                            seriesBarDistance: 20,
+                            axisX: {
+                              labelInterpolationFnc: function (value) {
+                                return index % 2 === 0 ? value : null;
+                              },
+                            },
+                          },
+                        ],
+                      ]}
+                    />
+                  )}
                 </div>
               </Card.Body>
             </Card>

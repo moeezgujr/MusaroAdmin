@@ -41,6 +41,7 @@ function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [subscriptionLoading, setSubscriptionLoading] = useState(true);
   const [metricLoading, setMetricLoading] = useState(true);
+  const [totalCountLoading, setTotalCountLoading] = useState(true);
 
   const [subCity, setsubCity] = useState("");
   useEffect(() => {
@@ -50,6 +51,7 @@ function Dashboard() {
         setTotalCount(data.data);
       } catch (err) {
       } finally {
+        setTotalCountLoading(false);
       }
     };
     fetchTotalCount();
@@ -199,7 +201,11 @@ function Dashboard() {
                       </div>
                       <div className="ml-2">
                         <Card.Title as="h4">
-                          0{totalCount?.overallCustomerCount}
+                          {totalCountLoading ? (
+                            <Skeleton width={100} height={20} />
+                          ) : (
+                            `0${totalCount?.overallCustomerCount}`
+                          )}
                         </Card.Title>
 
                         <p className="card-category">Overall customers</p>
@@ -224,7 +230,11 @@ function Dashboard() {
                       </div>
                       <div className="ml-2">
                         <Card.Title as="h4">
-                          0{totalCount?.activeCustomerCount}
+                          {totalCountLoading ? (
+                            <Skeleton width={100} height={20} />
+                          ) : (
+                            `0${totalCount?.activeCustomerCount}`
+                          )}
                         </Card.Title>
 
                         <p className="card-category">Active customers</p>
@@ -249,7 +259,11 @@ function Dashboard() {
                       </div>
                       <div className="ml-2">
                         <Card.Title as="h4">
-                          0{totalCount?.overallSubscriptionCount}
+                          {totalCountLoading ? (
+                            <Skeleton width={100} height={20} />
+                          ) : (
+                            `0${totalCount?.overallSubscriptionCount}`
+                          )}
                         </Card.Title>
 
                         <p className="card-category">Overall Subscription</p>
@@ -274,7 +288,11 @@ function Dashboard() {
                       </div>
                       <div className="ml-2">
                         <Card.Title as="h4">
-                          0{totalCount?.cancelSubscriptionCount}
+                          {totalCountLoading ? (
+                            <Skeleton width={100} height={20} />
+                          ) : (
+                            `0${totalCount?.cancelSubscriptionCount}`
+                          )}
                         </Card.Title>
 
                         <p className="card-category">Cancel Subscription</p>
@@ -538,69 +556,69 @@ function Dashboard() {
               </Card.Header>
               <Card.Body>
                 <div className="ct-chart" id="chartHours">
-                {metricLoading ? (
+                  {metricLoading ? (
                     <Skeleton height={50} count={4} />
                   ) : (
-                  <ChartistGraph
-                    data={{
-                      labels: [
-                        "Jan",
-                        "Feb",
-                        "Mar",
-                        "Apr",
-                        "May",
-                        "Jun",
-                        "Jul",
-                        "Aug",
-                        "Sep",
-                        "Oct",
-                        "Nov",
-                        "Dec",
-                      ],
-                      series: [
-                        metricdata?.length > 0
-                          ? metricdata.map((item) => item.customers)
-                          : [287, 385, 490, 492, 554, 586, 698, 695],
-                        metricdata?.length > 0
-                          ? metricdata.map((item) => item.providers)
-                          : [67, 152, 143, 240, 287, 335, 435, 437],
-                      ],
-                    }}
-                    type="Line"
-                    options={{
-                      low: 0,
-                      high: 100,
-                      showArea: true,
-                      height: "245px",
-                      axisX: {
-                        showGrid: false,
-                      },
-                      axisY: {
-                        labelInterpolationFnc: function (value, index) {
-                          return index % 2 === 0 ? value : null;
+                    <ChartistGraph
+                      data={{
+                        labels: [
+                          "Jan",
+                          "Feb",
+                          "Mar",
+                          "Apr",
+                          "May",
+                          "Jun",
+                          "Jul",
+                          "Aug",
+                          "Sep",
+                          "Oct",
+                          "Nov",
+                          "Dec",
+                        ],
+                        series: [
+                          metricdata?.length > 0
+                            ? metricdata.map((item) => item.customers)
+                            : [287, 385, 490, 492, 554, 586, 698, 695],
+                          metricdata?.length > 0
+                            ? metricdata.map((item) => item.providers)
+                            : [67, 152, 143, 240, 287, 335, 435, 437],
+                        ],
+                      }}
+                      type="Line"
+                      options={{
+                        low: 0,
+                        high: 100,
+                        showArea: true,
+                        height: "245px",
+                        axisX: {
+                          showGrid: false,
                         },
-                      },
-                      lineSmooth: true,
-                      showLine: true,
-                      showPoint: true,
-                      fullWidth: true,
-                      chartPadding: {
-                        right: 50,
-                      },
-                    }}
-                    responsiveOptions={[
-                      [
-                        "screen and (max-width: 640px)",
-                        {
-                          axisX: {
-                            labelInterpolationFnc: function (value) {
-                              return value[0];
-                            },
+                        axisY: {
+                          labelInterpolationFnc: function (value, index) {
+                            return index % 2 === 0 ? value : null;
                           },
                         },
-                      ],
-                    ]}
-                  />
+                        lineSmooth: true,
+                        showLine: true,
+                        showPoint: true,
+                        fullWidth: true,
+                        chartPadding: {
+                          right: 50,
+                        },
+                      }}
+                      responsiveOptions={[
+                        [
+                          "screen and (max-width: 640px)",
+                          {
+                            axisX: {
+                              labelInterpolationFnc: function (value) {
+                                return value[0];
+                              },
+                            },
+                          },
+                        ],
+                      ]}
+                    />
                   )}
                 </div>
               </Card.Body>

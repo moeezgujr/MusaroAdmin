@@ -5,6 +5,7 @@ import { Container, Form, Row, Col } from "react-bootstrap";
 import { useHistory, useParams } from "react-router";
 import { getWorkshop } from "Apis/Workshop";
 import { verifyWorkshop } from "Apis/Workshop";
+import Popup from "components/Popup";
 
 const ProfessionFormComponent = ({ goBack }) => {
   const [formValues, setFormValues] = useState({
@@ -21,7 +22,9 @@ const ProfessionFormComponent = ({ goBack }) => {
     description: "",
     image: null,
   });
-  const [userid, setuserid]=useState(0)
+  const [userid, setuserid]=useState(0);
+  const [openPopup, setopenPopup]=useState(false)
+
   function convertTo24Hour(time12h) {
     // Parse the time string to a Date object
     var date = new Date("2000-01-01 " + time12h);
@@ -85,9 +88,12 @@ const ProfessionFormComponent = ({ goBack }) => {
     // }
   };
   const imageUrl = process.env.REACT_APP_IMAGE_SRC;
-
+   const onClosePopup=()=>{
+     setopenPopup(false)
+   }
   return (
     <div style={{ background: "#F8FAFC" }}>
+      <Popup isOpen={openPopup} onClose={onClosePopup}/>
       <Container fluid className="d-flex justify-content-center">
         <div style={styles.container}>
           <div style={styles.title}>{"View Workshop Details"}</div>
@@ -95,7 +101,7 @@ const ProfessionFormComponent = ({ goBack }) => {
             <div style={styles.cancelButton}>
               <button
                 className="rejectbtn mr-1"
-                onClick={(e) => handleSubmit(e,"REJECTED")}
+                onClick={(e) => setopenPopup(true)}
               >
                 {"Reject with Note"}
               </button>
