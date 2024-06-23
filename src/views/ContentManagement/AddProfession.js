@@ -24,8 +24,8 @@ const ProfessionFormComponent = ({ goBack }) => {
     setImage(e);
     setImagePreview(URL.createObjectURL(e));
   };
-  const history=useHistory()
-  const handleSubmit = (e) => {
+  const history = useHistory();
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
     formData.append("name", title);
@@ -34,13 +34,22 @@ const ProfessionFormComponent = ({ goBack }) => {
       if (image) {
         formData.append("img", image);
       }
-      updateProfession(id, formData);
-      toast.success("Profession updated sucessfully");
+      const res = await updateProfession(id, formData);
+      if (res?.message === "Success") {
+        toast.success("Profession updated sucessfully");
+      } else {
+        toast.error("An error occured while updating data");
+      }
     } else {
-      addProfession(formData);
-      toast.success("Profession added sucessfully");
+      formData.append("img", image);
+      const res = await addProfession(formData);
+      if (res?.message === "New Profession Added!") {
+        toast.success("Profession added sucessfully");
+      } else {
+        toast.error("An error occured while adding data");
+      }
     }
-    history.push('/admin/content')
+    history.push("/admin/content");
   };
   const { id } = useParams();
   const fetchProfession = async (id) => {
@@ -71,7 +80,9 @@ const ProfessionFormComponent = ({ goBack }) => {
                 </button>
               </div>
               <div style={styles.addButton}>
-                <button className="addaccountBtn">{"Add Profession"}</button>
+                <button className="addaccountBtn">
+                  {id ? "Edit Profession" : "Add Profession"}
+                </button>
               </div>
             </div>
           </div>

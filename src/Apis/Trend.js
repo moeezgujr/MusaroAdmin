@@ -73,3 +73,18 @@ export const getTrendByID = async (id) => {
     }
   }
 };
+export const searchTrend = async (text) => {
+  try {
+    const response = await api.get(
+      "/trend/list?limit=10&offset=0&search=" + text
+    );
+    return response.data;
+  } catch (error) {
+    // Check if the error has a response property
+    if (error.response) {
+      return error.response.data;
+    } else {
+      return { error: error.message };
+    }
+  }
+};

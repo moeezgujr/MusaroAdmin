@@ -114,7 +114,7 @@ const Slider = ({ open, callback, id }) => {
       <div className="d-flex">
         <img
           className="rating-img"
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6tWkfCJfejkeaq78A0p6L5CZWFFVwxyz0DA&s"
+          src={process.env.REACT_APP_IMAGE_SRC + item.customer.profilePicture}
         />
         <div
           className="d-flex mt-2"
@@ -168,7 +168,8 @@ const Slider = ({ open, callback, id }) => {
             >
               <h2 className="rating_heading">Ratings</h2>
               <p className="heading_text">
-                You are viewing the latest {data.length} reviews of the service provider
+                You are viewing the latest {data.length} reviews of the service
+                provider
               </p>
               {loading ? (
                 <>

@@ -24,6 +24,7 @@ function CustomerList({ search }) {
   const [slideropen, setSliderOpen] = useState(false);
 
   const fetchTotalCount = async (page) => {
+    setLoading(true);
     try {
       // const data = await userList();
       const data = await customerList(page);
@@ -39,6 +40,7 @@ function CustomerList({ search }) {
     else fetchTotalCount(0);
   }, [search]);
   const searchText = async (text) => {
+    setLoading(true);
     try {
       // const data = await userList();
       const data = await searchList(text);
@@ -72,10 +74,14 @@ function CustomerList({ search }) {
       label: "Created On",
     },
   ];
-  const history = useHistory();
   const callback = () => {
     setSliderOpen(false);
     fetchTotalCount(0);
+  };
+  const onpagechange = (id) => {
+    if(id>0){
+      fetchTotalCount(id-1);
+    }
   };
   return (
     // <div className="main">
@@ -105,7 +111,7 @@ function CustomerList({ search }) {
               data={customer}
               totalPages={pagination.pages}
               currentPage={pagination.page}
-              onPageChange={""}
+              onPageChange={onpagechange}
               callback={(type, id) => {
                 setSliderOpen(true);
                 setCustomerId(id);

@@ -4,6 +4,7 @@ import ImageUploadButton from "components/ImageUploader/Imageuploader";
 import { Container, Form, Row, Col } from "react-bootstrap";
 import { useHistory, useParams } from "react-router";
 import { getWorkshop } from "Apis/Workshop";
+import { verifyWorkshop } from "Apis/Workshop";
 
 const ProfessionFormComponent = ({ goBack }) => {
   const [formValues, setFormValues] = useState({
@@ -20,6 +21,7 @@ const ProfessionFormComponent = ({ goBack }) => {
     description: "",
     image: null,
   });
+  const [userid, setuserid]=useState(0)
   function convertTo24Hour(time12h) {
     // Parse the time string to a Date object
     var date = new Date("2000-01-01 " + time12h);
@@ -60,6 +62,7 @@ const ProfessionFormComponent = ({ goBack }) => {
   const { id } = useParams();
   const fetchWorkshop = async (id) => {
     const data = await getWorkshop(id);
+    setuserid(data.data[0].owner?._id)
     setFormValues(mapWorkshopToFormValues(data.data[0]));
   };
   useEffect(() => {
@@ -73,11 +76,13 @@ const ProfessionFormComponent = ({ goBack }) => {
     }));
   };
 
-  const history=useHistory()
-  const handleSubmit = (e) => {
+  const history = useHistory();
+  const handleSubmit = async (e,status) => {
     e.preventDefault();
-    // Handle form submission here
-    console.log("Form Values:", formValues);
+    const res = await verifyWorkshop(userid, { status: status, reason: undefined });
+    // if (res.errors === null) {
+    //   history.push("/admin/workshops");
+    // }
   };
   const imageUrl = process.env.REACT_APP_IMAGE_SRC;
 
@@ -90,14 +95,14 @@ const ProfessionFormComponent = ({ goBack }) => {
             <div style={styles.cancelButton}>
               <button
                 className="rejectbtn mr-1"
-                onClick={() => history.push("/admin/content")}
+                onClick={(e) => handleSubmit(e,"REJECTED")}
               >
                 {"Reject with Note"}
               </button>
             </div>
             <div style={styles.addButton}>
               <button
-                onClick={handleSubmit}
+                onClick={(e) => handleSubmit(e,"APPROVED")}
                 className="addaccountBtn"
                 style={{ width: "200px" }}
               >
@@ -106,41 +111,6 @@ const ProfessionFormComponent = ({ goBack }) => {
             </div>
           </div>
         </div>
-
-        {/* <Row>
-          <Col>
-            <Form style={{ width: "500px" }}>
-              <Form.Group controlId="input1">
-                <Form.Label>Title:</Form.Label>
-                <Form.Control type="text" placeholder="Wood CNC Workshop" />
-              </Form.Group>
-            </Form>
-          </Col>
-          <Col>
-            <Form style={{ width: "500px" }}>
-              <Form.Group controlId="input2">
-                <Form.Label>Owner of Workshop:</Form.Label>
-                <Form.Control type="text" placeholder="Owner Name" />
-              </Form.Group>
-            </Form>
-          </Col>
-          <Col>
-            <Form style={{ width: "500px" }}>
-              <Form.Group controlId="input1">
-                <Form.Label>Start Date:</Form.Label>
-                <Form.Control type="date" placeholder="Wood CNC Workshop" />
-              </Form.Group>
-            </Form>
-          </Col>
-          <Col>
-            <Form style={{ width: "500px" }}>
-              <Form.Group controlId="input2">
-                <Form.Label>End Date:</Form.Label>
-                <Form.Control type="date" placeholder="Owner Name" />
-              </Form.Group>
-            </Form>
-          </Col>
-        </Row> */}
       </Container>
       <div
         className="d-flex"

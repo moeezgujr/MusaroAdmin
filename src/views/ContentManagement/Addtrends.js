@@ -38,7 +38,7 @@ const TrendFormComponent = ({ goBack }) => {
     setImagePreview(URL.createObjectURL(e));
   };
   const history = useHistory();
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(image);
     const formData = new FormData();
@@ -48,12 +48,14 @@ const TrendFormComponent = ({ goBack }) => {
       if (image) {
         formData.append("img", image);
       }
-      updateTrend(id, formData);
-      toast.success("Trend Updated sucessfully");
+      const res = updateTrend(id, formData);
+      if (res.errors === null) toast.success("Trend Updated sucessfully");
+      else toast.success("An error occured");
     } else {
       formData.append("img", image);
-      addTrend(formData);
-      toast.success("Trend added sucessfully");
+      const res = await addTrend(formData);
+      if (res.errors === null) toast.success("Trend added sucessfully");
+      else toast.success("An error occured");
     }
     history.push("/admin/content");
   };

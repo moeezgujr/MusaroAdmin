@@ -24,6 +24,7 @@ function UserList() {
   const [loading, setLoading] = useState(true);
 
   const fetchTotalCount = async (page) => {
+    setLoading(true);
     try {
       const data = await userList(page);
       setUsers(data.data.users);
@@ -34,6 +35,7 @@ function UserList() {
     }
   };
   const searchUsers = async (page, search) => {
+    setLoading(true);
     try {
       const data = await searchUser(page, search);
       setUsers(data.data.users);

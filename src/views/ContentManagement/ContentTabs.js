@@ -9,6 +9,8 @@ import { getAllProfession } from "Apis/Profession";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import Pagination from "views/UserManagement/Pagination";
+import { searchTrend } from "Apis/Trend";
+import { searchProfession } from "Apis/Profession";
 
 const Tabs = () => {
   const [activeTab, setActiveTab] = useState(1);
@@ -31,12 +33,14 @@ const Tabs = () => {
     localStorage.setItem("tab", tabNumber);
   };
   const getTrends = async (page) => {
+    setLoading(true); // Set loading to false when data is fetched
     const data = await getAllTrend(page);
     setTrend(data.data.trends);
     setPagination(data.data.meta);
     setLoading(false); // Set loading to false when data is fetched
   };
   const getProfessions = async (page) => {
+    setLoading(true); // Set loading to false when data is fetched
     const data = await getAllProfession(page);
     setProfession(data.data.professions);
     setPagination(data.data.meta);
@@ -75,12 +79,34 @@ const Tabs = () => {
       getTrends(val - 1);
     }
   };
+  const onSearch = async (e) => {
+    setLoading(true);
+    if (activeTab == 2) {
+      if (e.target.value) {
+        const data = await searchTrend(e.target.value);
+        setTrend(data.data.trends);
+        setPagination(data.data.meta);
+      } else {
+        getTrends(0);
+      }
+    } else {
+      if (e.target.value) {
+        const data = await searchProfession(e.target.value);
+        setProfession(data.data.professions);
+        setPagination(data.data.meta);
+      } else {
+        getProfessions(0);
+      }
+    }
+    setLoading(false);
+  };
   return (
     <div className="tabs-container">
       <Header
         btntext={"Add" + " " + tabtitle}
         title={"Content Management"}
         icon
+        onSearch={onSearch}
         onAddAccount={() => history.push("/admin/add" + tabtitle)}
         isSearchHide={activeTab === 3 && true}
         hideButton={activeTab === 3 && true}

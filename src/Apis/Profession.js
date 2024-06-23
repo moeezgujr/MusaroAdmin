@@ -62,6 +62,21 @@ export const getAllProfession = async (page) => {
     }
   }
 };
+export const searchProfession = async (text) => {
+  try {
+    const response = await api.get(
+      `/general/professions?limit=10&offset=${0}&status=ACTIVE&search=${text}`
+    );
+    return response.data;
+  } catch (error) {
+    // Check if the error has a response property
+    if (error.response) {
+      return error.response.data;
+    } else {
+      return { error: error.message };
+    }
+  }
+};
 export const getProfessionsbyId = async (id) => {
   try {
     const response = await api.get("/general/profession/" + id);

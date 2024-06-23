@@ -45,6 +45,7 @@ function ProviderList({ search }) {
   const [slideropen, setSliderOpen] = useState(false);
   const [id, setProviderId] = useState(0);
   const fetchTotalCount = async (page) => {
+    setLoading(true);
     try {
       // const data = await userList();
       const data = await getProviders(page);
@@ -56,6 +57,7 @@ function ProviderList({ search }) {
     }
   };
   const searchText = async (text) => {
+    setLoading(true);
     try {
       // const data = await userList();
       const data = await searchProviders(text);
