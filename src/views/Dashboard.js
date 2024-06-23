@@ -22,7 +22,8 @@ import { ReactComponent as Checkcricleicon } from "../assets/img/check-circle.sv
 import { ReactComponent as Vectoricon } from "../assets/img/Vector.svg";
 import { ReactComponent as ColorIcon } from "../assets/img/Color.svg";
 import { ReactComponent as SecondColoricon } from "../assets/img/2nd-color.svg";
-
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 import { totalCountApi } from "Apis/Dashboard";
 import { signupAnalytics } from "Apis/Dashboard";
 import { subscriptionAnalytics } from "Apis/Dashboard";
@@ -37,6 +38,9 @@ function Dashboard() {
   const [graphData, setGraphData] = useState("");
   const [subscriptiondata, setsubscriptiondata] = useState("");
   const [metricdata, setmetricdata] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [subscriptionLoading, setSubscriptionLoading] = useState(true);
+  const [metricLoading, setMetricLoading] = useState(true);
 
   const [subCity, setsubCity] = useState("");
   useEffect(() => {
@@ -54,16 +58,23 @@ function Dashboard() {
     subscriptionGraphData("MONTHLY");
   }, []);
   const signupGraphData = async (time, city) => {
+    setLoading(true);
+
     const data = await signupAnalytics(time, city);
     setGraphData(addAndAccumulateMonths(data.data));
+    setLoading(false);
   };
   const subscriptionGraphData = async (time) => {
+    setSubscriptionLoading(true);
     const data = await subscriptionAnalytics(time);
     setsubscriptiondata(addMissingMonths(data.data));
+    setSubscriptionLoading(false);
   };
   const metricGraphData = async (time, city) => {
+    setMetricLoading(true);
     const data = await trefficMetricAnalytics(time, city);
     setmetricdata(addAndAccumulateMonths(data.data));
+    setMetricLoading(false);
   };
   const handleSelect = (eventKey) => {
     setSelectedCity(eventKey);
@@ -294,10 +305,9 @@ function Dashboard() {
                       </Dropdown.Toggle>
 
                       <Dropdown.Menu>
-                      <Dropdown.Item eventKey="">Reset</Dropdown.Item>
-                      <Dropdown.Item eventKey="Riyadh">Riyadh</Dropdown.Item>
+                        <Dropdown.Item eventKey="">Reset</Dropdown.Item>
+                        <Dropdown.Item eventKey="Riyadh">Riyadh</Dropdown.Item>
                         <Dropdown.Item eventKey="Jeddah">Jeddah</Dropdown.Item>
-                        <Dropdown.Item eventKey="ABC">ABC</Dropdown.Item>
                       </Dropdown.Menu>
                     </Dropdown>
                     <Dropdown onSelect={handleTime}>
@@ -319,79 +329,70 @@ function Dashboard() {
               </Card.Header>
               <Card.Body>
                 <div className="ct-chart" id="chartHours">
-                  <ChartistGraph
-                    data={{
-                      labels: [
-                        "Jan",
-                        "Feb",
-                        "Mar",
-                        "Apr",
-                        "May",
-                        "Jun",
-                        "Jul",
-                        "Aug",
-                        "Sep",
-                        "Oct",
-                        "Nov",
-                        "Dec",
-                      ],
-                      series:
-                        graphData?.length > 0
-                          ? [graphData?.map((Item) => Item.total)]
-                          : [[23, 113, 67, 108, 190, 239, 307, 308]],
-                    }}
-                    type="Line"
-                    options={{
-                      low: 0,
-                      high: 400,
-                      showArea: true,
+                  {loading ? (
+                    <Skeleton height={50} count={4} />
+                  ) : (
+                    <ChartistGraph
+                      data={{
+                        labels: [
+                          "Jan",
+                          "Feb",
+                          "Mar",
+                          "Apr",
+                          "May",
+                          "Jun",
+                          "Jul",
+                          "Aug",
+                          "Sep",
+                          "Oct",
+                          "Nov",
+                          "Dec",
+                        ],
+                        series:
+                          graphData?.length > 0
+                            ? [graphData?.map((Item) => Item.total)]
+                            : [[23, 113, 67, 108, 190, 239, 307, 308]],
+                      }}
+                      type="Line"
+                      options={{
+                        low: 0,
+                        high: 400,
+                        showArea: true,
 
-                      height: "245px",
-                      axisX: {
-                        showGrid: false,
-                      },
-                      axisY: {
-                        showGrid: true,
-                        labelInterpolationFnc: function (value, index) {
-                          return index % 2 === 0 ? value : null;
+                        height: "245px",
+                        axisX: {
+                          showGrid: false,
                         },
-                      },
-                      lineSmooth: true,
-                      showLine: true,
-                      showPoint: false,
-                      fullWidth: true,
-                      chartPadding: {
-                        right: 50,
-                      },
-                    }}
-                    responsiveOptions={[
-                      [
-                        "screen and (max-width: 640px)",
-                        {
-                          axisX: {
-                            labelInterpolationFnc: function (value) {
-                              return value[0];
-                            },
+                        axisY: {
+                          showGrid: true,
+                          labelInterpolationFnc: function (value, index) {
+                            return index % 2 === 0 ? value : null;
                           },
                         },
-                      ],
-                    ]}
-                  />
+                        lineSmooth: true,
+                        showLine: true,
+                        showPoint: false,
+                        fullWidth: true,
+                        chartPadding: {
+                          right: 50,
+                        },
+                      }}
+                      responsiveOptions={[
+                        [
+                          "screen and (max-width: 640px)",
+                          {
+                            axisX: {
+                              labelInterpolationFnc: function (value) {
+                                return value[0];
+                              },
+                            },
+                          },
+                        ],
+                      ]}
+                    />
+                  )}
                 </div>
               </Card.Body>
-              {/* <Card.Footer>
-                <div className="legend">
-                  <i className="fas fa-circle text-info"></i>
-                  Open <i className="fas fa-circle text-danger"></i>
-                  Click <i className="fas fa-circle text-warning"></i>
-                  Click Second Time
-                </div>
-                <hr></hr>
-                <div className="stats">
-                  <i className="fas fa-history"></i>
-                  Updated 3 minutes ago
-                </div>
-              </Card.Footer> */}
             </Card>
           </Col>
           <Col md="6">
@@ -406,7 +407,6 @@ function Dashboard() {
                       <Dropdown.Toggle id="dropdown-basic">
                         {subscriptionTime || "Monthly"}
                       </Dropdown.Toggle>
-
                       <Dropdown.Menu>
                         <Dropdown.Item eventKey="Daily">Daily</Dropdown.Item>
                         <Dropdown.Item eventKey="Weekly">Weekly</Dropdown.Item>
@@ -421,63 +421,67 @@ function Dashboard() {
               </Card.Header>
               <Card.Body>
                 <div className="ct-chart" id="chartActivity">
-                  <ChartistGraph
-                    data={{
-                      labels: [
-                        "Jan",
-                        "Feb",
-                        "Mar",
-                        "Apr",
-                        "Mai",
-                        "Jun",
-                        "Jul",
-                        "Aug",
-                        "Sep",
-                        "Oct",
-                        "Nov",
-                        "Dec",
-                      ],
-                      series:
-                        subscriptiondata?.length > 0
-                          ? [subscriptiondata.map((item) => item.total)]
-                          : [
-                              [
-                                542, 443, 320, 780, 553, 453, 326, 434, 568,
-                                610, 756, 895,
+                  {subscriptionLoading ? (
+                    <Skeleton height={50} count={4} />
+                  ) : (
+                    <ChartistGraph
+                      data={{
+                        labels: [
+                          "Jan",
+                          "Feb",
+                          "Mar",
+                          "Apr",
+                          "Mai",
+                          "Jun",
+                          "Jul",
+                          "Aug",
+                          "Sep",
+                          "Oct",
+                          "Nov",
+                          "Dec",
+                        ],
+                        series:
+                          subscriptiondata?.length > 0
+                            ? [subscriptiondata.map((item) => item.total)]
+                            : [
+                                [
+                                  542, 443, 320, 780, 553, 453, 326, 434, 568,
+                                  610, 756, 895,
+                                ],
                               ],
-                            ],
-                    }}
-                    type="Bar"
-                    options={{
-                      seriesBarDistance: 5,
-                      low: 0,
-                      high: 100,
-                      axisX: {
-                        showGrid: false,
-                      },
-                      axisY: {
-                        showGrid: true,
-
-                        labelInterpolationFnc: function (value, index) {
-                          return index % 2 === 0 ? value : null;
+                      }}
+                      type="Bar"
+                      options={{
+                        seriesBarDistance: 5,
+                        low: 0,
+                        high: 100,
+                        axisX: {
+                          showGrid: false,
                         },
-                      },
-                      height: "245px",
-                    }}
-                    responsiveOptions={[
-                      [
-                        "screen and (max-width: 640px)",
-                        {
-                          seriesBarDistance: 5,
-                          axisX: {
-                            labelInterpolationFnc: function (value) {
-                              return value[0];
-                            },
+                        axisY: {
+                          showGrid: true,
+
+                          labelInterpolationFnc: function (value, index) {
+                            return index % 2 === 0 ? value : null;
                           },
                         },
-                      ],
-                    ]}
-                  />
+                        height: "245px",
+                      }}
+                      responsiveOptions={[
+                        [
+                          "screen and (max-width: 640px)",
+                          {
+                            seriesBarDistance: 5,
+                            axisX: {
+                              labelInterpolationFnc: function (value) {
+                                return value[0];
+                              },
+                            },
+                          },
+                        ],
+                      ]}
+                    />
+                  )}
                 </div>
               </Card.Body>
             </Card>
@@ -523,7 +527,7 @@ function Dashboard() {
                     </Dropdown>
                   </div>
                 </div>
-                <div className="d-flex col justify-content-end">
+                <div className="d-flex col justify-content-end mt-3">
                   <p className="customer_metric_text">
                     <ColorIcon /> Customer Registered{" "}
                   </p>
@@ -534,6 +538,9 @@ function Dashboard() {
               </Card.Header>
               <Card.Body>
                 <div className="ct-chart" id="chartHours">
+                {metricLoading ? (
+                    <Skeleton height={50} count={4} />
+                  ) : (
                   <ChartistGraph
                     data={{
                       labels: [
@@ -594,6 +601,7 @@ function Dashboard() {
                       ],
                     ]}
                   />
+                  )}
                 </div>
               </Card.Body>
             </Card>

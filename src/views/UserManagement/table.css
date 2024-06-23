@@ -48,8 +48,8 @@
 }
 .table_text {
   font-family: sans-serif;
-    font-size: 14px;
-    font-weight: 100;
+  font-size: 14px;
+  font-weight: 100;
 }
 
 .role_td {
@@ -59,34 +59,31 @@
   margin-bottom: 10px;
   border-radius: 40px;
   width: fit-content;
-  padding: 5px
+  padding: 5px;
 }
-.subsrctiption_status{
-  color: #B54708;
-  background-color: #FFFAEB;
+.subsrctiption_status {
+  color: #b54708;
+  background-color: #fffaeb;
   margin-top: 10px;
   margin-bottom: 10px;
   border-radius: 40px;
   width: fit-content;
-  padding: 5px
-  
+  padding: 5px;
 }
 .pagination button.active {
   background-color: #ddd;
 }
-.customer_metric_text{
+.customer_metric_text {
   width: auto;
   padding-left: 10px;
-  
-  padding-top: 20px;
 
-    height: 20px;
-    font-family: 'Open Sans';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 20px;
-    color: #475467;
+  height: 20px;
+  font-family: "Open Sans";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: #475467;
 }
 .pagination button:hover:not(.active) {
   background-color: #ddd;

@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useSpring, animated } from "react-spring";
 import styled from "styled-components";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 import "./Slider.css";
 import { getRatings } from "Apis/Customer";
 import { ReactComponent as Staricon } from "../../assets/img/star.svg";
 import { ReactComponent as DotIcon } from "../../assets/img/dot.svg";
+import NoAccountsFound from "views/UserManagement/NoDataFound";
 
 const Container = styled.div`
   display: flex;
@@ -79,9 +82,19 @@ const CloseButton = styled.button`
 
 const Slider = ({ open, callback, id }) => {
   const [isOpen, setIsOpen] = useState(open);
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const ratings = async (id) => {
-    await getRatings(id);
+    setLoading(true);
+    try {
+      const data = await getRatings(id);
+      setData(data.data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -96,7 +109,7 @@ const Slider = ({ open, callback, id }) => {
     from: { transform: "translateY(100%)" },
   });
 
-  const RatingCard = () => (
+  const RatingCard = ({ item }) => (
     <div className="ratingcard mt-3">
       <div className="d-flex">
         <img
@@ -108,17 +121,16 @@ const Slider = ({ open, callback, id }) => {
           style={{ width: "1130px", justifyContent: "space-between" }}
         >
           <div>
-            <p className="ratingname">Ahmad Bandooq</p>
+            <p className="ratingname">{item.customer.name || ""}</p>
             <p className="raatingstartext">
-              <Staricon style={{ marginTop: "-5px" }} /> 4.5/5
+              <Staricon style={{ marginTop: "-5px" }} /> {item.rating || 0}/5
             </p>
-            <p className="raatingstartext">
-              Lorem ipsum dolor sit amet consectetur.{" "}
-            </p>
+            <p className="raatingstartext">{item?.comment || ""}</p>
           </div>
           <div>
             <p className="verified_text">
-              <DotIcon /> Verified
+              <DotIcon />{" "}
+              {item?.customer?.isVerified ? "Verified" : "Not Verified"}
             </p>
             <div className="experience_text">
               <p>4 years experience</p>
@@ -156,11 +168,21 @@ const Slider = ({ open, callback, id }) => {
             >
               <h2 className="rating_heading">Ratings</h2>
               <p className="heading_text">
-                You are viewing the latest 10 reviews of the service provider
+                You are viewing the latest {data.length} reviews of the service provider
               </p>
-              {Array.from({ length: 7 }).map((_, index) => (
-                <RatingCard key={index} />
-              ))}
+              {loading ? (
+                <>
+                  <Skeleton count={5} height={80} />
+                </>
+              ) : data.length > 0 ? (
+                data.map((item, index) => (
+                  <RatingCard item={item} key={index} />
+                ))
+              ) : (
+                <div>
+                  <NoAccountsFound />
+                </div>
+              )}
             </Content>
           </SliderWrapper>
         </animated.div>

@@ -31,6 +31,7 @@ import Login from "views/Login";
 import Forget from "views/ForgetPassword/Forget";
 import Otp from "views/ForgetPassword/Otp";
 import CreatePassword from "views/ForgetPassword/CreatePassword";
+import ErrorBoundary from "ErrorBoundary";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -58,26 +59,34 @@ root.render(
   <BrowserRouter>
     <ToastContainer />
     <Switch>
-      <Route path="/forgetpassword" render={(props) => <Forget {...props} />} />
-      <Route path="/createpassword" render={(props) => <CreatePassword {...props} />} />
-      <Route path="/otp" render={(props) => <Otp {...props} />} />
+      <ErrorBoundary>
+        <Route
+          path="/forgetpassword"
+          render={(props) => <Forget {...props} />}
+        />
+        <Route
+          path="/createpassword"
+          render={(props) => <CreatePassword {...props} />}
+        />
+        <Route path="/otp" render={(props) => <Otp {...props} />} />
 
-      <Route
-        path="/admin"
-        render={(props) =>
-          isAuthenticated() ? <AdminLayout {...props} /> : <Redirect to="/" />
-        }
-      />
-      <Route
-        path="/"
-        render={(props) =>
-          isAuthenticated() ? (
-            <Redirect to="/admin/dashboard" />
-          ) : (
-            <Login {...props} />
-          )
-        }
-      />
+        <Route
+          path="/admin"
+          render={(props) =>
+            isAuthenticated() ? <AdminLayout {...props} /> : <Redirect to="/" />
+          }
+        />
+        <Route
+          path="/"
+          render={(props) =>
+            isAuthenticated() ? (
+              <Redirect to="/admin/dashboard" />
+            ) : (
+              <Login {...props} />
+            )
+          }
+        />
+      </ErrorBoundary>
     </Switch>
   </BrowserRouter>
 );

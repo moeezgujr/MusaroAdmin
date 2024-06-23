@@ -27,14 +27,16 @@ import "./AnalyticsReport.css";
 import { subscriptionCustomerGraph } from "Apis/Dashboard";
 // import Header from "views/UserManagement/TableHeader";
 // import TicketTable from "./RevenueTable";
-
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 function AnalyticsReport() {
   const [totalCount, setTotalCount] = useState({});
-  const [cityA, setSelectedACity] = useState("");
-  const [cityB, setSelectedBCity] = useState("");
-  const [time, setTime] = useState("");
-  const [graphtype, setGraphType] = useState("");
+  const [cityA, setSelectedACity] = useState("Riyadh");
+  const [cityB, setSelectedBCity] = useState("Makka");
+  const [time, setTime] = useState("Monthly");
+  const [graphtype, setGraphType] = useState("SUBSCRIPTION");
   const [graph1Data, setGraph1Data] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchTotalCount = async () => {
@@ -47,6 +49,7 @@ function AnalyticsReport() {
     };
 
     fetchTotalCount();
+    customerGraph(graphtype,time,cityA,cityB)
   }, []);
   const handleSelect = (e, type) => {
     if (type === "cityb") {
@@ -58,14 +61,47 @@ function AnalyticsReport() {
     }
   };
   const customerGraph = async (graphtype, time, cityA, cityB) => {
+    setLoading(true);
     const data = await subscriptionCustomerGraph(graphtype, time, cityA, cityB);
-    setGraph1Data(data.data);
+    setGraph1Data(addMissingMonths(data.data), time);
+    setLoading(false);
   };
+  function addMissingMonths(data) {
+    if (data.length === 0) {
+      return [];
+    }
+    const months = Array.from({ length: 12 }, (_, i) => i + 1);
+    const result = [];
+
+    // Create a set of existing months for quick lookup
+    const existingMonths = new Set(data.map((item) => item.month));
+
+    months.forEach((month) => {
+      if (existingMonths.has(month)) {
+        // If the month exists, add the existing entry
+        result.push(...data.filter((item) => item.month === month));
+      } else {
+        // If the month does not exist, add a new entry with total 0 and users 0
+        result.push({
+          cityA: 0,
+          cityB: 0,
+          month: month,
+          total: 0,
+          week: 0,
+          year: 2024,
+        });
+      }
+    });
+
+    return result;
+  }
+
   const handleType = (type) => {
     setGraphType(type);
     customerGraph(type, time, cityA, cityB);
   };
   const handleTime = (e) => {
+    setTime(e);
     customerGraph(graphtype, e, cityA, cityB);
   };
   return (
@@ -295,18 +331,24 @@ function AnalyticsReport() {
               <Card.Header>
                 <div className="d-flex row justify-content-between">
                   <Card.Title as="h4" className="ml-3">
-                    <Button
-                      className="anayltics_action_btn"
-                      onClick={() => handleType("SUBSCRIPTION")}
-                    >
-                      Subscriptions
-                    </Button>
-                    <Button
-                      className="anayltics_action_btn"
-                      onClick={() => handleType("CUSTOMER")}
-                    >
-                      Customers
-                    </Button>
+                    <div className="tabs">
+                      <div
+                        className={`tab-1 tab ${
+                          graphtype === "SUBSCRIPTION" ? "activeTab" : ""
+                        }`}
+                        onClick={() => handleType("SUBSCRIPTION")}
+                      >
+                        Subscriptions
+                      </div>
+                      <div
+                        className={`tab ${
+                          graphtype === "CUSTOMER" ? "activeTab" : ""
+                        }`}
+                        onClick={() => handleType("CUSTOMER")}
+                      >
+                        Customers
+                      </div>
+                    </div>
                   </Card.Title>
                   <div className="d-flex row mr-3">
                     <Dropdown
@@ -372,12 +414,32 @@ function AnalyticsReport() {
               </Card.Header>
               <Card.Body>
                 <div className="ct-chart" id="chartActivity">
+                {loading ? (
+                  <Skeleton height={50} count={4} />
+                ) : (
                   <ChartistGraph
                     data={{
-                      labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+                      labels: [
+                        "Jan",
+                        "Feb",
+                        "Mar",
+                        "Apr",
+                        "May",
+                        "Jun",
+                        "Jul",
+                        "Aug",
+                        "Sep",
+                        "Oct",
+                        "Nov",
+                        "Dec",
+                      ],
                       series: [
-                        [78, 56, 24, 65, 47, 21],
-                        [78, 56, 24, 65, 47, 21],
+                        graph1Data?.length > 0
+                          ? graph1Data.map((item) => item.cityA)
+                          : [],
+                        graph1Data?.length > 0
+                          ? graph1Data.map((item) => item.cityB)
+                          : [],
                       ],
                     }}
                     type="Bar"
@@ -410,6 +472,7 @@ function AnalyticsReport() {
                       ],
                     ]}
                   />
+                )}
                 </div>
               </Card.Body>
             </Card>
@@ -421,18 +484,24 @@ function AnalyticsReport() {
               <Card.Header>
                 <div className="d-flex row justify-content-between">
                   <Card.Title as="h4" className="ml-3">
-                  <Button
-                      className="anayltics_action_btn"
-                      onClick={() => handleType("SUBSCRIPTION")}
-                    >
-                      Ads Revenue
-                    </Button>
-                    <Button
-                      className="anayltics_action_btn"
-                      onClick={() => handleType("CUSTOMER")}
-                    >
-                      RFQs
-                    </Button>
+                    <div className="tabs">
+                      <div
+                        className={`tab-1 tab ${
+                          graphtype === "SUBSCRIPTION" ? "activeTab" : ""
+                        }`}
+                        onClick={() => handleType("SUBSCRIPTION")}
+                      >
+                        Ads Revenue
+                      </div>
+                      <div
+                        className={`tab ${
+                          graphtype === "CUSTOMER" ? "activeTab" : ""
+                        }`}
+                        onClick={() => handleType("CUSTOMER")}
+                      >
+                        RFQs
+                      </div>
+                    </div>
                   </Card.Title>
                   <div className="d-flex row mr-3">
                     <Dropdown
@@ -487,12 +556,13 @@ function AnalyticsReport() {
                     </Dropdown>
                   </div>
                 </div>
+
                 <div className="d-flex col justify-content-end">
                   <p className="customer_metric_text">
-                    <SecondColoricon /> Trends  revenue
+                    <SecondColoricon /> Trends revenue
                   </p>
                   <p className="customer_metric_text">
-                    <ColorIcon /> Workshops  revenue
+                    <ColorIcon /> Workshops revenue
                   </p>
                 </div>
               </Card.Header>
