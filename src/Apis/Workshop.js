@@ -43,7 +43,7 @@ export const getWorkshop = async (id) => {
 };
 export const verifyWorkshop = async (id, dto) => {
   try {
-    const response = await api.patch("/provider/verify/" + id, dto);
+    const response = await api.put("/workshop/" + id, dto);
     return response.data;
   } catch (error) {
     // Check if the error has a response property

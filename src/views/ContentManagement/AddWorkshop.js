@@ -6,6 +6,7 @@ import { useHistory, useParams } from "react-router";
 import { getWorkshop } from "Apis/Workshop";
 import { verifyWorkshop } from "Apis/Workshop";
 import Popup from "components/Popup";
+import { toast } from "react-toastify";
 
 const ProfessionFormComponent = ({ goBack }) => {
   const [formValues, setFormValues] = useState({
@@ -82,10 +83,14 @@ const ProfessionFormComponent = ({ goBack }) => {
   const history = useHistory();
   const handleSubmit = async (e,status) => {
     e.preventDefault();
-    const res = await verifyWorkshop(userid, { status: status, reason: undefined });
-    // if (res.errors === null) {
-    //   history.push("/admin/workshops");
-    // }
+    const res = await verifyWorkshop(id, { workshopStatus: status, rejectionReason: '' });
+    if (res.errors === null) {
+      toast.success("Status Approved successfully");
+    } else {
+      toast.error("An Error occurend while updating status");
+    }
+    history.push("/admin/content");
+
   };
   const imageUrl = process.env.REACT_APP_IMAGE_SRC;
    const onClosePopup=()=>{
@@ -93,7 +98,7 @@ const ProfessionFormComponent = ({ goBack }) => {
    }
   return (
     <div style={{ background: "#F8FAFC" }}>
-      <Popup isOpen={openPopup} onClose={onClosePopup}/>
+      <Popup isOpen={openPopup} onClose={onClosePopup} id={id}/>
       <Container fluid className="d-flex justify-content-center">
         <div style={styles.container}>
           <div style={styles.title}>{"View Workshop Details"}</div>
@@ -108,7 +113,7 @@ const ProfessionFormComponent = ({ goBack }) => {
             </div>
             <div style={styles.addButton}>
               <button
-                onClick={(e) => handleSubmit(e,"APPROVED")}
+                onClick={(e) => handleSubmit(e,"PUBLISHED")}
                 className="addaccountBtn"
                 style={{ width: "200px" }}
               >

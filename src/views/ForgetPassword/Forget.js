@@ -4,13 +4,17 @@ import { Button, Form } from "react-bootstrap";
 import MobileNumberInput from "./MobileNumberInput";
 import { useHistory } from "react-router";
 import { forgetPassword } from "Apis/Auth";
+import { toast } from "react-toastify";
 
 function Forget() {
   const [number, setNumber] = useState("");
   const onSubmit = async () => {
-    // history.push("/otp")
     const response = await forgetPassword({ mobile: number });
     console.log(response);
+    if (response.errors === null) {
+      toast.success(response.message)
+      history.push("/otp/"+number);
+    }
   };
   const callback = (value) => {
     setNumber(value);

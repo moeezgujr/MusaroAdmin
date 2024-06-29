@@ -70,27 +70,27 @@
   flex-grow: 0;
 }
 .input___otp {
-    display: block;
-    margin: 28px auto;
-    border: none;
-    padding: 0;
-    width: 5.6ch;
-    background: repeating-linear-gradient(
-        90deg,
-        dimgrey 0,
-        dimgrey 1ch,
-        transparent 0,
-        transparent 1.4ch
-      )
-      0 100%/5.2ch 2px no-repeat;
-    font: 7ch droid sans mono, consolas, monospace;
-    letter-spacing: 0.4ch;
-  }
-  
-  .input___otp:focus {
-    outline: none;
-    color: #222222;
-  }
+  display: block;
+  margin: 28px auto;
+  border: none;
+  padding: 0;
+  width: 7ch; /* Adjusted for 5 digits */
+  background: repeating-linear-gradient(
+    90deg,
+    dimgrey 0,
+    dimgrey 1ch,
+    transparent 0,
+    transparent 1.4ch
+  ) 0 100%/6.5ch 2px no-repeat; /* Adjusted for 5 digits */
+  font: 7ch droid sans mono, consolas, monospace;
+  letter-spacing: 0.4ch;
+}
+
+.input___otp:focus {
+  outline: none;
+  color: #222222;
+}
+
   .instruction-password{
         /* width: 788px; */
         height: 20px;
