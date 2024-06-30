@@ -106,7 +106,9 @@
     
   }
   .otp_recieve_text{
-    width: 223px;
+    width: auto;
+    display: flex;
+    justify-content: center;
     height: 22px;
     font-style: normal;
     font-weight: 450;
@@ -115,6 +117,7 @@
     color: #525252;
     flex: none;
     order: 1;
+    white-space: break-spaces;
     margin: auto;
 
   }
