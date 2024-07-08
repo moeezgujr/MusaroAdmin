@@ -21,10 +21,12 @@ import { ReactComponent as Charticon } from "../../assets/img/chart-line.svg";
 import { ReactComponent as Checkcricleicon } from "../../assets/img/check-circle.svg";
 import { ReactComponent as Vectoricon } from "../../assets/img/Vector.svg";
 import TicketTable from "./RevenueTable";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 import { totalCountApi } from "Apis/Dashboard";
 
 function Revenue() {
-  const [totalCount, setTotalCount] = useState({});
+  const [totalCount, setTotalCount] = useState('');
   const [tab, setTab] = useState(1);
 
   useEffect(() => {
@@ -61,7 +63,7 @@ function Revenue() {
                       </div>
                       <div className="ml-2">
                         <Card.Title as="h4">
-                          {totalCount.overallCustomerCount}
+                          {totalCount ? totalCount.overallCustomerCount : <Skeleton width={80} />}
                         </Card.Title>
 
                         <p className="card-category">Overall Customers</p>
@@ -86,7 +88,8 @@ function Revenue() {
                       </div>
                       <div className="ml-2">
                         <Card.Title as="h4">
-                          {totalCount.overallSubscriptionCount || 0}
+                          {totalCount ? totalCount.overallSubscriptionCount ||0 : <Skeleton width={80} />}
+
                         </Card.Title>
 
                         <p className="card-category">Overall Subscriptions</p>
@@ -111,7 +114,8 @@ function Revenue() {
                       </div>
                       <div className="ml-2">
                         <Card.Title as="h4">
-                          {totalCount.cancelSubscriptionCount || 0}
+                        {totalCount ? totalCount.cancelSubscriptionCount ||0 : <Skeleton width={80} />}
+
                         </Card.Title>
 
                         <p className="card-category">Cancelled Subscriptions</p>

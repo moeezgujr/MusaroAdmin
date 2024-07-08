@@ -30,3 +30,16 @@ export const searchListSubscription = async (text) => {
     }
   }
 };
+export const verifyProvider = async (id, dto) => {
+  try {
+    const response = await api.patch("provider/verify/" + id, dto);
+    return response.data;
+  } catch (error) {
+    // Check if the error has a response property
+    if (error.response) {
+      return error.response.data;
+    } else {
+      return { error: error.message };
+    }
+  }
+};

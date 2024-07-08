@@ -28,6 +28,7 @@ import { totalCountApi } from "Apis/Dashboard";
 import { signupAnalytics } from "Apis/Dashboard";
 import { subscriptionAnalytics } from "Apis/Dashboard";
 import { trefficMetricAnalytics } from "Apis/Dashboard";
+import { getCities } from "Apis/General";
 
 function Dashboard() {
   const [totalCount, setTotalCount] = useState({});
@@ -44,6 +45,8 @@ function Dashboard() {
   const [totalCountLoading, setTotalCountLoading] = useState(true);
 
   const [subCity, setsubCity] = useState("");
+  const [cityList, setCitylist] = useState([]);
+
   useEffect(() => {
     const fetchTotalCount = async () => {
       try {
@@ -54,10 +57,19 @@ function Dashboard() {
         setTotalCountLoading(false);
       }
     };
+    const fetchCity = async () => {
+      try {
+        const data = await getCities();
+        setCitylist(data.data.cities);
+      } catch (err) {
+      } finally {
+      }
+    };
     fetchTotalCount();
     signupGraphData("MONTHLY", "");
     metricGraphData("MONTHLY", "");
     subscriptionGraphData("MONTHLY");
+    fetchCity();
   }, []);
   const signupGraphData = async (time, city) => {
     setLoading(true);
@@ -314,20 +326,27 @@ function Dashboard() {
                     New Signups
                   </Card.Title>
                   <div className="d-flex row mr-4">
-                    <Dropdown
-                      style={{ marginRight: "10px" }}
-                      onSelect={handleSelect}
-                    >
-                      <Dropdown.Toggle id="dropdown-basic">
-                        {selectedCity || "City"}
-                      </Dropdown.Toggle>
+                    {Array.isArray(cityList) && cityList?.length > 0 && (
+                      <Dropdown
+                        style={{ marginRight: "10px" }}
+                        onSelect={handleSelect}
+                      >
+                        <Dropdown.Toggle id="dropdown-basic">
+                          {selectedCity || "City"}
+                        </Dropdown.Toggle>
 
-                      <Dropdown.Menu>
-                        <Dropdown.Item eventKey="">Reset</Dropdown.Item>
-                        <Dropdown.Item eventKey="Riyadh">Riyadh</Dropdown.Item>
-                        <Dropdown.Item eventKey="Jeddah">Jeddah</Dropdown.Item>
-                      </Dropdown.Menu>
-                    </Dropdown>
+                        <Dropdown.Menu>
+                          <Dropdown.Item eventKey="">Reset</Dropdown.Item>
+                          {cityList.map((item) => {
+                            return (
+                              <Dropdown.Item eventKey={item.name}>
+                                {item.name}
+                              </Dropdown.Item>
+                            );
+                          })}
+                        </Dropdown.Menu>
+                      </Dropdown>
+                    )}
                     <Dropdown onSelect={handleTime}>
                       <Dropdown.Toggle id="dropdown-basic">
                         {selectedTime || "Monthly"}

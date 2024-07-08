@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Create an instance of axios
 const api = axios.create({
-  baseURL: 'https://api.musaro.net/', // replace with your API base URL
+  baseURL: 'https://16.24.112.93/', // replace with your API base URL
   timeout: 10000, // optional timeout
   headers: {
     'Content-Type': 'application/json',
