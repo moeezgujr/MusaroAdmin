@@ -16,6 +16,7 @@ import Forget from "views/ForgetPassword/Forget";
 import Otp from "views/ForgetPassword/Otp";
 import CreatePassword from "views/ForgetPassword/CreatePassword";
 import ErrorBoundary from "ErrorBoundary";
+import PrivacyPolicy from "views/PrivacyPolicy/PrivacyPolicy";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -44,6 +45,10 @@ root.render(
     <ToastContainer />
     <Switch>
       <ErrorBoundary>
+        <Route
+          path="/privacypolicy"
+          render={(props) => <PrivacyPolicy {...props} />}
+        />
         <Route
           path="/createpassword/:mobile"
           render={(props) => <CreatePassword {...props} />}
