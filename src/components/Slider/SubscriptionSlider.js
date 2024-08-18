@@ -5,6 +5,9 @@ import "./Slider.css";
 import { getRatings, getcustomerbyid, deleteCustomer } from "Apis/Customer";
 import { toast } from "react-toastify";
 import ImageUploadButton from "components/ImageUploader/Imageuploader";
+import Popup from "components/Popup";
+import { verifyProvider } from "Apis/NewSubscription";
+import { useHistory } from "react-router-dom/cjs/react-router-dom";
 
 const Container = styled.div`
   display: flex;
@@ -62,6 +65,8 @@ const CloseButton = styled.button`
 
 const SubscriptionSlider = ({ open, callback, id, data }) => {
   const [isOpen, setIsOpen] = useState(open);
+  const [isPopupOpen, setPopupOpen] = useState(false);
+
   const [formValues, setFormValues] = useState({
     name: "",
     city: "",
@@ -116,16 +121,28 @@ const SubscriptionSlider = ({ open, callback, id, data }) => {
     from: { transform: "translateY(100%)" },
   });
 
-  //   const handleSubmit = async () => {
-  //     const res = await deleteCustomer(id);
-  //     if (!res.error) {
-  //       toast.success("Customer deleted successfully");
-  //       callback();
-  //     }
-  //   };
+  const onClosePopup = () => {
+    setPopupOpen(false);
+    setIsOpen(false);
 
+  };
+  const verify=async()=>{
+    const res = await verifyProvider(id, {
+      status: "APPROVED",
+      reason: '',
+    });
+    if (res.errors === null) {
+      toast.success("Status Approved successfully");
+    } else {
+      toast.error("An Error occurend while updating status");
+    }
+    setIsOpen(false);
+
+  }
   return (
     <>
+      <Popup isOpen={isPopupOpen} onClose={onClosePopup} id={id} comingFrom={'subscriptionList'}/>
+
       <FullScreenWrapper isOpen={isOpen}>
         <CloseButton
           onClick={() => {
@@ -155,13 +172,13 @@ const SubscriptionSlider = ({ open, callback, id, data }) => {
                   <div style={styles.cancelButton}>
                     <button
                       className="rejectbtn mr-1"
-                      onClick={() => window.history.back()}
+                      onClick={() => setPopupOpen(true)}
                     >
                       {"Reject with Note"}
                     </button>
                   </div>
                   <div style={styles.addButton}>
-                    <button className="addaccountBtn">{"Approve"}</button>
+                    <button    onClick={() => verify()} className="addaccountBtn">{"Approve"}</button>
                   </div>
                 </div>
               </div>

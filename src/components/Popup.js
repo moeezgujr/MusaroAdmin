@@ -4,25 +4,42 @@ import "./Popup.css"; // Import your CSS file for styling
 import { toast } from "react-toastify";
 import { verifyWorkshop } from "Apis/Workshop";
 import { useHistory } from "react-router";
+import { verifyProvider } from "Apis/NewSubscription";
 
-const Popup = ({ isOpen, onClose, id }) => {
-  const history=useHistory()
+const Popup = ({ isOpen, onClose, id, comingFrom }) => {
+  const history = useHistory();
   if (!isOpen) return null;
   const [reason, setReason] = useState("");
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const res = await verifyWorkshop(id, {
-      workshopStatus: "REJECTED",
-      rejectionReason: reason,
-    });
-    if (res.errors === null) {
-      toast.success("Status rejected successfully");
-      onClose();
+
+    if (comingFrom === "subscriptionList") {
+      const res = await verifyProvider(id, {
+        status: "REJECTED",
+        reason: reason,
+      });
+      if (res.errors === null) {
+        toast.success("Status Rejected successfully");
+        onClose();
+      } else {
+        toast.error("An Error occurend while updating status");
+        onClose();
+      }
+      history.push("/admin/subscriptions");
     } else {
-      toast.error("An Error occurend while updating status");
-      onClose();
+      const res = await verifyWorkshop(id, {
+        workshopStatus: "REJECTED",
+        rejectionReason: reason,
+      });
+      if (res.errors === null) {
+        toast.success("Status Rejected successfully");
+        onClose();
+      } else {
+        toast.error("An Error occurend while updating status");
+        onClose();
+      }
+      history.push("/admin/content");
     }
-    history.push("/admin/content");
   };
   return (
     <div className="popup">
