@@ -56,6 +56,7 @@ const Tabs = () => {
     if (tab == 1) {
       getProfessions(0);
     } else {
+      setTabTitle("Trend");
       getTrends(0);
     }
   }, [activeTab, storedTab]);
@@ -100,6 +101,26 @@ const Tabs = () => {
     }
     setLoading(false);
   };
+  function stripHTMLAndTruncate(htmlString) {
+    if (typeof htmlString !== 'string') return '';
+  
+    // Remove all <img> tags using a regular expression
+    let noImgString = htmlString.replace(/<img[^>]*>/gi, '');
+  
+    // Remove all other HTML tags
+    let strippedString = noImgString.replace(/<\/?[^>]+(>|$)/g, '');
+  
+    // Set the maximum length to 252 to account for the "..." and the space before the link.
+    const maxLength = 252;
+  
+    // Trim the resulting string to maxLength characters and add "..." if it exceeds maxLength characters
+    let truncatedString = strippedString.length > 255 
+      ? strippedString.slice(0, maxLength) + '...'
+      : strippedString;
+  
+    return truncatedString;
+  }
+  
   return (
     <div className="tabs-container">
       <Header
@@ -190,7 +211,7 @@ const Tabs = () => {
                     createdOn={item.createdAt}
                     title={item.title}
                     imageUrl={imageUrl + item.img}
-                    paragraph={item.description}
+                    paragraph={stripHTMLAndTruncate(item.description)}
                     id={item._id}
                     handleTabClick={editCallback}
                   />

@@ -324,3 +324,43 @@ order: 1;
 flex-grow: 0;
 
 }
+.ql-toolbar.ql-snow{
+  background-color: #ffffff !important;
+}
+.ql-editor{
+  background-color: #ffffff !important;
+}
+
+.image-preview-container {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 10px;
+}
+
+.image-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.delete-image-button {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: rgba(255, 255, 255, 0.7);
+  border: none;
+  border-radius: 50%;
+  padding: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #ff4d4f; /* Red color */
+  transition: background-color 0.2s;
+}
+
+.delete-image-button:hover {
+  background-color: rgba(255, 255, 255, 1);
+}

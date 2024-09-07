@@ -1,70 +1,80 @@
 import React, { useEffect, useState } from "react";
 import "./Professionform.css"; // Import your CSS file for styling
 import ImageUploadButton from "components/ImageUploader/Imageuploader";
-import { addTrend } from "Apis/Trend";
+import { addTrend, getTrendByID, updateTrend } from "Apis/Trend";
 import { useHistory, useParams } from "react-router";
-import { getTrendByID } from "Apis/Trend";
-import { updateTrend } from "Apis/Trend";
 import { toast } from "react-toastify";
+import Editor from "./Editor";
 
 const TrendFormComponent = ({ goBack }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+  const [fields, setFields] = useState([]); // Initialize fields as an empty array
 
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
   };
+
   const { id } = useParams();
+  const history = useHistory();
+
   const fetchTrend = async (id) => {
     const data = await getTrendByID(id);
     setDescription(data.data.description);
     setTitle(data.data.title);
     setImagePreview(process.env.REACT_APP_IMAGE_SRC + data.data.img);
-    // setImage(data.data.description)
+    const ids = JSON.parse(JSON.stringify(data.data.fileIds));
+    setFields(ids);
   };
+
   useEffect(() => {
     if (id) {
       fetchTrend(id);
     }
   }, [id]);
-  const handleDescriptionChange = (e) => {
-    setDescription(e.target.value);
-  };
 
   const handleImageChange = (e) => {
     setImage(e);
     setImagePreview(URL.createObjectURL(e));
   };
-  const history = useHistory();
+
+  const handleImageDelete = () => {
+    setImage(null);
+    setImagePreview(null);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(image);
     const formData = new FormData();
     formData.append("title", title);
+    formData.append("fileIds", JSON.stringify(fields));
     formData.append("description", description);
+
     if (id) {
       if (image) {
         formData.append("img", image);
       }
-      const res = updateTrend(id, formData);
-      if (res.errors === null) toast.success("Trend Updated sucessfully");
-      else toast.success("An error occured");
+      const res = await updateTrend(id, formData);
+      if (res.errors === null) toast.success("Trend Updated successfully");
+      else toast.error("An error occurred");
     } else {
       formData.append("img", image);
       const res = await addTrend(formData);
-      if (res.errors === null) toast.success("Trend added sucessfully");
-      else toast.success("An error occured");
+      if (res.errors === null) toast.success("Trend added successfully");
+      else toast.error("An error occurred");
     }
     history.push("/admin/content");
   };
+
+  const cb = (id) => {
+    setFields((prevFields) => [...prevFields, id]); // Correctly append to the array
+  };
+
   return (
     <>
-      <div className="form-container" style={{ height: "100vh" }}>
-        {/* <button className="go-back-button" onClick={goBack}>
-          Go Back
-        </button> */}
+      <div className="form-container" style={{ height: "1000px" }}>
         <form onSubmit={handleSubmit} className="form">
           <div style={styles.container}>
             <div style={styles.title}>{id ? "Edit Trend" : "Add Trend"}</div>
@@ -95,31 +105,29 @@ const TrendFormComponent = ({ goBack }) => {
                 onChange={handleTitleChange}
               />
             </div>
-            <div className="form-group">
+            <div className="form-group" style={{ width: "100%" }}>
               <label htmlFor="description">Description:</label>
-              <textarea
-                id="description"
-                className="profession-input-textarea"
-                value={description}
-                onChange={handleDescriptionChange}
-              ></textarea>
+              <Editor value={description} cb={cb} setValue={setDescription} />
             </div>
             <div className="form-group">
               <label htmlFor="image">Image:</label>
-              {/* <input type="file" id="image"  className="fileinputcontainer" onChange={handleImageChange} /> */}
-              <ImageUploadButton handleImageChange={handleImageChange} />
-              {imagePreview && (
-                <div className="image-preview">
+              {imagePreview ? (
+                <div className="image-preview-container">
                   <img
                     src={imagePreview}
                     alt="Image Preview"
-                    style={{
-                      width: "150px",
-                      height: "150px",
-                      marginTop: "10px",
-                    }}
+                    className="image-preview"
                   />
+                  <button
+                    type="button"
+                    className="delete-image-button"
+                    onClick={handleImageDelete}
+                  >
+                    &#x2715; {/* Unicode for "X" symbol */}
+                  </button>
                 </div>
+              ) : (
+                <ImageUploadButton handleImageChange={handleImageChange} />
               )}
             </div>
           </div>

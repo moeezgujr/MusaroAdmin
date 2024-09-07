@@ -17,6 +17,25 @@ export const addTrend = async (dto) => {
     }
   }
 };
+export const uploadApi = async (dto) => {
+  try {
+    const formData = new FormData();
+    formData.append("file", dto);
+    const response = await api.post("/general/upload-file", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    // Check if the error has a response property
+    if (error.response) {
+      return error.response.data;
+    } else {
+      return { error: error.message };
+    }
+  }
+};
 export const deleteTrend = async (id) => {
   try {
     const response = await api.delete("/trend=" + id);
