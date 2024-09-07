@@ -58,6 +58,11 @@ const ProfessionFormComponent = ({ goBack }) => {
     setTitle(data.data.name);
     setImagePreview(process.env.REACT_APP_IMAGE_SRC + data.data.img);
   };
+  
+  const handleImageDelete = () => {
+    setImage(null);
+    setImagePreview(null);
+  };
   useEffect(() => {
     if (id) fetchProfession(id);
   }, [id]);
@@ -108,20 +113,23 @@ const ProfessionFormComponent = ({ goBack }) => {
             </div>
             <div className="form-group">
               <label htmlFor="image">Image:</label>
-              {/* <input type="file" id="image"  className="fileinputcontainer" onChange={handleImageChange} /> */}
-              <ImageUploadButton handleImageChange={handleImageChange} />
-              {imagePreview && (
-                <div className="image-preview">
+              {imagePreview ? (
+                <div className="image-preview-container">
                   <img
                     src={imagePreview}
                     alt="Image Preview"
-                    style={{
-                      width: "150px",
-                      height: "150px",
-                      marginTop: "10px",
-                    }}
+                    className="image-preview"
                   />
+                  <button
+                    type="button"
+                    className="delete-image-button"
+                    onClick={handleImageDelete}
+                  >
+                    &#x2715; {/* Unicode for "X" symbol */}
+                  </button>
                 </div>
+              ) : (
+                <ImageUploadButton handleImageChange={handleImageChange} />
               )}
             </div>
           </div>
