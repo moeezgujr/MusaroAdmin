@@ -25,8 +25,6 @@ const TrendFormComponent = ({ goBack }) => {
     setDescription(data.data.description);
     setTitle(data.data.title);
     setImagePreview(process.env.REACT_APP_IMAGE_SRC + data.data.img);
-    const ids = JSON.parse(JSON.stringify(data.data.fileIds));
-    setFields(ids);
   };
 
   useEffect(() => {
