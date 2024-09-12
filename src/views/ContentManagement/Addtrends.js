@@ -22,7 +22,7 @@ const TrendFormComponent = ({ goBack }) => {
 
   const fetchTrend = async (id) => {
     const data = await getTrendByID(id);
-    setDescription(data.data.description);
+    setDescription(data.data.description.replace('/temp/','/trends/'));
     setTitle(data.data.title);
     setImagePreview(process.env.REACT_APP_IMAGE_SRC + data.data.img);
   };

@@ -1,6 +1,6 @@
 // Importing helper modules
 import { uploadApi } from "Apis/Trend";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef } from "react";
 
 // Importing core components
 import QuillEditor from "react-quill";
@@ -9,8 +9,8 @@ import QuillEditor from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
 const Editor = ({ setValue, value, cb }) => {
-  // Editor state
 
+  
   // Editor ref
   const quill = useRef();
 
@@ -32,7 +32,7 @@ const Editor = ({ setValue, value, cb }) => {
       const dto = await uploadApi(file);
       const quillEditor = quill.current.getEditor();
       const range = quillEditor.getSelection(true);
-      const url = dto.data.url;
+      const url = dto.data.url.replace("trends/", "temp/");
       quillEditor.insertEmbed(
         range.index,
         "image",
@@ -87,14 +87,17 @@ const Editor = ({ setValue, value, cb }) => {
   ];
 
   return (
-    <QuillEditor
-      ref={(el) => (quill.current = el)}
-      theme="snow"
-      value={value}
-      formats={formats}
-      modules={modules}
-      onChange={setValue}
-    />
+    <div style={{ maxHeight: "400px", overflowY: "auto" }}> {/* Scrollable Container */}
+      <QuillEditor
+        ref={(el) => (quill.current = el)}
+        theme="snow"
+        value={value}
+        formats={formats}
+        modules={modules}
+        onChange={setValue}
+        style={{ height: "100%" }} // Ensure full height usage within the container
+      />
+    </div>
   );
 };
 
