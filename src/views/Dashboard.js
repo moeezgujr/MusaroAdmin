@@ -37,15 +37,32 @@ function Dashboard() {
   const [subscriptionTime, setSubscriptionTime] = useState("");
   const [newSubTime, setnewSubTime] = useState("");
   const [graphData, setGraphData] = useState("");
+  const [graphLabels, setGraphLabeles] = useState([]);
+  const [subscriptionGraphLabels, setsubscriptionGraphLabels] = useState([]);
   const [subscriptiondata, setsubscriptiondata] = useState("");
   const [metricdata, setmetricdata] = useState("");
   const [loading, setLoading] = useState(true);
   const [subscriptionLoading, setSubscriptionLoading] = useState(true);
   const [metricLoading, setMetricLoading] = useState(true);
   const [totalCountLoading, setTotalCountLoading] = useState(true);
+  const [metriclabels, setMetricLabels] = useState([]);
 
   const [subCity, setsubCity] = useState("");
   const [cityList, setCitylist] = useState([]);
+  const monthNames = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
 
   useEffect(() => {
     const fetchTotalCount = async () => {
@@ -71,31 +88,105 @@ function Dashboard() {
     subscriptionGraphData("MONTHLY");
     fetchCity();
   }, []);
+  const formatGraphLabels = (time, graphData, monthNames) => {
+    const getDateOfISOWeek = (week, year) => {
+      const simple = new Date(year, 0, 1 + (week - 1) * 7);
+      const dayOfWeek = simple.getDay();
+      const ISOWeekStart = new Date(simple);
+      ISOWeekStart.setDate(ISOWeekStart.getDate() - (dayOfWeek || 7) + 1); // Adjust to Monday
+      return `${ISOWeekStart.getDate()} ${monthNames[ISOWeekStart.getMonth()]}`;
+    };
+
+    switch (time) {
+      case "WEEKLY":
+        return graphData.map((item) => getDateOfISOWeek(item.week, item.year));
+      case "MONTHLY":
+        return graphData.map((item) => `${monthNames[item.month - 1]}`);
+      case "DAILY":
+        return graphData.map(
+          (item) => `${item.day} ${monthNames[item.month - 1]}`
+        );
+      case "YEARLY":
+        return graphData.map((item) => item.year);
+      default:
+        return [];
+    }
+  };
+
   const signupGraphData = async (time, city) => {
     setLoading(true);
+    const { startDate, endDate } = getStartAndEndDate(time);
 
-    const data = await signupAnalytics(time, city);
-    setGraphData(addAndAccumulateMonths(data.data));
+    // Fetch data from the API
+    const data = await signupAnalytics(time, city, startDate, endDate);
+    const graphData = data?.data || [];
+
+    const graphLabels = formatGraphLabels(time, graphData, monthNames);
+    setGraphData(graphData);
+    setGraphLabeles(graphLabels);
     setLoading(false);
   };
+
   const subscriptionGraphData = async (time) => {
     setSubscriptionLoading(true);
-    const data = await subscriptionAnalytics(time);
-    setsubscriptiondata(addMissingMonths(data.data));
+    const { startDate, endDate } = getStartAndEndDate(time);
+    const data = await subscriptionAnalytics(time, startDate, endDate);
+    const graphData = data?.data || [];
+    const graphLabels = formatGraphLabels(time, graphData, monthNames);
+    setsubscriptionGraphLabels(graphLabels);
+    setsubscriptiondata(data.data);
     setSubscriptionLoading(false);
   };
   const metricGraphData = async (time, city) => {
     setMetricLoading(true);
-    const data = await trefficMetricAnalytics(time, city);
-    setmetricdata(addAndAccumulateMonths(data.data));
+    const { startDate, endDate } = getStartAndEndDate(time);
+    const data = await trefficMetricAnalytics(time, city, startDate, endDate);
+    const graphData = data?.data || [];
+    const graphLabels = formatGraphLabels(time, graphData, monthNames);
+    setMetricLabels(graphLabels);
+    setmetricdata(graphData);
     setMetricLoading(false);
   };
   const handleSelect = (eventKey) => {
     setSelectedCity(eventKey);
     signupGraphData(selectedTime.toUpperCase(), eventKey);
   };
+  const getStartAndEndDate = (timeFormat='DAILY') => {
+    // Get current date
+    const currentDate = new Date();
+    let startDate = "";
+
+    // Set end date as current date in ISO format
+    const endDate = currentDate.toISOString();
+
+    // Create a copy of the current date for manipulation
+    const startDateObj = new Date(currentDate);
+
+    // Check the timeFormat and subtract the appropriate time
+    if (timeFormat.toUpperCase() === "WEEKLY") {
+      // Subtract 25 days for weekly
+      startDateObj.setDate(startDateObj.getDate() - 25);
+    } else if (timeFormat.toUpperCase() === "MONTHLY") {
+      // Subtract 12 months for monthly
+      startDateObj.setMonth(startDateObj.getMonth() - 12);
+    } else if (timeFormat.toUpperCase() === "DAILY") {
+      // Subtract 15 days for daily
+      startDateObj.setDate(startDateObj.getDate() - 7);
+    } else if (timeFormat.toUpperCase() === "YEARLY") {
+      // Subtract 5 years for yearly
+      startDateObj.setFullYear(startDateObj.getFullYear() - 5);
+    }
+
+    // Convert the manipulated start date to ISO format
+    startDate = startDateObj.toISOString();
+
+    return { startDate, endDate };
+  };
+
   const handleTime = (ev) => {
     setSelectedTime(ev);
+    // Get start and end dates once
+    // Call the graph data function with the relevant parameters
     signupGraphData(ev.toUpperCase(), selectedCity);
   };
   const handleTimeSubscription = (e) => {
@@ -110,92 +201,6 @@ function Dashboard() {
     setsubCity(e);
     metricGraphData(newSubTime.toUpperCase(), e);
   };
-  function addAndAccumulateMonths(data) {
-    if (data?.length === 0 || !data) {
-      return [];
-    }
-
-    // Create a map to accumulate totals for each month
-    const monthMap = new Map();
-
-    data.forEach((item) => {
-      if (monthMap.has(item.month)) {
-        // If the month exists, accumulate totals
-        const existing = monthMap.get(item.month);
-        existing.total += item.total;
-        existing.providers += item.providers;
-        existing.customers += item.customers;
-
-        existing.users += item.users;
-        if (item.week !== undefined) {
-          existing.week = item.week; // Assume the latest week value should be kept
-        }
-      } else {
-        // If the month does not exist, add a new entry
-        monthMap.set(item.month, {
-          year: item.year,
-          month: item.month,
-          total: item.total,
-          users: item.users,
-          week: item.week,
-          providers: item.providers,
-          customers: item.customers,
-        });
-      }
-    });
-
-    // Find the largest month value in the data
-    const maxMonth = Math.max(...data.map((item) => item.month));
-
-    // Initialize the result array
-    const result = [];
-
-    // Loop through all months from 1 to maxMonth
-    for (let month = 1; month <= maxMonth; month++) {
-      if (monthMap.has(month)) {
-        // If the month exists, add the accumulated entry
-        result.push(monthMap.get(month));
-      } else {
-        // If the month does not exist, add a new entry with total 0 and users 0
-        result.push({
-          year: 2024,
-          month: month,
-          total: 0,
-          users: 0,
-          providers: 0,
-          customers: 0,
-        });
-      }
-    }
-
-    return result;
-  }
-  function addMissingMonths(data) {
-    const months = Array.from({ length: 12 }, (_, i) => i + 1);
-    const result = [];
-
-    // Create a set of existing months for quick lookup
-    const existingMonths = new Set(data.map((item) => item.month));
-
-    months.forEach((month) => {
-      if (existingMonths.has(month)) {
-        // If the month exists, add the existing entry
-        result.push(...data.filter((item) => item.month === month));
-      } else {
-        // If the month does not exist, add a new entry with total 0 and users 0
-        result.push({
-          year: 2024,
-          month: month,
-          total: 0,
-          users: 0,
-          customers: 0,
-          providers: 0,
-        });
-      }
-    });
-
-    return result;
-  }
 
   return (
     <>
@@ -371,20 +376,7 @@ function Dashboard() {
                   ) : (
                     <ChartistGraph
                       data={{
-                        labels: [
-                          "Jan",
-                          "Feb",
-                          "Mar",
-                          "Apr",
-                          "May",
-                          "Jun",
-                          "Jul",
-                          "Aug",
-                          "Sep",
-                          "Oct",
-                          "Nov",
-                          "Dec",
-                        ],
+                        labels: graphLabels,
                         series:
                           graphData?.length > 0
                             ? [graphData?.map((Item) => Item.total)]
@@ -463,29 +455,11 @@ function Dashboard() {
                   ) : (
                     <ChartistGraph
                       data={{
-                        labels: [
-                          "Jan",
-                          "Feb",
-                          "Mar",
-                          "Apr",
-                          "Mai",
-                          "Jun",
-                          "Jul",
-                          "Aug",
-                          "Sep",
-                          "Oct",
-                          "Nov",
-                          "Dec",
-                        ],
+                        labels: subscriptionGraphLabels || [],
                         series:
                           subscriptiondata?.length > 0
                             ? [subscriptiondata.map((item) => item.total)]
-                            : [
-                                [
-                                  542, 443, 320, 780, 553, 453, 326, 434, 568,
-                                  610, 756, 895,
-                                ],
-                              ],
+                            : [],
                       }}
                       type="Bar"
                       options={{
@@ -550,18 +524,27 @@ function Dashboard() {
                         <Dropdown.Item eventKey="Yearly">Yearly</Dropdown.Item>
                       </Dropdown.Menu>
                     </Dropdown>
-                    <Dropdown onSelect={handleMetricsCity}>
-                      <Dropdown.Toggle id="dropdown-basic">
-                        {subCity || "City"}
-                      </Dropdown.Toggle>
+                    {Array.isArray(cityList) && cityList?.length > 0 && (
+                      <Dropdown
+                        style={{ marginRight: "10px" }}
+                        onSelect={handleMetricsCity}
+                      >
+                        <Dropdown.Toggle id="dropdown-basic">
+                          {selectedCity || "City"}
+                        </Dropdown.Toggle>
 
-                      <Dropdown.Menu>
-                        <Dropdown.Item eventKey="">Reset</Dropdown.Item>
-                        <Dropdown.Item eventKey="Riyadh">Riyadh</Dropdown.Item>
-                        <Dropdown.Item eventKey="Jeddah">Jeddah</Dropdown.Item>
-                        <Dropdown.Item eventKey="ABC">ABC</Dropdown.Item>
-                      </Dropdown.Menu>
-                    </Dropdown>
+                        <Dropdown.Menu>
+                          <Dropdown.Item eventKey="">Reset</Dropdown.Item>
+                          {cityList.map((item) => {
+                            return (
+                              <Dropdown.Item eventKey={item.name}>
+                                {item.name}
+                              </Dropdown.Item>
+                            );
+                          })}
+                        </Dropdown.Menu>
+                      </Dropdown>
+                    )}
                   </div>
                 </div>
                 <div className="d-flex col justify-content-end mt-3">
@@ -580,27 +563,14 @@ function Dashboard() {
                   ) : (
                     <ChartistGraph
                       data={{
-                        labels: [
-                          "Jan",
-                          "Feb",
-                          "Mar",
-                          "Apr",
-                          "May",
-                          "Jun",
-                          "Jul",
-                          "Aug",
-                          "Sep",
-                          "Oct",
-                          "Nov",
-                          "Dec",
-                        ],
+                        labels: metriclabels || [],
                         series: [
                           metricdata?.length > 0
-                            ? metricdata.map((item) => item.customers)
-                            : [287, 385, 490, 492, 554, 586, 698, 695],
-                          metricdata?.length > 0
                             ? metricdata.map((item) => item.providers)
-                            : [67, 152, 143, 240, 287, 335, 435, 437],
+                            : [],
+                          metricdata?.length > 0
+                            ? metricdata.map((item) => item.customers)
+                            : [],
                         ],
                       }}
                       type="Line"

@@ -22,7 +22,7 @@ const TrendFormComponent = ({ goBack }) => {
 
   const fetchTrend = async (id) => {
     const data = await getTrendByID(id);
-    setDescription(data.data.description.replaceAll('/temp/','/trends/'));
+    setDescription(data.data.description.replaceAll("/temp/", "/trends/"));
     setTitle(data.data.title);
     setImagePreview(process.env.REACT_APP_IMAGE_SRC + data.data.img);
   };
@@ -47,7 +47,9 @@ const TrendFormComponent = ({ goBack }) => {
     e.preventDefault();
     const formData = new FormData();
     formData.append("title", title);
-    formData.append("fileIds", fields.toString());
+    if (fields.length > 0) {
+      formData.append("fileIds", fields.toString());
+    }
     formData.append("description", description);
 
     if (id) {

@@ -29,16 +29,43 @@ import { subscriptionCustomerGraph } from "Apis/Dashboard";
 // import TicketTable from "./RevenueTable";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import { getCities } from "Apis/General";
+import { rfqs } from "Apis/Dashboard";
 function AnalyticsReport() {
   const [totalCount, setTotalCount] = useState({});
-  const [cityA, setSelectedACity] = useState("Riyadh");
-  const [cityB, setSelectedBCity] = useState("Makka");
+  const [cityA, setSelectedACity] = useState("ABHA");
+  const [cityB, setSelectedBCity] = useState("ALBAHA");
+  const [cityC, setSelectedCCity] = useState("ABHA");
+  const [cityD, setSelectedDCity] = useState("ALBAHA");
   const [time, setTime] = useState("Monthly");
-  const [graphtype, setGraphType] = useState("SUBSCRIPTION");
-  const [graph1Data, setGraph1Data] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [totalCountLoading, setTotalCountLoading] = useState(true);
+  const [time1, setTime1] = useState("Monthly");
 
+  const [graphtype, setGraphType] = useState("SUBSCRIPTION");
+  const [graph2type, setGraph2Type] = useState("RFQ");
+  const [graph1Data, setGraph1Data] = useState("");
+  const [rfqData, setRFQData] = useState([]);
+  const [rfqgraphLabelsData, setRfqGraphsLabels] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [loading1, setLoading1] = useState(true);
+
+  const [customerlabels, setgraphlabelsincustomer] = useState([]);
+  const [cityList, setCitylist] = useState([]);
+
+  const [totalCountLoading, setTotalCountLoading] = useState(true);
+  const monthNames = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
   useEffect(() => {
     const fetchTotalCount = async () => {
       try {
@@ -49,62 +76,148 @@ function AnalyticsReport() {
         setTotalCountLoading(false);
       }
     };
-
+    const fetchCity = async () => {
+      try {
+        const data = await getCities();
+        setCitylist(data.data.cities);
+      } catch (err) {
+      } finally {
+      }
+    };
+    fetchCity();
     fetchTotalCount();
     customerGraph(graphtype, time, cityA, cityB);
+    rfqDatafetch(graph2type, time, cityA, cityB);
   }, []);
+  const getStartAndEndDate = (timeFormat = "DAILY") => {
+    // Get current date
+    const currentDate = new Date();
+    let startDate = "";
+
+    // Set end date as current date in ISO format
+    const endDate = currentDate.toISOString();
+
+    // Create a copy of the current date for manipulation
+    const startDateObj = new Date(currentDate);
+
+    // Check the timeFormat and subtract the appropriate time
+    if (timeFormat.toUpperCase() === "WEEKLY") {
+      // Subtract 25 days for weekly
+      startDateObj.setDate(startDateObj.getDate() - 25);
+    } else if (timeFormat.toUpperCase() === "MONTHLY") {
+      // Subtract 12 months for monthly
+      startDateObj.setMonth(startDateObj.getMonth() - 12);
+    } else if (timeFormat.toUpperCase() === "DAILY") {
+      // Subtract 15 days for daily
+      startDateObj.setDate(startDateObj.getDate() - 7);
+    } else if (timeFormat.toUpperCase() === "YEARLY") {
+      // Subtract 5 years for yearly
+      startDateObj.setFullYear(startDateObj.getFullYear() - 5);
+    }
+
+    // Convert the manipulated start date to ISO format
+    startDate = startDateObj.toISOString();
+
+    return { startDate, endDate };
+  };
+  const formatGraphLabels = (time, graphData, monthNames) => {
+    const getDateOfISOWeek = (week, year) => {
+      const simple = new Date(year, 0, 1 + (week - 1) * 7);
+      const dayOfWeek = simple.getDay();
+      const ISOWeekStart = new Date(simple);
+      ISOWeekStart.setDate(ISOWeekStart.getDate() - (dayOfWeek || 7) + 1); // Adjust to Monday
+      return `${ISOWeekStart.getDate()} ${monthNames[ISOWeekStart.getMonth()]}`;
+    };
+
+    switch (
+      time.toUpperCase() // Convert time to uppercase for case-insensitivity
+    ) {
+      case "WEEKLY":
+        return graphData.map((item) => getDateOfISOWeek(item.week, item.year));
+      case "MONTHLY":
+        return graphData.map((item) => `${monthNames[item.month - 1]}`);
+      case "DAILY":
+        return graphData.map(
+          (item) => `${item.day} ${monthNames[item.month - 1]}`
+        );
+      case "YEARLY":
+        return graphData.map((item) => item.year);
+      default:
+        return [];
+    }
+  };
+  const rfqDatafetch = async (
+    graphtype = "RFQ",
+    time = "MONTHLY",
+    cityC = "ABHA",
+    cityD = "ALJUBAIL"
+  ) => {
+    setLoading1(true);
+    const { startDate, endDate } = getStartAndEndDate(time);
+    const data = await rfqs(
+      graphtype,
+      time.toUpperCase(),
+      cityC,
+      cityD,
+      startDate,
+      endDate
+    );
+    const graphData = data?.data || [];
+    const graphLabels = formatGraphLabels(time, graphData, monthNames);
+    setRfqGraphsLabels(graphLabels);
+    setRFQData(graphData);
+    setLoading1(false);
+  };
   const handleSelect = (e, type) => {
-    if (type === "cityb") {
-      setSelectedBCity(e);
-      customerGraph(graphtype, time, cityA, e);
-    } else {
+    if (type === "citya") {
       setSelectedACity(e);
+      customerGraph(graphtype, time, cityA, e);
+    } else if (type === "cityb") {
+      setSelectedBCity(e);
       customerGraph(graphtype, time, e, cityB);
+    } else if (type === "cityc") {
+      setSelectedCCity(e);
+      rfqDatafetch(graph2type, time, e, cityC);
+    } else if (type === "cityd") {
+      setSelectedDCity(e);
+      rfqDatafetch(graph2type, time, e, cityD);
     }
   };
   const customerGraph = async (graphtype, time, cityA, cityB) => {
     setLoading(true);
-    const data = await subscriptionCustomerGraph(graphtype, time, cityA, cityB);
-    setGraph1Data(addMissingMonths(data.data), time);
+    const { startDate, endDate } = getStartAndEndDate(time);
+
+    const data = await subscriptionCustomerGraph(
+      graphtype,
+      time,
+      cityA,
+      cityB,
+      startDate,
+      endDate
+    );
+    const graphData = data?.data || [];
+
+    const graphLabels = formatGraphLabels(time, graphData, monthNames);
+    setgraphlabelsincustomer(graphLabels);
+    setGraph1Data(graphData);
     setLoading(false);
   };
-  function addMissingMonths(data) {
-    if (data.length === 0) {
-      return [];
-    }
-    const months = Array.from({ length: 12 }, (_, i) => i + 1);
-    const result = [];
-
-    // Create a set of existing months for quick lookup
-    const existingMonths = new Set(data.map((item) => item.month));
-
-    months.forEach((month) => {
-      if (existingMonths.has(month)) {
-        // If the month exists, add the existing entry
-        result.push(...data.filter((item) => item.month === month));
-      } else {
-        // If the month does not exist, add a new entry with total 0 and users 0
-        result.push({
-          cityA: 0,
-          cityB: 0,
-          month: month,
-          total: 0,
-          week: 0,
-          year: 2024,
-        });
-      }
-    });
-
-    return result;
-  }
 
   const handleType = (type) => {
     setGraphType(type);
     customerGraph(type, time, cityA, cityB);
   };
+  const handleRFQType = (type) => {
+    setGraph2Type(type);
+    rfqDatafetch(type, time, cityC, cityD);
+  };
   const handleTime = (e) => {
     setTime(e);
     customerGraph(graphtype, e, cityA, cityB);
+  };
+  const handleTime1 = (e) => {
+    setTime1(e);
+    rfqDatafetch(graph2type, e, cityC, cityD);
   };
   return (
     <>
@@ -332,10 +445,11 @@ function AnalyticsReport() {
                         </div>
                         <div className="ml-2">
                           <Card.Title as="h4">
-                          {totalCountLoading ? (
+                            {totalCountLoading ? (
                               <Skeleton width={100} height={20} />
                             ) : (
-                            totalCount.cancelSubscriptionCount || 0)}
+                              totalCount.cancelSubscriptionCount || 0
+                            )}
                           </Card.Title>
 
                           <p className="card-category">
@@ -395,46 +509,61 @@ function AnalyticsReport() {
                         <Dropdown.Item eventKey="Yearly">Yearly</Dropdown.Item>
                       </Dropdown.Menu>
                     </Dropdown>
-                    <Dropdown
-                      style={{ marginRight: "10px" }}
-                      onSelect={(e) => handleSelect(e, "citya")}
-                    >
-                      <Dropdown.Toggle id="dropdown-basic">
-                        {cityA || "City"}
-                      </Dropdown.Toggle>
+                    {Array.isArray(cityList) && cityList?.length > 0 && (
+                      <Dropdown
+                        style={{ marginRight: "10px" }}
+                        onSelect={(e) => handleSelect(e, "citya")}
+                      >
+                        <Dropdown.Toggle id="dropdown-basic">
+                          {cityA || "City"}
+                        </Dropdown.Toggle>
 
-                      <Dropdown.Menu>
-                        <Dropdown.Item eventKey="">Reset</Dropdown.Item>
-                        <Dropdown.Item eventKey="Riyadh">Riyadh</Dropdown.Item>
-                        <Dropdown.Item eventKey="Jeddah">Jeddah</Dropdown.Item>
-                        <Dropdown.Item eventKey="Madina">Madina</Dropdown.Item>
-                        <Dropdown.Item eventKey="Makka">Makka</Dropdown.Item>
-                      </Dropdown.Menu>
-                    </Dropdown>
-                    <Dropdown
-                      style={{ marginRight: "10px" }}
-                      onSelect={(e) => handleSelect(e, "cityb")}
-                    >
-                      <Dropdown.Toggle id="dropdown-basic">
-                        {cityB || "To City"}
-                      </Dropdown.Toggle>
-                      <Dropdown.Menu>
-                        <Dropdown.Item eventKey="">Reset</Dropdown.Item>
-                        <Dropdown.Item eventKey="Riyadh">Riyadh</Dropdown.Item>
-                        <Dropdown.Item eventKey="Jeddah">Jeddah</Dropdown.Item>
-                        <Dropdown.Item eventKey="Madina">Madina</Dropdown.Item>
-                        <Dropdown.Item eventKey="Makka">Makka</Dropdown.Item>
-                      </Dropdown.Menu>
-                    </Dropdown>
+                        <Dropdown.Menu>
+                          <Dropdown.Item eventKey="">Reset</Dropdown.Item>
+                          {cityList.map((item) => {
+                            return (
+                              <Dropdown.Item eventKey={item.name}>
+                                {item.name}
+                              </Dropdown.Item>
+                            );
+                          })}
+                        </Dropdown.Menu>
+                      </Dropdown>
+                    )}
+                    {Array.isArray(cityList) && cityList?.length > 0 && (
+                      <Dropdown
+                        style={{ marginRight: "10px" }}
+                        onSelect={(e) => handleSelect(e, "cityb")}
+                      >
+                        <Dropdown.Toggle id="dropdown-basic">
+                          {cityB || "City"}
+                        </Dropdown.Toggle>
+
+                        <Dropdown.Menu>
+                          <Dropdown.Item eventKey="">Reset</Dropdown.Item>
+                          {cityList.map((item) => {
+                            return (
+                              <Dropdown.Item eventKey={item.name}>
+                                {item.name}
+                              </Dropdown.Item>
+                            );
+                          })}
+                        </Dropdown.Menu>
+                      </Dropdown>
+                    )}
                   </div>
                 </div>
                 <div className="d-flex col justify-content-end">
-                  <p className="customer_metric_text">
-                    <SecondColoricon /> Total
-                  </p>
-                  <p className="customer_metric_text">
-                    <ColorIcon /> City
-                  </p>
+                  {cityA && (
+                    <p className="customer_metric_text">
+                      <SecondColoricon /> {cityA}
+                    </p>
+                  )}
+                  {cityB && (
+                    <p className="customer_metric_text">
+                      <ColorIcon /> {cityB}
+                    </p>
+                  )}
                 </div>
               </Card.Header>
               <Card.Body>
@@ -444,23 +573,10 @@ function AnalyticsReport() {
                   ) : (
                     <ChartistGraph
                       data={{
-                        labels: [
-                          "Jan",
-                          "Feb",
-                          "Mar",
-                          "Apr",
-                          "May",
-                          "Jun",
-                          "Jul",
-                          "Aug",
-                          "Sep",
-                          "Oct",
-                          "Nov",
-                          "Dec",
-                        ],
+                        labels: customerlabels || [],
                         series: [
                           graph1Data?.length > 0
-                            ? graph1Data.map((item) => item.cityA)
+                            ? [graph1Data.map((item) => item.cityA)]
                             : [],
                           graph1Data?.length > 0
                             ? graph1Data.map((item) => item.cityB)
@@ -512,17 +628,17 @@ function AnalyticsReport() {
                     <div className="tabs">
                       <div
                         className={`tab-1 tab ${
-                          graphtype === "SUBSCRIPTION" ? "activeTab" : ""
+                          graph2type === "REVENUE" ? "activeTab" : ""
                         }`}
-                        onClick={() => handleType("SUBSCRIPTION")}
+                        onClick={() => handleRFQType("REVENUE")}
                       >
                         Ads Revenue
                       </div>
                       <div
                         className={`tab ${
-                          graphtype === "CUSTOMER" ? "activeTab" : ""
+                          graph2type === "RFQ" ? "activeTab" : ""
                         }`}
-                        onClick={() => handleType("CUSTOMER")}
+                        onClick={() => handleRFQType("RFQ")}
                       >
                         RFQs
                       </div>
@@ -530,11 +646,11 @@ function AnalyticsReport() {
                   </Card.Title>
                   <div className="d-flex row mr-3">
                     <Dropdown
-                      onSelect={handleTime}
+                      onSelect={handleTime1}
                       style={{ marginRight: "10px" }}
                     >
                       <Dropdown.Toggle id="dropdown-basic">
-                        {time || "Monthly"}
+                        {time1 || "Monthly"}
                       </Dropdown.Toggle>
 
                       <Dropdown.Menu>
@@ -548,37 +664,49 @@ function AnalyticsReport() {
                         <Dropdown.Item eventKey="Yearly">Yearly</Dropdown.Item>
                       </Dropdown.Menu>
                     </Dropdown>
-                    <Dropdown
-                      style={{ marginRight: "10px" }}
-                      onSelect={(e) => handleSelect(e, "citya")}
-                    >
-                      <Dropdown.Toggle id="dropdown-basic">
-                        {cityA || "City"}
-                      </Dropdown.Toggle>
 
-                      <Dropdown.Menu>
-                        <Dropdown.Item eventKey="">Reset</Dropdown.Item>
-                        <Dropdown.Item eventKey="Riyadh">Riyadh</Dropdown.Item>
-                        <Dropdown.Item eventKey="Jeddah">Jeddah</Dropdown.Item>
-                        <Dropdown.Item eventKey="Madina">Madina</Dropdown.Item>
-                        <Dropdown.Item eventKey="Makka">Makka</Dropdown.Item>
-                      </Dropdown.Menu>
-                    </Dropdown>
-                    <Dropdown
-                      style={{ marginRight: "10px" }}
-                      onSelect={(e) => handleSelect(e, "cityb")}
-                    >
-                      <Dropdown.Toggle id="dropdown-basic">
-                        {cityB || "To City"}
-                      </Dropdown.Toggle>
-                      <Dropdown.Menu>
-                        <Dropdown.Item eventKey="">Reset</Dropdown.Item>
-                        <Dropdown.Item eventKey="Riyadh">Riyadh</Dropdown.Item>
-                        <Dropdown.Item eventKey="Jeddah">Jeddah</Dropdown.Item>
-                        <Dropdown.Item eventKey="Madina">Madina</Dropdown.Item>
-                        <Dropdown.Item eventKey="Makka">Makka</Dropdown.Item>
-                      </Dropdown.Menu>
-                    </Dropdown>
+                    {Array.isArray(cityList) && cityList?.length > 0 && (
+                      <Dropdown
+                        style={{ marginRight: "10px" }}
+                        onSelect={(e) => handleSelect(e, "cityc")}
+                      >
+                        <Dropdown.Toggle id="dropdown-basic">
+                          {cityC || "City"}
+                        </Dropdown.Toggle>
+
+                        <Dropdown.Menu>
+                          <Dropdown.Item eventKey="">Reset</Dropdown.Item>
+                          {cityList.map((item) => {
+                            return (
+                              <Dropdown.Item eventKey={item.name}>
+                                {item.name}
+                              </Dropdown.Item>
+                            );
+                          })}
+                        </Dropdown.Menu>
+                      </Dropdown>
+                    )}
+                    {Array.isArray(cityList) && cityList?.length > 0 && (
+                      <Dropdown
+                        style={{ marginRight: "10px" }}
+                        onSelect={(e) => handleSelect(e, "cityd")}
+                      >
+                        <Dropdown.Toggle id="dropdown-basic">
+                          {cityD || "To City"}
+                        </Dropdown.Toggle>
+
+                        <Dropdown.Menu>
+                          <Dropdown.Item eventKey="">Reset</Dropdown.Item>
+                          {cityList.map((item) => {
+                            return (
+                              <Dropdown.Item eventKey={item.name}>
+                                {item.name}
+                              </Dropdown.Item>
+                            );
+                          })}
+                        </Dropdown.Menu>
+                      </Dropdown>
+                    )}
                   </div>
                 </div>
 
@@ -595,19 +723,14 @@ function AnalyticsReport() {
                 <div className="ct-chart" id="chartHours">
                   <ChartistGraph
                     data={{
-                      labels: [
-                        "9:00AM",
-                        "12:00AM",
-                        "3:00PM",
-                        "6:00PM",
-                        "9:00PM",
-                        "12:00PM",
-                        "3:00AM",
-                        "6:00AM",
-                      ],
+                      labels: rfqgraphLabelsData,
                       series: [
-                        [287, 385, 490, 492, 554, 586, 698, 695],
-                        [67, 152, 143, 240, 287, 335, 435, 437],
+                        rfqData?.length > 0
+                          ? [rfqData.map((item) => item.cityA)]
+                          : [],
+                        rfqData?.length > 0
+                          ? rfqData.map((item) => item.cityB)
+                          : [],
                       ],
                     }}
                     type="Line"
