@@ -50,7 +50,6 @@ function Revenue() {
     <>
       <Container fluid>
         <p className="dashboard-title">Subscription & Revenue</p>
-
         <Row>
           <Col lg="4" sm="6">
             <Card className="card-stats" style={{ height: "80%" }}>
@@ -63,9 +62,8 @@ function Revenue() {
                       </div>
                       <div className="ml-2">
                         <Card.Title as="h4">
-                          {totalCount ? totalCount.overallCustomerCount : <Skeleton width={80} />}
+                          {totalCount ? totalCount.overallCustomerCount : <Skeleton width={120} />}
                         </Card.Title>
-
                         <p className="card-category">Overall Customers</p>
                       </div>
                     </div>
@@ -144,198 +142,14 @@ function Revenue() {
                 Canceled Subscriptions
               </button>
             </div>
-            <div className="filter-container">
-              <Dropdown>
-                <Dropdown.Toggle id="dropdown-basic">Date</Dropdown.Toggle>
-                <Dropdown.Menu>
-                  <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                  <Dropdown.Item href="#/action-2">
-                    Another action
-                  </Dropdown.Item>
-                  <Dropdown.Item href="#/action-3">
-                    Something else
-                  </Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
-            </div>
+           
           </div>
         </Row>
         <Row className="mb-5">
           <p className="cancel-subscription-text">Cancel Subscription</p>
           <TicketTable tab={tab} />
         </Row>
-        <Row>
-          <Col md="6">
-            <Card>
-              <Card.Header>
-                <div className="d-flex row justify-content-between">
-                  <Card.Title as="h4" className="ml-3">
-                    Subscription Revenue
-                  </Card.Title>
-                  <div className="d-flex row mr-3">
-                    <Dropdown style={{ marginRight: "10px" }}>
-                      <Dropdown.Toggle id="dropdown-basic">
-                        Weekly
-                      </Dropdown.Toggle>
 
-                      <Dropdown.Menu>
-                        <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                        <Dropdown.Item href="#/action-2">
-                          Another action
-                        </Dropdown.Item>
-                        <Dropdown.Item href="#/action-3">
-                          Something else
-                        </Dropdown.Item>
-                      </Dropdown.Menu>
-                    </Dropdown>
-                  </div>
-                </div>
-              </Card.Header>
-              <Card.Body>
-                <div className="ct-chart" id="chartActivity">
-                  <ChartistGraph
-                    data={{
-                      labels: [
-                        "Jan",
-                        "Feb",
-                        "Mar",
-                        "Apr",
-                        "Mai",
-                        "Jun",
-                        "Jul",
-                        "Aug",
-                        "Sep",
-                        "Oct",
-                        "Nov",
-                        "Dec",
-                      ],
-                      series: [
-                        [
-                          542, 443, 320, 780, 553, 453, 326, 434, 568, 610, 756,
-                          895,
-                        ],
-                      ],
-                    }}
-                    type="Bar"
-                    options={{
-                      seriesBarDistance: 10,
-                      axisX: {
-                        showGrid: false,
-                      },
-                      height: "245px",
-                    }}
-                    responsiveOptions={[
-                      [
-                        "screen and (max-width: 640px)",
-                        {
-                          seriesBarDistance: 5,
-                          axisX: {
-                            labelInterpolationFnc: function (value) {
-                              return value[0];
-                            },
-                          },
-                        },
-                      ],
-                    ]}
-                  />
-                </div>
-              </Card.Body>
-            </Card>
-          </Col>
-          <Col md="6">
-            <Card>
-              <Card.Header>
-                <div className="d-flex row justify-content-between">
-                  <Card.Title as="h4" className="ml-3">
-                    Adds Revenue
-                  </Card.Title>
-                  <div className="d-flex row mr-4">
-                    <Dropdown>
-                      <Dropdown.Toggle id="dropdown-basic">
-                        Monthly
-                      </Dropdown.Toggle>
-
-                      <Dropdown.Menu>
-                        <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                        <Dropdown.Item href="#/action-2">
-                          Another action
-                        </Dropdown.Item>
-                        <Dropdown.Item href="#/action-3">
-                          Something else
-                        </Dropdown.Item>
-                      </Dropdown.Menu>
-                    </Dropdown>
-                  </div>
-                </div>
-              </Card.Header>
-              <Card.Body>
-                <div className="ct-chart" id="chartHours">
-                  <ChartistGraph
-                    data={{
-                      labels: [
-                        "Jan",
-                        "Feb",
-                        "Mar",
-                        "Apr",
-                        "May",
-                        "Jun",
-                        "Jul",
-                        "Aug",
-                        "Sep",
-                        "Oct",
-                        "Nov",
-                        "Dec",
-                      ],
-                      series: [[23, 113, 67, 108, 190, 239, 307, 308]],
-                    }}
-                    type="Line"
-                    options={{
-                      low: 0,
-                      high: 400,
-                      showArea: false,
-                      height: "245px",
-                      axisX: {
-                        showGrid: false,
-                      },
-                      lineSmooth: true,
-                      showLine: true,
-                      showPoint: false,
-                      fullWidth: true,
-                      chartPadding: {
-                        right: 50,
-                      },
-                    }}
-                    responsiveOptions={[
-                      [
-                        "screen and (max-width: 640px)",
-                        {
-                          axisX: {
-                            labelInterpolationFnc: function (value) {
-                              return value[0];
-                            },
-                          },
-                        },
-                      ],
-                    ]}
-                  />
-                </div>
-              </Card.Body>
-              {/* <Card.Footer>
-                <div className="legend">
-                  <i className="fas fa-circle text-info"></i>
-                  Open <i className="fas fa-circle text-danger"></i>
-                  Click <i className="fas fa-circle text-warning"></i>
-                  Click Second Time
-                </div>
-                <hr></hr>
-                <div className="stats">
-                  <i className="fas fa-history"></i>
-                  Updated 3 minutes ago
-                </div>
-              </Card.Footer> */}
-            </Card>
-          </Col>
-        </Row>
       </Container>
     </>
   );

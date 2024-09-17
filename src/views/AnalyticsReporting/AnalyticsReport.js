@@ -109,7 +109,7 @@ function AnalyticsReport() {
       startDateObj.setMonth(startDateObj.getMonth() - 12);
     } else if (timeFormat.toUpperCase() === "DAILY") {
       // Subtract 15 days for daily
-      startDateObj.setDate(startDateObj.getDate() - 7);
+      startDateObj.setDate(startDateObj.getDate() - 30);
     } else if (timeFormat.toUpperCase() === "YEARLY") {
       // Subtract 5 years for yearly
       startDateObj.setFullYear(startDateObj.getFullYear() - 5);
@@ -137,9 +137,20 @@ function AnalyticsReport() {
       case "MONTHLY":
         return graphData.map((item) => `${monthNames[item.month - 1]}`);
       case "DAILY":
-        return graphData.map(
-          (item) => `${item.day} ${monthNames[item.month - 1]}`
-        );
+        return graphData.map((item, index) => {
+          const dayLabel = `${item.day} ${monthNames[item.month - 1]}`;
+
+          // Add labels at the start, end, and every 5th point
+          if (
+            index === 0 ||
+            index === graphData.length - 1 ||
+            index % 2 === 0
+          ) {
+            return dayLabel;
+          } else {
+            return ""; // Skip label for other points
+          }
+        });
       case "YEARLY":
         return graphData.map((item) => item.year);
       default:
@@ -597,6 +608,7 @@ function AnalyticsReport() {
                             return index % 2 === 0 ? value : null;
                           },
                         },
+                        showPoint: true,
                         height: "245px",
                       }}
                       responsiveOptions={[
@@ -626,14 +638,6 @@ function AnalyticsReport() {
                 <div className="d-flex row justify-content-between">
                   <Card.Title as="h4" className="ml-3">
                     <div className="tabs">
-                      <div
-                        className={`tab-1 tab ${
-                          graph2type === "REVENUE" ? "activeTab" : ""
-                        }`}
-                        onClick={() => handleRFQType("REVENUE")}
-                      >
-                        Ads Revenue
-                      </div>
                       <div
                         className={`tab ${
                           graph2type === "RFQ" ? "activeTab" : ""
