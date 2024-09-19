@@ -38,7 +38,6 @@ import Support from "views/Support/Support";
 import CustomerFormComponent from "views/CustomerManagement/CustomerDetails";
 
 const dashboardRoutes = [
-
   {
     path: "/dashboard",
     name: "Dashboard Overview",
@@ -53,6 +52,7 @@ const dashboardRoutes = [
     icon: "user",
     component: UserTable,
     layout: "/admin",
+    key: "UserManagement",
   },
   {
     path: "/adduser",
@@ -132,6 +132,7 @@ const dashboardRoutes = [
     icon: "content",
     component: ContentView,
     layout: "/admin",
+    key: "ContentManagement",
   },
   {
     path: "/anaylticsreporting",
@@ -139,6 +140,7 @@ const dashboardRoutes = [
     icon: "anaylticsreporting",
     component: AnalyticsReport,
     layout: "/admin",
+    key: "Analytics",
   },
   {
     path: "/customermanagement",
@@ -146,6 +148,7 @@ const dashboardRoutes = [
     icon: "customer",
     component: Customer,
     layout: "/admin",
+    key: "CustomerManagement",
   },
 
   {
@@ -154,6 +157,7 @@ const dashboardRoutes = [
     icon: "subscriptions",
     component: Subscription,
     layout: "/admin",
+    key: "NewSubscriptions",
   },
   {
     path: "/revenuereport",
@@ -161,6 +165,7 @@ const dashboardRoutes = [
     icon: "revenuereport",
     component: Revenue,
     layout: "/admin",
+    key: "Revenue",
   },
   {
     path: "/maps",

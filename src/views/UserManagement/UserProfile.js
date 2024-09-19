@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { useHistory, useParams } from "react-router";
 import { getUser } from "Apis/User";
 import { editUser } from "Apis/User";
+import Revenue from "views/RevenueManagement/Revenue";
 
 const User = ({ goBack }) => {
   const [name, setName] = useState("");
@@ -15,10 +16,12 @@ const User = ({ goBack }) => {
   const [mobile, setMobile] = useState("");
   const [role, setRole] = useState(null);
   const [permissions, setPermissions] = useState({
-    permission1: false,
-    permission2: false,
-    permission3: false,
-    permission4: false,
+    UserManagement: false,
+    ContentManagement: false,
+    Analytics: false,
+    CustomerManagement: false,
+    NewSubscriptions: false,
+    Revenue: false,
   });
   const history = useHistory();
   const { id } = useParams();
@@ -65,10 +68,13 @@ const User = ({ goBack }) => {
   const handleSelectAllChange = (e) => {
     const isChecked = e.target.checked;
     setPermissions({
-      permission1: isChecked,
-      permission2: isChecked,
-      permission3: isChecked,
-      permission4: isChecked,
+      Analytics: isChecked,
+      ContentManagement: isChecked,
+      CustomerManagement: isChecked,
+      Revenue: isChecked,
+      NewSubscriptions: isChecked,
+      ContentManagement: isChecked,
+      UserManagement: isChecked,
     });
   };
   const handleMobileChange = (e) => setMobile(e.target.value);
@@ -238,46 +244,68 @@ const User = ({ goBack }) => {
               <div className="mb-3">
                 <input
                   type="checkbox"
-                  id="permission1"
-                  name="permission1"
-                  checked={permissions.permission1}
+                  id="UserManagement"
+                  name="UserManagement"
+                  checked={permissions.UserManagement}
                   onChange={handlePermissionChange}
                   className="mr-1"
                 />
-                <label htmlFor="permission1">Permission 1</label>
+                <label htmlFor="permission1">User Management</label>
               </div>
               <div className="mb-3">
                 <input
                   type="checkbox"
-                  id="permission2"
-                  name="permission2"
-                  checked={permissions.permission2}
+                  id="ContentManagement"
+                  name="ContentManagement"
+                  checked={permissions.ContentManagement}
                   onChange={handlePermissionChange}
                   className="mr-1"
                 />
-                <label htmlFor="permission2">Permission 2</label>
+                <label htmlFor="permission2">Content Management</label>
               </div>
               <div className="mb-3">
                 <input
                   type="checkbox"
-                  id="permission3"
-                  name="permission3"
-                  checked={permissions.permission3}
+                  id="Analytics"
+                  name="Analytics"
+                  checked={permissions.Analytics}
                   onChange={handlePermissionChange}
                   className="mr-1"
                 />
-                <label htmlFor="permission3">Permission 3</label>
+                <label htmlFor="permission3">Analytics</label>
               </div>
               <div className="mb-3">
                 <input
                   type="checkbox"
-                  id="permission4"
-                  name="permission4"
-                  checked={permissions.permission4}
+                  id="CustomerManagement"
+                  name="CustomerManagement"
+                  checked={permissions.CustomerManagement}
                   onChange={handlePermissionChange}
                   className="mr-1"
                 />
-                <label htmlFor="permission4">Permission 4</label>
+                <label htmlFor="permission4">Customer Management</label>
+              </div>
+              <div className="mb-3">
+                <input
+                  type="checkbox"
+                  id="NewSubscriptions"
+                  name="NewSubscriptions"
+                  checked={permissions.NewSubscriptions}
+                  onChange={handlePermissionChange}
+                  className="mr-1"
+                />
+                <label htmlFor="permission4">Subscriptions</label>
+              </div>
+              <div className="mb-3">
+                <input
+                  type="checkbox"
+                  id="Revenue"
+                  name="Revenue"
+                  checked={permissions.Revenue}
+                  onChange={handlePermissionChange}
+                  className="mr-1"
+                />
+                <label htmlFor="permission4">Revenue</label>
               </div>
             </div>
             <br />

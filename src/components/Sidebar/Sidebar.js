@@ -37,6 +37,7 @@ function Sidebar({ color, image, routes }) {
   const activeRoute = (routeName) => {
     return location.pathname.indexOf(routeName) > -1 ? "active" : "";
   };
+  const userPermissions = JSON.parse(localStorage.getItem("userData"))?.data?.user?.permissions || [];
   return (
     <div className="sidebar" data-image={image} data-color={color}>
       <div className="sidebar-background" />
@@ -56,7 +57,7 @@ function Sidebar({ color, image, routes }) {
 
         <Nav>
           {routes.map((prop, key) => {
-            if (!prop.redirect && !prop.isNotAvailable)
+            if (!prop.redirect && !prop.isNotAvailable && (!prop.key ||userPermissions.includes(prop.key)))
               return (
                 <li
                   className={
