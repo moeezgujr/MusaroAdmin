@@ -68,7 +68,7 @@ export const updateTrend = async (id, dto) => {
 };
 export const getAllTrend = async (page) => {
   try {
-    const response = await api.get("/trend/list?limit=10&offset=" + page);
+    const response = await api.get("/trend/list?limit=10&offset=" + (page * 10));
     return response.data;
   } catch (error) {
     // Check if the error has a response property

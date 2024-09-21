@@ -3,7 +3,7 @@ import api from "./Axios";
 export const customerList = async (page) => {
   try {
     const response = await api.get(
-      "/customer/list-customers?limit=10&offset=" + page
+      "/customer/list-customers?limit=10&offset=" + (page*10)
     );
     return response.data;
   } catch (error) {
@@ -47,7 +47,7 @@ export const getcustomerbyid = async (text) => {
 export const getProviders = async (page) => {
   try {
     const response = await api.get(
-      "/provider/list-providers?limit=10&offset=" + page
+      "/provider/list-providers?limit=10&offset=" + (page*10)
     );
     return response.data;
   } catch (error) {

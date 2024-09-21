@@ -32,7 +32,7 @@ export const deleteTrend = async (id) => {
 };
 export const updateProfession = async (id, dto) => {
   try {
-    const response = await api.patch("/general/profession/" +id, dto, {
+    const response = await api.patch("/general/profession/" + id, dto, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -50,7 +50,7 @@ export const updateProfession = async (id, dto) => {
 export const getAllProfession = async (page) => {
   try {
     const response = await api.get(
-      `/general/professions?limit=10&offset=${page}&status=ACTIVE`
+      `/general/professions?limit=10&offset=${page * 10}&status=ACTIVE`
     );
     return response.data;
   } catch (error) {

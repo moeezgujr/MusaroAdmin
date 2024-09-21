@@ -52,7 +52,7 @@ function UserList() {
   const columns = [
     { value: "name", label: "Name" },
     { value: "username", label: "Username" },
-    { value: "role", label: "Role" },
+    { value: "designation", label: "Designation" },
   ];
 
   const paginationCallback = (val) => {

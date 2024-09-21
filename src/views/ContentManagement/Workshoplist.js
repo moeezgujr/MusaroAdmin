@@ -16,8 +16,8 @@ function WorkshopsList() {
     console.log(`You clicked me! ${title}`);
   };
 
-  const fetchWorkshops = async () => {
-    const data = await getWorkshopList(0);
+  const fetchWorkshops = async (page) => {
+    const data = await getWorkshopList(page);
     const list = data.data.workshops.map((item) => {
       return {
         ...item,
@@ -32,7 +32,7 @@ function WorkshopsList() {
   };
 
   useEffect(() => {
-    fetchWorkshops();
+    fetchWorkshops(0);
   }, []);
 
   const columns = [
@@ -45,6 +45,11 @@ function WorkshopsList() {
   const history = useHistory();
   const callback = (type, id) => {
     history.push("/admin/addworkshop/" + id);
+  };
+  const onPageChange = (page) => {
+    if (page > 0) {
+      fetchWorkshops(page - 1);
+    }
   };
   return (
     <>
@@ -66,6 +71,7 @@ function WorkshopsList() {
           currentPage={pagination.page}
           totalPages={pagination.pages}
           isPaginationShow={pagination.pages > 1 && true}
+          onPageChange={onPageChange}
         />
       )}
     </>

@@ -16,7 +16,7 @@ export const addWorkshop = async (dto) => {
 export const getWorkshopList = async (page) => {
   try {
     const response = await api.get(
-      "/workshop/list?limit=10&status=PUBLISHED&offset=" + page
+      "/workshop/list?limit=10&offset=" + (page * 10)
     );
     return response.data;
   } catch (error) {

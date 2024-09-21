@@ -21,6 +21,9 @@ export const TableWithPagination = ({
     if (label === "createdAt") {
       return new Date(value).toLocaleDateString();
     }
+    if(!value){
+      value='Not available'
+    }
     return value;
   };
   function capitalizeFirstLetterOnly(str) {
