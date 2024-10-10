@@ -12,6 +12,7 @@ const ProfessionFormComponent = ({ goBack }) => {
   const [description, setDescription] = useState("");
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+  const [loading, setLoading] = useState(false); // State to manage button loading
 
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
@@ -27,30 +28,43 @@ const ProfessionFormComponent = ({ goBack }) => {
   const history = useHistory();
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (loading) return; // Prevent further API calls while loading is true
+    
+    setLoading(true); // Disable button
     const formData = new FormData();
     formData.append("name", title);
     formData.append("description", description);
+    
     if (id) {
       if (image) {
         formData.append("img", image);
       }
       const res = await updateProfession(id, formData);
       if (res?.message === "Success") {
-        toast.success("Profession updated sucessfully");
+        toast.success("Profession updated successfully");
       } else {
-        toast.error("An error occured while updating data");
+        toast.error("An error occurred while updating data");
       }
     } else {
       formData.append("img", image);
       const res = await addProfession(formData);
       if (res?.message === "New Profession Added!") {
-        toast.success("Profession added sucessfully");
+        toast.success("Profession added successfully");
       } else {
-        toast.error("An error occured while adding data");
+        toast.error("An error occurred while adding data");
       }
     }
+
+    // After API call, navigate back to the content page
     history.push("/admin/content");
+
+    // Re-enable button after 30 seconds
+    setTimeout(() => {
+      setLoading(false);
+    }, 30000); // 30 seconds
   };
+
   const { id } = useParams();
   const fetchProfession = async (id) => {
     const data = await getProfessionsbyId(id);
@@ -63,30 +77,30 @@ const ProfessionFormComponent = ({ goBack }) => {
     setImage(null);
     setImagePreview(null);
   };
+
   useEffect(() => {
     if (id) fetchProfession(id);
   }, [id]);
+
   return (
     <>
       <div className="form-container" style={{ height: "100vh" }}>
-        {/* <button className="go-back-button" onClick={goBack}>
-          Go Back
-        </button> */}
         <form onSubmit={handleSubmit} className="form">
           <div style={styles.container}>
-            <div style={styles.title}>{"Add Profession"}</div>
+            <div style={styles.title}>{id ? "Edit Profession" : "Add Profession"}</div>
             <div style={styles.container2}>
               <div style={styles.cancelButton}>
                 <button
+                  type="button"
                   className="cancelbtn mr-1"
                   onClick={() => history.push("/admin/content")}
                 >
-                  {"Cancel"}
+                  Cancel
                 </button>
               </div>
               <div style={styles.addButton}>
-                <button className="addaccountBtn">
-                  {id ? "Edit Profession" : "Add Profession"}
+                <button className="addaccountBtn" disabled={loading}>
+                  {loading ? "Please wait..." : id ? "Edit Profession" : "Add Profession"}
                 </button>
               </div>
             </div>
@@ -138,6 +152,7 @@ const ProfessionFormComponent = ({ goBack }) => {
     </>
   );
 };
+
 const styles = {
   container: {
     display: "flex",
@@ -156,11 +171,9 @@ const styles = {
     fontSize: "24px",
     fontWeight: "bold",
   },
-  search: {
-    marginRight: "10px",
-  },
   addButton: {
     marginLeft: "auto",
   },
 };
+
 export default ProfessionFormComponent;

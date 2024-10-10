@@ -13,6 +13,7 @@ import { deleteUser } from "Apis/User";
 import { toast } from "react-toastify";
 import { searchUser } from "Apis/User";
 import NoAccountsFound from "./NoDataFound";
+import DeletePopup from "components/DeletePopup.";
 
 function UserList() {
   const handleClick = (title) => {
@@ -22,6 +23,8 @@ function UserList() {
   const [users, setUsers] = useState([]);
   const [pagination, setPagination] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [deleteId, setDeleteId] = useState(0);
 
   const fetchTotalCount = async (page) => {
     setLoading(true);
@@ -58,15 +61,12 @@ function UserList() {
   const paginationCallback = (val) => {
     fetchTotalCount(val - 1);
   };
-
+  
   const actionCallback = async (type, id) => {
     console.log(type, id);
     if (type === "delete") {
-      const res = await deleteUser(id);
-      if (res.message === "Success") {
-        fetchTotalCount(0);
-        toast.success("User deleted Successfully");
-      }
+      setDeleteModal(true)
+      setDeleteId(id)
     }
     if (type === "edit") {
       history.push("/admin/edituser/" + id);
@@ -75,8 +75,20 @@ function UserList() {
   const onSearchCallback = (e) => {
     searchUsers(0, e.target.value);
   };
+  const handleDelete=async()=>{
+    const res = await deleteUser(deleteId);
+    if (res.message === "Success") {
+      fetchTotalCount(0);
+      toast.success("User deleted Successfully");
+    }
+    setDeleteModal(false)
+  }
+  const onClose=()=>{
+    setDeleteModal(false)
+  }
   return (
     <>
+    <DeletePopup isOpen={deleteModal} heading={'Delete Account'} cb={handleDelete} onClose={onClose} text={'Are you sure you want to delete this account? This action cannot be undone.'}/>
       <Header
         btntext={"Add Account"}
         onSearch={onSearchCallback}

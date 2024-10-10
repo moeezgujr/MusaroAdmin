@@ -8,6 +8,7 @@ import { ReactComponent as DotIcon } from "../../assets/img/dot.svg";
 import { getcustomerbyid } from "Apis/Customer";
 import { deleteCustomer } from "Apis/Customer";
 import { toast } from "react-toastify";
+import DeletePopup from "components/DeletePopup.";
 
 const Container = styled.div`
   display: flex;
@@ -81,6 +82,8 @@ const CloseButton = styled.button`
 `;
 const CustomerSlider = ({ open, callback, id, data }) => {
   const [isOpen, setIsOpen] = useState(open);
+  const [deleteModal, setDeleteModal] = useState(false);
+
   const [formValues, setFormValues] = useState({
     name: "",
     city: "",
@@ -124,14 +127,31 @@ const CustomerSlider = ({ open, callback, id, data }) => {
     from: { transform: "translateY(100%)" },
   });
   const handleSubmit = async () => {
+    setDeleteModal(true)
+  };
+  const onClose=()=>{
+    setDeleteModal(false)
+  }
+  const handleDelete=async()=>{
     const res = await deleteCustomer(id);
     if (!res.error) {
       toast.success("Customer deleted successfully");
       callback();
     }
-  };
+    setDeleteModal(false)
+  }
   return (
     <>
+      <DeletePopup
+        isOpen={deleteModal}
+        heading={"Delete Account"}
+        cb={handleDelete}
+        onClose={onClose}
+        text={
+          "Are you sure you want to delete this account? This action cannot be undone."
+        }
+      />
+
       <FullScreenWrapper isOpen={isOpen}>
         <CloseButton
           onClick={() => {

@@ -12,6 +12,7 @@ const TrendFormComponent = ({ goBack }) => {
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [fields, setFields] = useState([]); // Initialize fields as an empty array
+  const [loading, setLoading] = useState(false); // State to manage button loading
 
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
@@ -45,6 +46,11 @@ const TrendFormComponent = ({ goBack }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (loading) return; // Prevent further submissions while loading is true
+    
+    setLoading(true); // Disable button
+
     const formData = new FormData();
     formData.append("title", title);
     if (fields.length > 0) {
@@ -65,6 +71,12 @@ const TrendFormComponent = ({ goBack }) => {
       if (res.errors === null) toast.success("Trend added successfully");
       else toast.error("An error occurred");
     }
+
+    // Re-enable button after 30 seconds
+    setTimeout(() => {
+      setLoading(false);
+    }, 30000); // 30 seconds
+
     history.push("/admin/content");
   };
 
@@ -88,8 +100,8 @@ const TrendFormComponent = ({ goBack }) => {
                 </button>
               </div>
               <div style={styles.addButton}>
-                <button className="addaccountBtn">
-                  {id ? "Edit Trend" : "Add Trend"}
+                <button className="addaccountBtn" disabled={loading}>
+                  {loading ? "Please wait..." : id ? "Edit Trend" : "Add Trend"}
                 </button>
               </div>
             </div>
@@ -154,9 +166,6 @@ const styles = {
   title: {
     fontSize: "24px",
     fontWeight: "bold",
-  },
-  search: {
-    marginRight: "10px",
   },
   addButton: {
     marginLeft: "auto",
