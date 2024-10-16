@@ -56,6 +56,32 @@ export const deleteUser = async (id) => {
     }
   }
 };
+export const deleteUserFromPhone = async (phone) => {
+  try {
+    const response = await api.delete("/user-management/public-user/" + phone);
+    return response.data;
+  } catch (error) {
+    // Check if the error has a response property
+    if (error.response) {
+      return error.response.data;
+    } else {
+      return { error: error.message };
+    }
+  }
+};
+export const verifydeleteUserFromPhone = async (dto) => {
+  try {
+    const response = await api.post("/user-management/delete-public-user", dto);
+    return response.data;
+  } catch (error) {
+    // Check if the error has a response property
+    if (error.response) {
+      return error.response.data;
+    } else {
+      return { error: error.message };
+    }
+  }
+};
 export const getUser = async (id) => {
   try {
     const response = await api.get("/user-management/employee/" + id);

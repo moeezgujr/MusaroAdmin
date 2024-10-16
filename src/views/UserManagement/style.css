@@ -201,3 +201,7 @@ code {
   order: 0;
   flex-grow: 0;
 }
+.dropdown-menu show{
+  height: 250px;
+  overflow: auto;
+}

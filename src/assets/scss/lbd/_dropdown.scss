@@ -14,7 +14,7 @@
         @include opacity(1);
         visibility: visible;
         overflow: auto;
-        height: 250px;
+        max-height: 250px;
     }
     .select &{
        border-radius: $border-radius-bottom;
