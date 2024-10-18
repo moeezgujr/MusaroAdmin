@@ -9,8 +9,11 @@ import { getAllProfession } from "Apis/Profession";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import Pagination from "views/UserManagement/Pagination";
-import { searchTrend } from "Apis/Trend";
+import { searchTrend, deleteTrend } from "Apis/Trend";
 import { searchProfession } from "Apis/Profession";
+import { toast } from "react-toastify";
+import { deleteProfession } from "Apis/Profession";
+import DeletePopup from "components/DeletePopup.";
 
 const Tabs = () => {
   const [activeTab, setActiveTab] = useState(1);
@@ -19,6 +22,8 @@ const Tabs = () => {
   const [profession, setProfession] = useState([]);
   const [loading, setLoading] = useState(true); // State for loading indicator
   const [pagination, setPagination] = useState(""); // State for loading indicator
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [deleteId, setDeleteId] = useState(0);
 
   const imageUrl = process.env.REACT_APP_IMAGE_SRC;
   const handleTabClick = (tabNumber) => {
@@ -61,9 +66,23 @@ const Tabs = () => {
     }
   }, [activeTab, storedTab]);
   const history = useHistory();
-  const editCallback = (id) => {
-    if (activeTab == 2) history.push("/admin/edittrend/" + id);
-    else history.push("/admin/editProfession/" + id);
+  const editCallback = async (id, type) => {
+    if (activeTab == 2) {
+      if (type === "delete") {
+        setDeleteId(id);
+        setDeleteModal(true);
+      } else {
+        history.push("/admin/edittrend/" + id);
+      }
+    } else {
+      if (type === "delete") {
+        setDeleteId(id);
+
+        setDeleteModal(true);
+      } else {
+        history.push("/admin/editProfession/" + id);
+      }
+    }
   };
   const onPageChange = (val) => {
     if (val - 1 > pagination.pages - 1) {
@@ -102,27 +121,54 @@ const Tabs = () => {
     setLoading(false);
   };
   function stripHTMLAndTruncate(htmlString) {
-    if (typeof htmlString !== 'string') return '';
-  
+    if (typeof htmlString !== "string") return "";
+
     // Remove all <img> tags using a regular expression
-    let noImgString = htmlString.replace(/<img[^>]*>/gi, '');
-  
+    let noImgString = htmlString.replace(/<img[^>]*>/gi, "");
+
     // Remove all other HTML tags
-    let strippedString = noImgString.replace(/<\/?[^>]+(>|$)/g, '');
-  
+    let strippedString = noImgString.replace(/<\/?[^>]+(>|$)/g, "");
+
     // Set the maximum length to 252 to account for the "..." and the space before the link.
     const maxLength = 252;
-  
+
     // Trim the resulting string to maxLength characters and add "..." if it exceeds maxLength characters
-    let truncatedString = strippedString.length > 255 
-      ? strippedString.slice(0, maxLength) + '...'
-      : strippedString;
-  
+    let truncatedString =
+      strippedString.length > 255
+        ? strippedString.slice(0, maxLength) + "..."
+        : strippedString;
+
     return truncatedString;
   }
-  
+  const onClose = () => {
+    setDeleteModal(false);
+  };
+  const handleDelete = async (val) => {
+    if (activeTab === 2) {
+      const res = await deleteTrend(deleteId);
+      if (!res.errors) {
+        toast.success("Trend deleted successfully");
+        setTrend(trend.filter((item) => item._id !== deleteId));
+      }
+    } else {
+      const res = await deleteProfession(deleteId);
+      if (!res.errors) {
+        toast.success("Profession deleted successfully");
+        setProfession(profession.filter((item) => item._id !== deleteId));
+      }
+    }
+    setDeleteModal(false);
+  };
   return (
     <div className="tabs-container">
+      <DeletePopup
+        isOpen={deleteModal}
+        heading={"Delete Action"}
+        cb={handleDelete}
+        onClose={onClose}
+        text={"Are you sure you want to delete? This action cannot be undone."}
+      />
+
       <Header
         btntext={"Add" + " " + tabtitle}
         title={"Content Management"}

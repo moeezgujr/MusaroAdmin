@@ -17,9 +17,9 @@ export const addProfession = async (dto) => {
     }
   }
 };
-export const deleteTrend = async (id) => {
+export const deleteProfession = async (id) => {
   try {
-    const response = await api.delete("/trend=" + id);
+    const response = await api.delete("/general/profession/" + id);
     return response.data;
   } catch (error) {
     // Check if the error has a response property

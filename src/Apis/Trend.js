@@ -38,7 +38,7 @@ export const uploadApi = async (dto) => {
 };
 export const deleteTrend = async (id) => {
   try {
-    const response = await api.delete("/trend=" + id);
+    const response = await api.delete("/trend/" + id);
     return response.data;
   } catch (error) {
     // Check if the error has a response property

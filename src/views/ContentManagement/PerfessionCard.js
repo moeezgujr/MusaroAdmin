@@ -1,6 +1,7 @@
 import React from "react";
 import "./Card.css"; // Import your CSS file for styling
 import { ReactComponent as Penicon } from "../../assets/img/pen.svg";
+import { ReactComponent as DeleteIcon } from "../../assets/img/delete.svg";
 
 const ProfessionCard = ({ imageUrl, paragraph, title, handleTabClick, id, createdOn }) => {
   return (
@@ -12,9 +13,15 @@ const ProfessionCard = ({ imageUrl, paragraph, title, handleTabClick, id, create
             <p className="text-profession-title">{title}</p>
             <p className="card-date mt-1">Created on :{createdOn.split("T")[0].replaceAll('-','/')}</p>
           </div>
+          <div className="d-flex">
           <div className="tab-1 tab edit-btn" onClick={() => handleTabClick(id)}>
-            <Penicon /> Edit
+            <Penicon /> 
+          </div>
+          <div className="tab-1 tab edit-btn" onClick={() => handleTabClick(id, 'delete')}>
+            <DeleteIcon /> 
           </div>{" "}
+          </div>
+       
         </div>
         <p className="mt-3 paragrahph-text">{paragraph}</p>
       </div>
