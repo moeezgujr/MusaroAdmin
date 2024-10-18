@@ -3,6 +3,7 @@ import "./Accountdelete.css";
 import { deleteUserFromPhone } from "Apis/User";
 import { verifydeleteUserFromPhone } from "Apis/User";
 import { toast } from "react-toastify";
+import MobileNumberInput from "views/ForgetPassword/MobileNumberInput";
 
 const AccountDeletion = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -63,16 +64,9 @@ const AccountDeletion = () => {
 
         <h3>Delete Account by Phone Number</h3>
         <p>Enter your phone number to request account deletion:</p>
-
-        {/* Phone Number Field */}
-        <input
-          type="tel"
-          className="form-component-input-phone"
-          placeholder="Enter phone number"
-          value={phoneNumber}
-          onChange={(e) => setPhoneNumber(e.target.value)}
-          disabled={isOtpVerified}
-        />
+        <div className="mt-3 mb-3">
+          <MobileNumberInput onChange={(e) => setPhoneNumber(e)} />
+        </div>
 
         {/* OTP Section */}
         {isOtpSent && !isOtpVerified && (
@@ -110,7 +104,8 @@ const AccountDeletion = () => {
             className="form-component-button form-component-send-otp-btn"
             disabled={timer > 0} // Disable button if timer is still active
           >
-            {timer > 0 ? `Resend OTP in ${timer}s` : "Send OTP"} {/* Show countdown */}
+            {timer > 0 ? `Resend OTP in ${timer}s` : "Send OTP"}{" "}
+            {/* Show countdown */}
           </button>
         )}
 
