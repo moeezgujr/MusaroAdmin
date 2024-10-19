@@ -23,8 +23,8 @@ const ProfessionFormComponent = ({ goBack }) => {
     description: "",
     image: null,
   });
-  const [userid, setuserid]=useState(0);
-  const [openPopup, setopenPopup]=useState(false)
+  const [userid, setuserid] = useState(0);
+  const [openPopup, setopenPopup] = useState(false);
 
   function convertTo24Hour(time12h) {
     // Parse the time string to a Date object
@@ -66,7 +66,7 @@ const ProfessionFormComponent = ({ goBack }) => {
   const { id } = useParams();
   const fetchWorkshop = async (id) => {
     const data = await getWorkshop(id);
-    setuserid(data.data[0].owner?._id)
+    setuserid(data.data[0].owner?._id);
     setFormValues(mapWorkshopToFormValues(data.data[0]));
   };
   useEffect(() => {
@@ -81,237 +81,248 @@ const ProfessionFormComponent = ({ goBack }) => {
   };
 
   const history = useHistory();
-  const handleSubmit = async (e,status) => {
+  const handleSubmit = async (e, status) => {
     e.preventDefault();
-    const res = await verifyWorkshop(id, { workshopStatus: status, rejectionReason: '' });
+    const res = await verifyWorkshop(id, {
+      workshopStatus: status,
+      rejectionReason: "",
+    });
     if (res.errors === null) {
       toast.success("Status Approved successfully");
     } else {
       toast.error("An Error occurend while updating status");
     }
     history.push("/admin/content");
-
   };
   const imageUrl = process.env.REACT_APP_IMAGE_SRC;
-   const onClosePopup=()=>{
-     setopenPopup(false)
-   }
+  const onClosePopup = () => {
+    setopenPopup(false);
+  };
   return (
-    <div style={{ background: "#F8FAFC" }}>
-      <Popup isOpen={openPopup} onClose={onClosePopup} id={id}/>
-      <Container fluid className="d-flex justify-content-center">
-        <div style={styles.container}>
-          <div style={styles.title}>{"View Workshop Details"}</div>
-          <div style={styles.container2}>
-            <div style={styles.cancelButton}>
-              <button
-                className="rejectbtn mr-1"
-                onClick={(e) => setopenPopup(true)}
-              >
-                {"Reject with Note"}
-              </button>
-            </div>
-            <div style={styles.addButton}>
-              <button
-                onClick={(e) => handleSubmit(e,"PUBLISHED")}
-                className="addaccountBtn"
-                style={{ width: "200px" }}
-              >
-                {"Approve Changes"}
-              </button>
+    <>
+      <button
+        className="addaccountBtn"
+        style={{ width: "100px", marginBottom: "10px" }}
+        onClick={(e) => history.push("/admin/content")}
+      >
+        {"Go Back"}
+      </button>
+      <div style={{ background: "#F8FAFC" }}>
+        <Popup isOpen={openPopup} onClose={onClosePopup} id={id} />
+        <Container fluid className="d-flex justify-content-center">
+          <div style={styles.container}>
+            <div style={styles.title}>{"View Workshop Details"}</div>
+            <div style={styles.container2}>
+              <div style={styles.cancelButton}>
+                <button
+                  className="rejectbtn mr-1"
+                  onClick={(e) => setopenPopup(true)}
+                >
+                  {"Reject with Note"}
+                </button>
+              </div>
+              <div style={styles.addButton}>
+                <button
+                  onClick={(e) => handleSubmit(e, "PUBLISHED")}
+                  className="addaccountBtn"
+                  style={{ width: "200px" }}
+                >
+                  {"Approve Changes"}
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      </Container>
-      <div
-        className="d-flex"
-        style={{ width: "100%", marginLeft: "20px", marginRight: "20px" }}
-      >
-        <div className="">
-          <label htmlFor="title">Title:</label>
-          <input
-            type="text"
-            className="workshop-input"
-            id="title"
-            disabled
-            placeholder="Enter Title"
-            value={formValues.title}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="ml-3">
-          <label htmlFor="title">Owner of workshop:</label>
-          <input
-            type="text"
-            className="workshop-input"
-            disabled
-            id="owner"
-            placeholder="Enter Owner"
-            value={formValues.owner}
-            onChange={handleChange}
-          />
-        </div>
-      </div>
-      <div
-        className="d-flex mt-3"
-        style={{ width: "100%", marginLeft: "20px", marginRight: "20px" }}
-      >
-        <div className="">
-          <label htmlFor="title">Start Date:</label>
-          <input
-            type="date"
-            disabled
-            className="workshop-input"
-            id="startDate"
-            placeholder="Enter Title"
-            value={formValues.startDate}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="ml-3">
-          <label htmlFor="title">End Date:</label>
-          <input
-            type="date"
-            className="workshop-input"
-            id="endDate"
-            placeholder="Enter Owner"
-            disabled
-            value={formValues.endDate}
-            onChange={handleChange}
-          />
-        </div>
-      </div>
-      <div
-        className="d-flex mt-3"
-        style={{ width: "100%", marginLeft: "20px", marginRight: "20px" }}
-      >
-        <div className="">
-          <label htmlFor="title">Start Time:</label>
-          <input
-            type="time"
-            className="workshop-input"
-            id="startTime"
-            disabled
-            placeholder="Enter Title"
-            value={formValues.startTime}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="ml-3">
-          <label htmlFor="title">End Time:</label>
-          <input
-            type="time"
-            className="workshop-input"
-            id="endTime"
-            placeholder="Enter Owner"
-            value={formValues.endTime}
-            disabled
-            onChange={handleChange}
-          />
-        </div>
-      </div>
-      <div
-        className="d-flex mt-3"
-        style={{ width: "100%", marginLeft: "20px", marginRight: "20px" }}
-      >
-        <div className="">
-          <label htmlFor="title">Price per coupon:</label>
-          <input
-            type="text"
-            className="workshop-input"
-            disabled
-            id="price"
-            placeholder="Enter Price per coupon"
-            value={formValues.price}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="ml-3">
-          <label htmlFor="title">Max. no of applicants:</label>
-          <input
-            type="text"
-            className="workshop-input"
-            id="maxApplicants"
-            placeholder="Enter Max. no of applicants"
-            disabled
-            value={formValues.maxApplicants}
-            onChange={handleChange}
-          />
-        </div>
-      </div>
-      <div
-        className="d-flex mt-3"
-        style={{ width: "100%", marginLeft: "20px", marginRight: "20px" }}
-      >
-        <div className="">
-          <label htmlFor="title">City of workshop:</label>
-          <input
-            type="text"
-            className="workshop-input"
-            id="city"
-            disabled
-            placeholder="Enter City"
-            value={formValues.city}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="ml-3">
-          <label htmlFor="title">Location:</label>
-          <input
-            type="text"
-            className="workshop-input"
-            id="location"
-            placeholder="Location"
-            value={formValues.location}
-            onChange={handleChange}
-            disabled
-          />
-        </div>
-      </div>
-      <div
-        className="d-flex mt-3"
-        style={{ width: "100%", marginLeft: "20px", marginRight: "20px" }}
-      >
-        <div className="">
-          <label htmlFor="description">Description:</label>
-          <textarea
-            id="description"
-            className="workshop-input-textarea"
-            value={formValues.description}
-            placeholder="Enter Description"
-            onChange={handleChange}
-            disabled
-          ></textarea>
-        </div>
-      </div>
-      <div
-        className="mt-3"
-        style={{ width: "100%", marginLeft: "20px", marginRight: "20px" }}
-      >
-        <label htmlFor="description">Image:</label>
-      </div>
-      <div
-        className="d-flex"
-        style={{
-          width: "96%",
-          marginLeft: "20px",
-          marginRight: "20px",
-        }}
-      >
-        {" "}
-        <div className="image-viewer-container">
-          {formValues.image ? (
-            <img
-              src={imageUrl + formValues.image}
-              alt="Workshop"
-              className="workshop-image"
+        </Container>
+        <div
+          className="d-flex"
+          style={{ width: "100%", marginLeft: "20px", marginRight: "20px" }}
+        >
+          <div className="">
+            <label htmlFor="title">Title:</label>
+            <input
+              type="text"
+              className="workshop-input"
+              id="title"
+              disabled
+              placeholder="Enter Title"
+              value={formValues.title}
+              onChange={handleChange}
             />
-          ) : (
-            <p>No image available</p>
-          )}
+          </div>
+          <div className="ml-3">
+            <label htmlFor="title">Owner of workshop:</label>
+            <input
+              type="text"
+              className="workshop-input"
+              disabled
+              id="owner"
+              placeholder="Enter Owner"
+              value={formValues.owner}
+              onChange={handleChange}
+            />
+          </div>
+        </div>
+        <div
+          className="d-flex mt-3"
+          style={{ width: "100%", marginLeft: "20px", marginRight: "20px" }}
+        >
+          <div className="">
+            <label htmlFor="title">Start Date:</label>
+            <input
+              type="date"
+              disabled
+              className="workshop-input"
+              id="startDate"
+              placeholder="Enter Title"
+              value={formValues.startDate}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="ml-3">
+            <label htmlFor="title">End Date:</label>
+            <input
+              type="date"
+              className="workshop-input"
+              id="endDate"
+              placeholder="Enter Owner"
+              disabled
+              value={formValues.endDate}
+              onChange={handleChange}
+            />
+          </div>
+        </div>
+        <div
+          className="d-flex mt-3"
+          style={{ width: "100%", marginLeft: "20px", marginRight: "20px" }}
+        >
+          <div className="">
+            <label htmlFor="title">Start Time:</label>
+            <input
+              type="time"
+              className="workshop-input"
+              id="startTime"
+              disabled
+              placeholder="Enter Title"
+              value={formValues.startTime}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="ml-3">
+            <label htmlFor="title">End Time:</label>
+            <input
+              type="time"
+              className="workshop-input"
+              id="endTime"
+              placeholder="Enter Owner"
+              value={formValues.endTime}
+              disabled
+              onChange={handleChange}
+            />
+          </div>
+        </div>
+        <div
+          className="d-flex mt-3"
+          style={{ width: "100%", marginLeft: "20px", marginRight: "20px" }}
+        >
+          <div className="">
+            <label htmlFor="title">Price per coupon:</label>
+            <input
+              type="text"
+              className="workshop-input"
+              disabled
+              id="price"
+              placeholder="Enter Price per coupon"
+              value={formValues.price}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="ml-3">
+            <label htmlFor="title">Max. no of applicants:</label>
+            <input
+              type="text"
+              className="workshop-input"
+              id="maxApplicants"
+              placeholder="Enter Max. no of applicants"
+              disabled
+              value={formValues.maxApplicants}
+              onChange={handleChange}
+            />
+          </div>
+        </div>
+        <div
+          className="d-flex mt-3"
+          style={{ width: "100%", marginLeft: "20px", marginRight: "20px" }}
+        >
+          <div className="">
+            <label htmlFor="title">City of workshop:</label>
+            <input
+              type="text"
+              className="workshop-input"
+              id="city"
+              disabled
+              placeholder="Enter City"
+              value={formValues.city}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="ml-3">
+            <label htmlFor="title">Location:</label>
+            <input
+              type="text"
+              className="workshop-input"
+              id="location"
+              placeholder="Location"
+              value={formValues.location}
+              onChange={handleChange}
+              disabled
+            />
+          </div>
+        </div>
+        <div
+          className="d-flex mt-3"
+          style={{ width: "100%", marginLeft: "20px", marginRight: "20px" }}
+        >
+          <div className="">
+            <label htmlFor="description">Description:</label>
+            <textarea
+              id="description"
+              className="workshop-input-textarea"
+              value={formValues.description}
+              placeholder="Enter Description"
+              onChange={handleChange}
+              disabled
+            ></textarea>
+          </div>
+        </div>
+        <div
+          className="mt-3"
+          style={{ width: "100%", marginLeft: "20px", marginRight: "20px" }}
+        >
+          <label htmlFor="description">Image:</label>
+        </div>
+        <div
+          className="d-flex"
+          style={{
+            width: "96%",
+            marginLeft: "20px",
+            marginRight: "20px",
+          }}
+        >
+          {" "}
+          <div className="image-viewer-container">
+            {formValues.image ? (
+              <img
+                src={imageUrl + formValues.image}
+                alt="Workshop"
+                className="workshop-image"
+              />
+            ) : (
+              <p>No image available</p>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 const styles = {
