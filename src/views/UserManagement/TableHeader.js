@@ -38,7 +38,7 @@ const Header = ({
           <div style={styles.addButton}>
             <button className="addaccountBtn" onClick={onAddAccount}>
               <div className="d-flex">
-                <PlusIcon className="mt-1" style={{ marginRight: "3px" }} />{" "}
+                {/* <PlusIcon className="mt-1" style={{ marginRight: "3px" }} />{" "} */}
                 {btntext || "Add Account"}
               </div>
             </button>
