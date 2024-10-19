@@ -103,7 +103,7 @@ const TrendFormComponent = ({ goBack }) => {
               </div>
               <div style={styles.addButton}>
                 <button className="addaccountBtn" disabled={loading}>
-                  {loading ? "Please wait..." : id ? "Edit Trend" : "Add Trend"}
+                  {loading ? "Please wait..." : "Save Changes"}
                 </button>
               </div>
             </div>

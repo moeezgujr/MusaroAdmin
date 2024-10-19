@@ -70,6 +70,9 @@
   width: fit-content;
   padding: 5px;
 }
+.ltr{
+  direction: ltr !important;
+}
 .pagination button.active {
   background-color: #ddd;
 }

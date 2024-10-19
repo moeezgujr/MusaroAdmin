@@ -143,7 +143,7 @@ const User = ({ goBack }) => {
               </div>
               <div style={styles.addButton}>
                 <button type="submit" className="addaccountBtn">
-                  {id ? "Edit Account" : "Add Account"}
+                  Save Changes
                 </button>
               </div>
             </div>

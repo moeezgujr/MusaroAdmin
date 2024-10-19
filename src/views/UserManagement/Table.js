@@ -14,18 +14,48 @@ export const TableWithPagination = ({
   id,
   isPaginationShow,
 }) => {
+  function formatDateWithMonthName(isoDateString) {
+    const date = new Date(isoDateString);
+
+    // Extract day and year
+    const day = String(date.getUTCDate()).padStart(2, "0");
+    const year = date.getUTCFullYear();
+
+    // Get month names array
+    const monthNames = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+
+    // Get the correct month name
+    const month = monthNames[date.getUTCMonth()]; // Months are zero-indexed
+
+    // Return the formatted date as DD-MMM-YYYY
+    return `${day}-${month}-${year}`;
+  }
   const renderCell = (value, label) => {
     if (typeof value === "object" && value !== null) {
       return JSON.stringify(value);
     }
     if (label === "createdAt") {
-      return new Date(value).toLocaleDateString();
+      return formatDateWithMonthName(value);
     }
-    if(!value){
-      value='Not available'
+    if (!value) {
+      value = "Not available";
     }
     return value;
   };
+
   function capitalizeFirstLetterOnly(str) {
     try {
       return str
@@ -62,13 +92,16 @@ export const TableWithPagination = ({
                       className={`
                         ${header.label == "Role" && "role_td"} ${
                         header.label === "Status" && "subsrctiption_status"
-                      }
+                      } ${header.value === "createdAt"? 'ltr':''}
                          table_text`}
                       style={{ marginTop: "10px", marginBottom: "10px" }}
                     >
-                      {capitalizeFirstLetterOnly(
-                        renderCell(item[header.value], header.value)
-                      )}
+                      {" "}
+                      {header.value === "createdAt"
+                        ? renderCell(item[header.value], header.value)
+                        : capitalizeFirstLetterOnly(
+                            renderCell(item[header.value], header.value)
+                          )}
                     </p>
                   </td>
                 ))}

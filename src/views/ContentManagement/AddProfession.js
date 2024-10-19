@@ -100,7 +100,7 @@ const ProfessionFormComponent = ({ goBack }) => {
               </div>
               <div style={styles.addButton}>
                 <button className="addaccountBtn" disabled={loading}>
-                  {loading ? "Please wait..." : id ? "Edit Profession" : "Add Profession"}
+                {loading ? "Please wait..." : "Save Changes"}
                 </button>
               </div>
             </div>
