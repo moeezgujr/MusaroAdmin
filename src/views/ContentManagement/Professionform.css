@@ -262,6 +262,7 @@
   order: 0;
   align-self: stretch;
   flex-grow: 0;
+  color: black;
 }
 .rejectbtn {
   box-sizing: border-box;
@@ -280,6 +281,8 @@
   order: 0;
   align-self: stretch;
   flex-grow: 0;
+  color: black;
+
 }
 
 .edit-btn {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 
@@ -9,14 +9,18 @@ const countryCodes = [
   // Add more country codes as needed
 ];
 
-const MobileNumberInput = ({onChange}) => {
+const MobileNumberInput = ({ onChange, val }) => {
   const [selectedCode, setSelectedCode] = useState(countryCodes[0].code);
   const [phoneNumber, setPhoneNumber] = useState("");
 
   const handleCodeChange = (code) => {
     setSelectedCode(code);
   };
-
+  useEffect(() => {
+    if (val) {
+      setPhoneNumber(val);
+    }
+  }, [val]);
   const handlePhoneNumberChange = (e) => {
     setPhoneNumber(e.target.value);
   };

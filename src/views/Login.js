@@ -49,7 +49,7 @@ function Login() {
                 Please enter your details to sign you in
               </p>
               <Form.Group controlId="formBasicEmail">
-                <Form.Label>Username</Form.Label>
+                <Form.Label>Username or Mobile#</Form.Label>
                 <Form.Control
                   type="text"
                   placeholder="Enter your username"
@@ -57,7 +57,7 @@ function Login() {
                 />
               </Form.Group>
 
-              <Form.Group controlId="formBasicPassword">
+              <Form.Group controlId="formBasicPassword" style={{marginTop:'10px'}}>
                 <Form.Label>Password</Form.Label>
                 <Form.Control
                   type="password"

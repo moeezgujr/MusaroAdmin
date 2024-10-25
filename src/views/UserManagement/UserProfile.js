@@ -7,6 +7,7 @@ import { useHistory, useParams } from "react-router";
 import { getUser } from "Apis/User";
 import { editUser } from "Apis/User";
 import Revenue from "views/RevenueManagement/Revenue";
+import MobileNumberInput from "views/ForgetPassword/MobileNumberInput";
 
 const User = ({ goBack }) => {
   const [name, setName] = useState("");
@@ -173,9 +174,10 @@ const User = ({ goBack }) => {
                 required
               />
             </div>
-            <div className="form-group">
+            <div className="form-group" style={{width:'609px'}}>
               <label htmlFor="mobile">Mobile#*</label>
-              <input
+              <MobileNumberInput onChange={(v)=>{setMobile(v)}} val={mobile}/>
+              {/* <input
                 type="tel"
                 className="profession-input-title"
                 placeholder="Mobile"
@@ -184,7 +186,7 @@ const User = ({ goBack }) => {
                 onChange={handleMobileChange}
                 pattern="[0-9]{10,14}"
                 required
-              />
+              /> */}
             </div>
             <div className="form-group">
               <label htmlFor="password">Password*</label>
