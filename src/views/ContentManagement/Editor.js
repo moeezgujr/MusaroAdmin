@@ -8,7 +8,7 @@ import QuillEditor from "react-quill";
 // Importing styles
 import "react-quill/dist/quill.snow.css";
 
-const Editor = ({ setValue, value, cb }) => {
+const Editor = ({ setValue, value, cb, id }) => {
 
   
   // Editor ref
@@ -39,7 +39,7 @@ const Editor = ({ setValue, value, cb }) => {
         process.env.REACT_APP_IMAGE_SRC + url,
         "user"
       );
-      cb(dto.data.url);
+      cb(dto.data.url, id);
     };
   }, []);
 

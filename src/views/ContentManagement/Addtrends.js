@@ -8,15 +8,18 @@ import Editor from "./Editor";
 
 const TrendFormComponent = ({ goBack }) => {
   const [title, setTitle] = useState("");
+  const [titleArabic, setTitleArabic] = useState("");
   const [description, setDescription] = useState("");
+  const [descriptionArabic, setDescriptionArabic] = useState("");
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [fields, setFields] = useState([]); // Initialize fields as an empty array
   const [loading, setLoading] = useState(false); // State to manage button loading
-
-  const handleTitleChange = (e) => {
-    setTitle(e.target.value);
-  };
+  const [arabicFields, setArabicFields] = useState([]);
+  const handleTitleChange = (e) => setTitle(e.target.value);
+  const handleTitleArabicChange = (e) => setTitleArabic(e.target.value);
+  const handleDescriptionChange = (value) => setDescription(value);
+  const handleDescriptionArabicChange = (value) => setDescriptionArabic(value);
 
   const { id } = useParams();
   const history = useHistory();
@@ -25,6 +28,8 @@ const TrendFormComponent = ({ goBack }) => {
     const data = await getTrendByID(id);
     setDescription(data.data.description);
     setTitle(data.data.title);
+    setTitleArabic(data.data.title_arabic || ""); // Fetch Arabic title if available
+    setDescriptionArabic(data.data.description_arabic || ""); // Fetch Arabic description if available
     setImagePreview(process.env.REACT_APP_IMAGE_SRC + data.data.img);
   };
 
@@ -53,12 +58,19 @@ const TrendFormComponent = ({ goBack }) => {
 
     const formData = new FormData();
     formData.append("title", title);
+    formData.append("title_arabic", titleArabic); // Append Arabic title
+    formData.append("description", description.replace("temp/", "trends/"));
+    formData.append(
+      "description_arabic",
+      descriptionArabic.replace("temp/", "trends/")
+    ); // Append Arabic description
+
     if (fields.length > 0) {
       formData.append("fileIds", fields.toString());
     }
-    let updatedDescription = description.replace("temp/", "trends/");
-
-    formData.append("description", updatedDescription);
+    if (arabicFields.length > 0) {
+      formData.append("fileIds_arabic", arabicFields.toString());
+    }
 
     if (id) {
       if (image) {
@@ -82,8 +94,15 @@ const TrendFormComponent = ({ goBack }) => {
     history.push("/admin/content");
   };
 
-  const cb = (id) => {
-    setFields((prevFields) => [...prevFields, id]); // Correctly append to the array
+  const cb = (id, type) => {
+    if (type === "description")
+      setFields((prevFields) => [
+        ...prevFields,
+        id,
+      ]); // Correctly append to the array
+    else {
+      setArabicFields((prevFields) => [...prevFields, id]); // Correctly append to the array
+    }
   };
 
   return (
@@ -108,20 +127,76 @@ const TrendFormComponent = ({ goBack }) => {
               </div>
             </div>
           </div>
-          <div className="mt-3 ml-2 form-fields-container">
-            <div className="form-group">
-              <label htmlFor="title">Title:</label>
-              <input
-                type="text"
-                className="profession-input-title"
-                id="title"
-                value={title}
-                onChange={handleTitleChange}
-              />
+          <div
+            className="mt-3 ml-2 form-fields-container"
+            style={{ width: "100%" }}
+          >
+            <div className="d-flex row">
+              <div
+                className="form-group"
+                style={{ marginLeft: "15px", marginRight: "15px" }}
+              >
+                <label htmlFor="title">Title:</label>
+                <input
+                  type="text"
+                  className="profession-input-title-2"
+                  id="title"
+                  value={title}
+                  onChange={handleTitleChange}
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="title-arabic" style={{ textAlign: "right" }}>
+                  :العنوان
+                </label>
+                <input
+                  type="text"
+                  className="profession-input-title-2"
+                  id="title-arabic"
+                  dir="rtl"
+                  value={titleArabic}
+                  onChange={handleTitleArabicChange}
+                />
+              </div>
             </div>
-            <div className="form-group" style={{ width: "100%" }}>
-              <label htmlFor="description">Description:</label>
-              <Editor value={description} cb={cb} setValue={setDescription} />
+            <div className="d-flex row">
+              <div
+                className="form-group"
+                style={{
+                  marginLeft: "15px",
+                  marginRight: "15px",
+                  maxWidth: "550px",
+                }}
+              >
+                <label htmlFor="description">Description:</label>
+                <Editor
+                  id="description"
+                  value={description}
+                  cb={cb}
+                  setValue={handleDescriptionChange}
+                />
+              </div>
+              <div
+                className="form-group"
+                style={{
+                  marginLeft: "10px",
+                  marginRight: "15px",
+                  maxWidth: "550px",
+                }}
+              >
+                <label
+                  htmlFor="description-arabic"
+                  style={{ textAlign: "right" }}
+                >
+                  :الوصف
+                </label>
+                <Editor
+                  id="description-arabic"
+                  value={descriptionArabic}
+                  cb={cb}
+                  setValue={handleDescriptionArabicChange}
+                />
+              </div>
             </div>
             <div className="form-group">
               <label htmlFor="image">Image:</label>
@@ -141,7 +216,10 @@ const TrendFormComponent = ({ goBack }) => {
                   </button>
                 </div>
               ) : (
-                <ImageUploadButton handleImageChange={handleImageChange} />
+                <ImageUploadButton
+                  className="fileinputcontainer-2"
+                  handleImageChange={handleImageChange}
+                />
               )}
             </div>
           </div>

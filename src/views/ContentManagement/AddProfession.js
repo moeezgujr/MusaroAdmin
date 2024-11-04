@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./Professionform.css"; // Import your CSS file for styling
+import "./Professionform.css";
 import ImageUploadButton from "components/ImageUploader/Imageuploader";
 import { useHistory, useParams } from "react-router";
 import { getProfessionsbyId } from "Apis/Profession";
@@ -10,6 +10,8 @@ import { toast } from "react-toastify";
 const ProfessionFormComponent = ({ goBack }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [titleArabic, setTitleArabic] = useState("");
+  const [descriptionArabic, setDescriptionArabic] = useState("");
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [loading, setLoading] = useState(false); // State to manage button loading
@@ -17,24 +19,37 @@ const ProfessionFormComponent = ({ goBack }) => {
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
   };
+
   const handleDescriptionChange = (e) => {
     setDescription(e.target.value);
+  };
+
+  const handleTitleArabicChange = (e) => {
+    setTitleArabic(e.target.value);
+  };
+
+  const handleDescriptionArabicChange = (e) => {
+    setDescriptionArabic(e.target.value);
   };
 
   const handleImageChange = (e) => {
     setImage(e);
     setImagePreview(URL.createObjectURL(e));
   };
+
   const history = useHistory();
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (loading) return; // Prevent further API calls while loading is true
+    if (loading) return;
     
-    setLoading(true); // Disable button
+    setLoading(true);
     const formData = new FormData();
     formData.append("name", title);
     formData.append("description", description);
+    formData.append("name_arabic", titleArabic);
+    formData.append("description_arabic", descriptionArabic);
     
     if (id) {
       if (image) {
@@ -56,20 +71,21 @@ const ProfessionFormComponent = ({ goBack }) => {
       }
     }
 
-    // After API call, navigate back to the content page
     history.push("/admin/content");
-
-    // Re-enable button after 30 seconds
+    
     setTimeout(() => {
       setLoading(false);
-    }, 30000); // 30 seconds
+    }, 30000);
   };
 
   const { id } = useParams();
+  
   const fetchProfession = async (id) => {
     const data = await getProfessionsbyId(id);
-    setDescription(data.data.description);
     setTitle(data.data.name);
+    setDescription(data.data.description);
+    setTitleArabic(data.data.name_arabic || "");
+    setDescriptionArabic(data.data.description_arabic || "");
     setImagePreview(process.env.REACT_APP_IMAGE_SRC + data.data.img);
   };
   
@@ -105,25 +121,51 @@ const ProfessionFormComponent = ({ goBack }) => {
               </div>
             </div>
           </div>
-          <div className="mt-3 ml-2 form-fields-container">
-            <div className="form-group">
-              <label htmlFor="title">Title:</label>
-              <input
-                type="text"
-                className="profession-input-title"
-                id="title"
-                value={title}
-                onChange={handleTitleChange}
-              />
+          <div className="mt-3 ml-2 form-fields-container" style={{width:'100%'}}>
+            <div className="d-flex row">
+              <div className="form-group" style={{marginLeft:'15px', marginRight:'15px'}}>
+                <label htmlFor="title">Title:</label>
+                <input
+                  type="text"
+                  className="profession-input-title-2"
+                  id="title"
+                  value={title}
+                  onChange={handleTitleChange}
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="title-arabic" style={{ textAlign: "right" }}>:العنوان</label>
+                <input
+                  type="text"
+                  className="profession-input-title-2"
+                  style={{width:'550px'}}
+                  id="title-arabic"
+                  dir="rtl"
+                  value={titleArabic}
+                  onChange={handleTitleArabicChange}
+                />
+              </div>
             </div>
-            <div className="form-group">
-              <label htmlFor="description">Description:</label>
-              <textarea
-                id="description"
-                className="profession-input-textarea"
-                value={description}
-                onChange={handleDescriptionChange}
-              ></textarea>
+            <div className="d-flex row">
+              <div className="form-group" style={{marginLeft:'15px', marginRight:'15px'}}>
+                <label htmlFor="description">Description:</label>
+                <textarea
+                  id="description"
+                  className="profession-input-textarea-2"
+                  value={description}
+                  onChange={handleDescriptionChange}
+                ></textarea>
+              </div>
+              <div className="form-group" style={{marginRight:'15px'}}>
+                <label htmlFor="description-arabic" style={{ textAlign: "right" }}>:الوصف</label>
+                <textarea
+                  id="description-arabic"
+                  className="profession-input-textarea-2"
+                  dir="rtl"
+                  value={descriptionArabic}
+                  onChange={handleDescriptionArabicChange}
+                ></textarea>
+              </div>
             </div>
             <div className="form-group">
               <label htmlFor="image">Image:</label>
@@ -139,11 +181,11 @@ const ProfessionFormComponent = ({ goBack }) => {
                     className="delete-image-button"
                     onClick={handleImageDelete}
                   >
-                    &#x2715; {/* Unicode for "X" symbol */}
+                    &#x2715;
                   </button>
                 </div>
               ) : (
-                <ImageUploadButton handleImageChange={handleImageChange} />
+                <ImageUploadButton className="fileinputcontainer-2" handleImageChange={handleImageChange} />
               )}
             </div>
           </div>
