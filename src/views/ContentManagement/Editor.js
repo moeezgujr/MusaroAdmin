@@ -1,25 +1,16 @@
-// Importing helper modules
+import React, { useCallback, useState } from "react";
+import { Editor } from "@tinymce/tinymce-react";
 import { uploadApi } from "Apis/Trend";
-import { useCallback, useMemo, useRef } from "react";
 
-// Importing core components
-import QuillEditor from "react-quill";
-
-// Importing styles
-import "react-quill/dist/quill.snow.css";
-
-const Editor = ({ setValue, value, cb, id }) => {
-
-  
-  // Editor ref
-  const quill = useRef();
-
-  // Handler to handle button clicked
-  function handler() {
-    console.log(value);
-  }
-
-  const imageHandler = useCallback(async () => {
+const MyEditor = ({value,setValue,cb,id}) => {
+  const [editorContent, setEditorContent] = useState(""); 
+  useState(()=>{
+     setEditorContent(value)
+  },[value])
+  const handleEditorChange = (content, editor) => {
+    setValue(content); // Save editor content to state
+  };
+  const imageHandler = useCallback(async (callback) => {
     // Create an input element of type 'file'
     const input = document.createElement("input");
     input.setAttribute("type", "file");
@@ -30,75 +21,53 @@ const Editor = ({ setValue, value, cb, id }) => {
     input.onchange = async () => {
       const file = input.files[0];
       const dto = await uploadApi(file);
-      const quillEditor = quill.current.getEditor();
-      const range = quillEditor.getSelection(true);
       const url = dto.data.url.replace("trends/", "temp/");
-      quillEditor.insertEmbed(
-        range.index,
-        "image",
-        process.env.REACT_APP_IMAGE_SRC + url,
-        "user"
-      );
-      cb(dto.data.url, id);
+
+      callback(process.env.REACT_APP_IMAGE_SRC + url); cb(dto.data.url, id);
     };
   }, []);
-
-  const modules = useMemo(
-    () => ({
-      toolbar: {
-        container: [
-          [{ header: [2, 3, 4, false] }],
-          ["bold", "italic", "underline", "blockquote"],
-          [{ color: [] }],
-          [
-            { list: "ordered" },
-            { list: "bullet" },
-            { indent: "-1" },
-            { indent: "+1" },
-          ],
-          ["link", "image"],
-          ["clean"],
-        ],
-        handlers: {
-          image: imageHandler,
-        },
-      },
-      clipboard: {
-        matchVisual: true,
-      },
-    }),
-    [imageHandler]
-  );
-
-  const formats = [
-    "header",
-    "bold",
-    "italic",
-    "underline",
-    "strike",
-    "blockquote",
-    "list",
-    "bullet",
-    "indent",
-    "link",
-    "image",
-    "color",
-    "clean",
-  ];
-
   return (
-    <div style={{ maxHeight: "400px", overflowY: "auto" }}> {/* Scrollable Container */}
-      <QuillEditor
-        ref={(el) => (quill.current = el)}
-        theme="snow"
+    <div>
+      <Editor
+        tinymceScriptSrc="/tinymce/tinymce.min.js" // Reference local tinymce script
+        license_key="gpl"
+        apiKey="gpl" // Optional for free usage
         value={value}
-        formats={formats}
-        modules={modules}
-        onChange={setValue}
-        style={{ height: "100%" }} // Ensure full height usage within the container
+        onEditorChange={handleEditorChange}
+        init={{
+          height: 500,
+          menubar: false,
+          plugins: [
+            "advlist",
+            "autolink",
+            "lists",
+            "link",
+            "image",
+            "charmap",
+            "preview",
+            "anchor",
+            "searchreplace",
+            "wordcount",
+          ],
+          toolbar:
+            "undo redo | formatselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | preview | rtl",
+          // imagetools_cors_hosts: ["mycmsappstorage.blob.core.windows.net"],
+          // upload settings
+          automatic_uploads: true,
+          // image upload
+          file_picker_types: "image media",
+          images_file_types: "jpg, jpeg, png, svg, gif",
+          file_picker_callback: (cb, valodl, modalType) => {
+            if (modalType.filetype === "image") {
+              imageHandler(cb);
+            } else if (modalType.filetype === "media") {
+              // imageFilePicker(cb, "media");
+            }
+          },
+        }}
       />
     </div>
   );
 };
 
-export default Editor;
+export default MyEditor;

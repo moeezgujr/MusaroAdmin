@@ -165,7 +165,7 @@ const TrendFormComponent = ({ goBack }) => {
                 style={{
                   marginLeft: "15px",
                   marginRight: "15px",
-                  maxWidth: "550px",
+                  width: "550px",
                 }}
               >
                 <label htmlFor="description">Description:</label>
@@ -181,7 +181,7 @@ const TrendFormComponent = ({ goBack }) => {
                 style={{
                   marginLeft: "10px",
                   marginRight: "15px",
-                  maxWidth: "550px",
+                  width: "550px",
                 }}
               >
                 <label
