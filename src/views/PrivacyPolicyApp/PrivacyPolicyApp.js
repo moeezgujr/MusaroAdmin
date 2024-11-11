@@ -210,7 +210,7 @@ const PrivacyPolicyApp = () => {
             to your initial enquiry.{" "}
           </li>{" "}
           <li>
-            þ If you do not want us to use your data or you change your mind
+            If you do not want us to use your data or you change your mind
             about being contacted in the future, please let us know by emailing
             us on the contact details set out above and/or amending your profile
             accordingly.{" "}
