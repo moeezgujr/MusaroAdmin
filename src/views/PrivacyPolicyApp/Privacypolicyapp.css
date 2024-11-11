@@ -1,0 +1,32 @@
+.privacy-policy-container {
+    margin: 20px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+  }
+  
+  .privacy-policy-container h1 {
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  
+  .policy-section {
+    margin-bottom: 20px;
+  }
+  
+  .policy-section h2 {
+    margin-top: 20px;
+  }
+  
+  .last-updated {
+    font-style: italic;
+    text-align: center;
+    margin-bottom: 15px;
+  }
+  
+  @media (max-width: 768px) {
+    .privacy-policy-container {
+      padding: 10px;
+    }
+  }
+  
