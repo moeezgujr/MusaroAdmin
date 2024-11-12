@@ -1,17 +1,56 @@
-.responsive-svg {
-  width: 100%; /* Makes the SVG take up the full width of its container */
-  height: auto; /* Maintains the aspect ratio */
+.privacy-policy {
+  font-family: 'Amiri', serif !important;
+  padding: 20px;
+  direction: rtl; /* Makes the text flow right-to-left */
+  text-align: right;
+  max-width: 800px;
+  margin: auto;
+}
+/* Alternatively, to target specific text elements in the component */
+.privacy-policy, 
+.privacy-policy p, 
+.privacy-policy h1, 
+.privacy-policy h2, 
+.privacy-policy ul, 
+.privacy-policy li {
+  font-family: 'Amiri', serif !important;
+}
+.privacy-title {
+  font-size: 24px;
+  margin-bottom: 20px;
+  text-align: center; /* Center the title */
+}
+
+.privacy-text {
+  margin-bottom: 15px;
+}
+
+.privacy-subtitle {
+  font-size: 20px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.privacy-list {
+  padding-right: 20px;
+  list-style-type: disc;
+}
+
+.privacy-item {
+  margin-bottom: 10px;
 }
 
 /* Responsive styles */
 @media (max-width: 600px) {
-  .responsive-svg {
-    width: 100%; /* Ensure it scales down on smaller screens */
+  .privacy-policy {
+    padding: 10px;
   }
-}
-.privacy-policy-container {
-  padding: 20px;
-  max-width: 1000px;
-  margin: auto;
-  text-align: center; /* Center content horizontally */
+
+  .privacy-title {
+    font-size: 20px;
+  }
+
+  .privacy-subtitle {
+    font-size: 18px;
+  }
 }
