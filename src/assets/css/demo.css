@@ -16,6 +16,8 @@
 
 */
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Amiri&display=swap');
+
 
 body {
   font-family: 'Open Sans', sans-serif;
@@ -23,6 +25,9 @@ body {
 .fixed-plugin .button-container .github-btn {
   display: inline-block;
   font-size: 14px;
+}
+.arabic-text {
+  font-family: 'Amiri', serif;
 }
 /*.fixed-plugin .button-container .github-btn .gh-btn,
 .fixed-plugin .button-container .github-btn .gh-count{

@@ -1,0 +1,17 @@
+.responsive-svg {
+  width: 100%; /* Makes the SVG take up the full width of its container */
+  height: auto; /* Maintains the aspect ratio */
+}
+
+/* Responsive styles */
+@media (max-width: 600px) {
+  .responsive-svg {
+    width: 100%; /* Ensure it scales down on smaller screens */
+  }
+}
+.privacy-policy-container {
+  padding: 20px;
+  max-width: 1000px;
+  margin: auto;
+  text-align: center; /* Center content horizontally */
+}
