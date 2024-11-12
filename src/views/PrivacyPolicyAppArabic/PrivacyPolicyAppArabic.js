@@ -3,7 +3,7 @@ import "./PrivacyPolicyAppArabic.css";
 
 const PrivacyPolicyAppArabic = () => {
   return (
-    <div className="privacy-policy">
+    <div className="privacy-policy" style={{background:'white'}}>
       <h1 className="main-title">سياسة الخصوصية لتطبيق MUSARO</h1>
       <p>
         توضح سياسة الخصوصية (“السياسة”) كيفية جمع تطبيق مسارو (“نحن”، “خاصتنا”،
