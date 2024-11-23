@@ -1,0 +1,39 @@
+.drag-and-drop-container {
+    width: 300px;
+    margin: 50px auto;
+    font-family: Arial, sans-serif;
+    text-align: center;
+  }
+  
+  .header {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .list {
+    border: 2px dashed #ccc;
+    padding: 10px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+  }
+  
+  .list-item {
+    padding: 10px 15px;
+    margin: 5px 0;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: grab;
+    transition: transform 0.2s;
+  }
+  
+  .list-item:hover {
+    background-color: #f0f8ff;
+    transform: scale(1.02);
+  }
+  
+  .list-item:active {
+    cursor: grabbing;
+  }
+  

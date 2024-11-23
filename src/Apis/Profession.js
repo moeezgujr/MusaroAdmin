@@ -47,11 +47,22 @@ export const updateProfession = async (id, dto) => {
     }
   }
 };
+export const updateProfessionOrder = async (dto) => {
+  try {
+    const response = await api.patch("/general/professions/order", dto);
+    return response.data;
+  } catch (error) {
+    // Check if the error has a response property
+    if (error.response) {
+      return error.response.data;
+    } else {
+      return { error: error.message };
+    }
+  }
+};
 export const getAllProfession = async (page) => {
   try {
-    const response = await api.get(
-      `/general/professions?limit=10&offset=${page * 10}&status=ACTIVE`
-    );
+    const response = await api.get(`/general/professions?status=ACTIVE`);
     return response.data;
   } catch (error) {
     // Check if the error has a response property

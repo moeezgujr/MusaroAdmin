@@ -7,7 +7,16 @@
   overflow: hidden;
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
 }
+.drag-icon {
+  margin-left: 10px; /* Space between icon and image */
 
+  margin-right: 10px; /* Space between icon and image */
+  font-size: 20px; /* Adjust the size */
+  color: #aaa; /* Adjust the color */
+  cursor: grab; /* Indicates draggable behavior */
+  display: flex;
+  align-items: center;
+}
 .card-image {
   width: 300px !important;
   height: 206px !important;

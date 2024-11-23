@@ -14,6 +14,7 @@ import { searchProfession } from "Apis/Profession";
 import { toast } from "react-toastify";
 import { deleteProfession } from "Apis/Profession";
 import DeletePopup from "components/DeletePopup.";
+import DragAndDropList from "views/DragandDrop/DragDrop";
 
 const Tabs = () => {
   const [activeTab, setActiveTab] = useState(1);
@@ -47,8 +48,8 @@ const Tabs = () => {
   const getProfessions = async (page) => {
     setLoading(true); // Set loading to false when data is fetched
     const data = await getAllProfession(page);
-    setProfession(data.data.professions);
-    setPagination(data.data.meta);
+    setProfession(data.data);
+    // setPagination(data.data.meta);
     setLoading(false); // Set loading to false when data is fetched
   };
   const storedTab = localStorage.getItem("tab");
@@ -206,21 +207,15 @@ const Tabs = () => {
                 <Skeleton height={40} count={5} style={{ marginBottom: 10 }} />{" "}
               </> // Assuming you have a Skeleton component for loading
             ) : (
-              profession.length > 0 &&
-              profession.map((item) => {
-                return (
-                  <ProfessionCard
-                    createdOn={item.createdAt}
-                    title={item.name}
-                    imageUrl={imageUrl + item.img}
-                    paragraph={item.description}
-                    id={item._id}
-                    handleTabClick={editCallback}
-                  />
-                );
-              })
+              profession?.length > 0 && (
+                <DragAndDropList
+                  profession={profession}
+                  handleTabClick={editCallback}
+                  setProfession={setProfession}
+                />
+              )
             )}
-            {pagination?.pages > 1 && (
+            {/* {pagination?.pages > 1 && (
               <div className="pagination" style={{ margin: 0, float: "unset" }}>
                 <>
                   <button onClick={() => onPageChange(pagination.page - 1)}>
@@ -240,7 +235,7 @@ const Tabs = () => {
                   </button>
                 </>
               </div>
-            )}
+            )} */}
           </div>
         )}
         {activeTab === 2 && (
