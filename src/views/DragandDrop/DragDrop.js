@@ -126,11 +126,11 @@ const DragAndDropList = ({ profession, handleTabClick, setProfession }) => {
     const items = [
       {
         professionId: draggedItem._id,
-        index: toIndex,
+        index: toIndex+1,
       },
       {
         professionId: replacedItem._id,
-        index: fromIndex,
+        index: fromIndex+1,
       },
     ];
     const body = {
