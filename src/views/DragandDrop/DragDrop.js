@@ -117,14 +117,24 @@ const DragAndDropList = ({ profession, handleTabClick, setProfession }) => {
         fromIndex,
       },
     });
-    updatedItems = updatedItems.map((item) => {
-      return {
-        professionId: item._id,
-        index: item.index,
-      };
-    });
+    // updatedItems = updatedItems.map((item) => {
+    //   return {
+    //     professionId: item._id,
+    //     index: item.index,
+    //   };
+    // });
+    const items = [
+      {
+        professionId: draggedItem._id,
+        index: toIndex,
+      },
+      {
+        professionId: replacedItem._id,
+        index: fromIndex,
+      },
+    ];
     const body = {
-      professions: updatedItems,
+      professions: items,
     };
     updateProfessionOrder(body);
     console.log({});
