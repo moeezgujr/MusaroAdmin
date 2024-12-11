@@ -1169,7 +1169,7 @@ button::-moz-focus-inner {
   background-color: #fff;
 }
 .tox .tox-dialog {
-  background-color: #fff;
+  background-color: #c52121;
   border-color: #cccccc;
   border-radius: 3px;
   border-style: solid;
@@ -1376,6 +1376,9 @@ button::-moz-focus-inner {
 .tox .tox-dialog--width-lg {
   height: 650px;
   max-width: 1200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .tox .tox-dialog--width-md {
   max-width: 800px;

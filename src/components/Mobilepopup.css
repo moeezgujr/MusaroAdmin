@@ -1,0 +1,45 @@
+.mobile_app {
+    text-align: center;
+    margin-top: 50px;
+  }
+  
+  button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .mobile-view {
+    background: white;
+    width: 360px;
+    height: 640px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    text-align: center;
+    position: relative;
+  }
+  
+  .mobile-view h3 {
+    margin-top: 0;
+  }
+  
+  .mobile-view button {
+    margin-top: 20px;
+    padding: 10px;
+    font-size: 14px;
+  }
+  
