@@ -2,7 +2,7 @@ import api from "./Axios";
 
 export const login = async (dto) => {
   try {
-    const response = await api.post("/auth/login", dto);
+    const response = await api.post("/auth/admin/login", dto);
     return response.data;
   } catch (error) {
     // Check if the error has a response property
