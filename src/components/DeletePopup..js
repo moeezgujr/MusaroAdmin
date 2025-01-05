@@ -8,8 +8,9 @@ import { verifyProvider } from "Apis/NewSubscription";
 
 const DeletePopup = ({ isOpen, onClose, cb,text, heading }) => {
   const history = useHistory();
-  if (!isOpen) return null;
   const [reason, setReason] = useState("");
+
+  if (!isOpen) return null;
   const handleSubmit = async (e) => {
     e.preventDefault();
     cb(true)

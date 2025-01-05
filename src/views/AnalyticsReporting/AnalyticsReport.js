@@ -617,7 +617,7 @@ function AnalyticsReport() {
                           {
                             seriesBarDistance: 20,
                             axisX: {
-                              labelInterpolationFnc: function (value) {
+                              labelInterpolationFnc: function (value,index) {
                                 return index % 2 === 0 ? value : null;
                               },
                             },

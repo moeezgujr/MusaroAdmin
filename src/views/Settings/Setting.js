@@ -16,7 +16,7 @@ const Setting = ({ goBack }) => {
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
 
   const handleTitleChange = (e) => {
-    setTitle(e.target.value);
+    // setTitle(e.target.value);
   };
 
   const handleusernameChange = (e) => {
@@ -93,7 +93,7 @@ const Setting = ({ goBack }) => {
         title={"Settings & Integration"}
         onAddAccount={(e) => handleSubmit(e)}
         onSecondarybtnCallback={(e) => {
-          handleCancel();
+          // handleCancel();
         }}
       />
       <p className="ml-3 mt-2">Personal Info</p>
