@@ -194,6 +194,7 @@ function AnalyticsReport() {
       rfqDatafetch(graph2type, time, e, cityD);
     }
   };
+  console.log('1')
   const customerGraph = async (graphtype, time, cityA, cityB) => {
     setLoading(true);
     const { startDate, endDate } = getStartAndEndDate(time);
