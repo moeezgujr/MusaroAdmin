@@ -40,6 +40,7 @@ const isTokenValid = () => {
 };
 
 const isAuthenticated = () => {
+  console.log('1')
   return isTokenValid();
 };
 
