@@ -44,10 +44,9 @@ const ProfessionFormComponent = ({ goBack }) => {
       ? workshop.startDate.split("T")[0]
       : "";
     const endDate = workshop.endDate ? workshop.endDate.split("T")[0] : "";
-
     return {
       title: workshop.workshopName || "",
-      owner: workshop.createdBy || "",
+      owner: workshop.owner.name || "",
       startDate: startDate || "",
       endDate: endDate || "",
       startTime: convertTo24Hour(workshop.startTime) || "",
