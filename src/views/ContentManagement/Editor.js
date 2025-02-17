@@ -43,6 +43,7 @@ const MyEditor = ({value,setValue,cb,id}) => {
             "lists",
             "link",
             "image",
+            'media',
             "charmap",
             "preview",
             "anchor",
@@ -50,7 +51,7 @@ const MyEditor = ({value,setValue,cb,id}) => {
             "wordcount",
           ],
           toolbar:
-            "undo redo | formatselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | preview | rtl",
+            "undo redo | formatselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media | preview | rtl",
           // imagetools_cors_hosts: ["mycmsappstorage.blob.core.windows.net"],
           // upload settings
           automatic_uploads: true,
