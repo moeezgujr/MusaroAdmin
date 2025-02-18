@@ -20,6 +20,7 @@ import PrivacyPolicy from "views/PrivacyPolicy/PrivacyPolicy";
 import AccountDeletion from "views/AccountDelete/AccountDeletion";
 import PrivacyPolicyApp from "views/PrivacyPolicyApp/PrivacyPolicyApp";
 import PrivacyPolicyAppArabic from "views/PrivacyPolicyAppArabic/PrivacyPolicyAppArabic";
+import MusaroAppRedirect from "views/MusaroRedirect/MusaroRedirect";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -52,6 +53,10 @@ root.render(
         <Route
           path="/privacypolicy"
           render={(props) => <PrivacyPolicy {...props} />}
+        />
+        <Route
+          path="/app"
+          render={(props) => <MusaroAppRedirect {...props} />}
         />
          <Route
           path="/appprivacypolicy_arabic"
