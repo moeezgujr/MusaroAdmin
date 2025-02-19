@@ -36,8 +36,17 @@ const column = [
   {
     value: "createdAt",
     label: "Created On",
+  }, {
+    value: "status",
+    label: "Status",
   },
 ];
+// Function to transform status
+const transformStatus = (status) => {
+  if (!status) return "";
+  return status.toLowerCase().replace(/_/g, " ").replace(/\b\w/, (c) => c.toUpperCase());
+};
+
 function ProviderList({ search }) {
   const [customer, setCustomer] = useState("");
   const [loading, setLoading] = useState(true);
@@ -49,7 +58,12 @@ function ProviderList({ search }) {
     try {
       // const data = await userList();
       const data = await getProviders(page);
-      setCustomer(data.data?.providers);
+      const transformedData = data.data?.providers.map(item => ({
+        ...item,
+        status: transformStatus(item.status)
+    }));
+    
+      setCustomer(transformedData);
       setPagination(data.data.meta);
     } catch (err) {
     } finally {
@@ -61,7 +75,11 @@ function ProviderList({ search }) {
     try {
       // const data = await userList();
       const data = await searchProviders(text);
-      setCustomer(data.data?.providers);
+      const transformedData = data.data?.providers.map(item => ({
+        ...item,
+        status: transformStatus(item.status)
+    }));      
+      setCustomer(transformedData);
       setPagination(data.data.meta);
     } catch (err) {
     } finally {

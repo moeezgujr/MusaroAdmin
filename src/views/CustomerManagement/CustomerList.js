@@ -73,6 +73,8 @@ function CustomerList({ search }) {
       value: "createdAt",
       label: "Created On",
     },
+   
+
   ];
   const callback = () => {
     setSliderOpen(false);

@@ -43,12 +43,46 @@ export const TableWithPagination = ({
     // Return the formatted date as DD-MMM-YYYY
     return `${day}-${month}-${year}`;
   }
+  const StatusBadge = ({ status }) => {
+    const formattedStatus = capitalizeFirstLetterOnly(status);
+  
+    const commonStyle = {
+      marginTop: "10px",
+      marginBottom: "10px",
+      borderRadius: "40px",
+      width: "fit-content",
+      padding: "5px",
+    };
+  
+    const statusStyles = {
+      "Pending Profile Completion": { color: "#B35309", backgroundColor: "#FFFBEB" },
+      "Pending Payment": { color: "#B35309", backgroundColor: "#FFFBEB" },
+      "Pending ID Verification": { color: "#B35309", backgroundColor: "#ECFDF3" },
+      "Pending Profile Completion": { color: "#B35309", backgroundColor: "#FFFBEB" },
+      "Pending": { color: "#B35309", backgroundColor: "#FFFBEB" },
+      "Active": { color: "#027A48", backgroundColor: "#ECFDF3" },
+      "Published": { color: "#027A48", backgroundColor: "#ECFDF3" },
+      "Blocked": { color: "#842029", backgroundColor: "#f8d7da" },
+      "Rejected": { color: "#B42318", backgroundColor: "#FEF3F2" },
+    };
+  
+    const defaultStyle = { color: "#6c757d", backgroundColor: "#e9ecef" };
+  
+    return (
+      <span style={{ ...commonStyle, ...(statusStyles[formattedStatus] || defaultStyle) }}>
+        {formattedStatus}
+      </span>
+    );
+  };
   const renderCell = (value, label) => {
     if (typeof value === "object" && value !== null) {
       return JSON.stringify(value);
     }
     if (label === "createdAt") {
       return formatDateWithMonthName(value);
+    }
+    if (label === "status") {
+      return <StatusBadge status={value} />;
     }
     if (!value) {
       value = "Not available";
@@ -90,9 +124,7 @@ export const TableWithPagination = ({
                   <td key={colIndex}>
                     <p
                       className={`
-                        ${header.label == "Role" && "role_td"} ${
-                        header.label === "Status" && "subsrctiption_status"
-                      } ${header.value === "createdAt"? 'ltr':''}
+                        ${header.label == "Role" && "role_td"}  ${header.value === "createdAt"? 'ltr':''}
                          table_text`}
                       style={{ marginTop: "10px", marginBottom: "10px" }}
                     >
