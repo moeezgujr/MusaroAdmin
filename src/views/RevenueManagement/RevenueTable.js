@@ -4,6 +4,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 import "./Revenue.css";
 import { TableWithPagination } from "views/UserManagement/Table";
 import { cancelledSubscriptionsList } from "Apis/Revenue";
+import NoAccountsFound from "views/UserManagement/NoDataFound";
 
 const TicketTable = ({ tab }) => {
   const cancelledSubscriptionsheader = [
@@ -99,23 +100,26 @@ const TicketTable = ({ tab }) => {
     fetchSubscription(val - 1, status);
   };
   return (
-    <>
-      {loading ? (
-        <div>{renderSkeleton()}</div>
-      ) : (
+    <>       
+    {loading ? (
+      <div>{renderSkeleton()}</div>
+    ) : (
+      data.length > 0 ? (
         <TableWithPagination
-          headers={
-            tab === 2 ? cancelledSubscriptionsheader : activeSubscriptionsheader
-          }
+          headers={tab === 2 ? cancelledSubscriptionsheader : activeSubscriptionsheader}
           data={data}
           id="cancel"
           onPageChange={paginationCallback}
           totalPages={pagination.pages}
           currentPage={pagination.page}
-          isPaginationShow={pagination.pages > 1 && true}
+          isPaginationShow={pagination.pages > 1}
         />
-      )}
-    </>
+      ) : (
+        <NoAccountsFound />
+      )
+    )}
+  </>
+  
   );
 };
 

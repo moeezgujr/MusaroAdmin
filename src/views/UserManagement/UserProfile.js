@@ -23,6 +23,7 @@ const User = ({ goBack }) => {
     CustomerManagement: false,
     NewSubscriptions: false,
     Revenue: false,
+    ServiceProvider:false
   });
   const history = useHistory();
   const { id } = useParams();
@@ -76,6 +77,7 @@ const User = ({ goBack }) => {
       NewSubscriptions: isChecked,
       ContentManagement: isChecked,
       UserManagement: isChecked,
+      ServiceProvider:isChecked
     });
   };
   const handleMobileChange = (e) => setMobile(e.target.value);
@@ -297,6 +299,17 @@ const User = ({ goBack }) => {
                   className="mr-1"
                 />
                 <label htmlFor="permission4">Subscriptions</label>
+              </div>
+              <div className="mb-3">
+                <input
+                  type="checkbox"
+                  id="ServiceProvider"
+                  name="ServiceProvider"
+                  checked={permissions.ServiceProvider}
+                  onChange={handlePermissionChange}
+                  className="mr-1"
+                />
+                <label htmlFor="permission4">Service Provider</label>
               </div>
               <div className="mb-3">
                 <input

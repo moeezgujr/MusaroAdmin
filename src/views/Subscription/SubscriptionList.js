@@ -100,13 +100,13 @@ function SubscriptionList() {
         id={id}
         data={subscritions}
       />
-      <Header
+      {/* <Header
         hideButton
         btntext={"Add Account"}
         onSearch={onSearchCallback}
         title={"New Subscriptions"}
         onAddAccount={() => history.push("/admin/customermanagement")}
-      />
+      /> */}
       {loading ? (
         <div id="customers" style={{ border: "none" }}>
           <Skeleton height={40} count={5} style={{ marginBottom: 10 }} />

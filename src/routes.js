@@ -36,6 +36,7 @@ import AnalyticsReport from "views/AnalyticsReporting/AnalyticsReport";
 import Setting from "views/Settings/Setting";
 import Support from "views/Support/Support";
 import CustomerFormComponent from "views/CustomerManagement/CustomerDetails";
+import Provider from "views/ServiceProvider/Provider";
 
 const dashboardRoutes = [
   {
@@ -150,15 +151,22 @@ const dashboardRoutes = [
     layout: "/admin",
     key: "CustomerManagement",
   },
-
   {
-    path: "/subscriptions",
-    name: "New Subscription",
-    icon: "subscriptions",
-    component: Subscription,
+    path: "/serviceprovider",
+    name: "Service Provider",
+    icon: "customer",
+    component: Provider,
     layout: "/admin",
-    key: "NewSubscriptions",
+    key: "ServiceProvider",
   },
+  // {
+  //   path: "/subscriptions",
+  //   name: "New Subscription",
+  //   icon: "subscriptions",
+  //   component: Subscription,
+  //   layout: "/admin",
+  //   key: "NewSubscriptions",
+  // },
   {
     path: "/revenuereport",
     name: "Subscriptions & Revenue",
