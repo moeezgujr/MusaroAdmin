@@ -20,6 +20,8 @@ function SubscriptionList() {
   const [pagination, setPagination] = useState("");
   const [slideropen, setSliderOpen] = useState(false);
   const [id, setID] = useState(0);
+  const [type, settype] = useState(null);
+
   const fetchTotalCount = async (page) => {
     try {
       // const data = await userList();
@@ -85,6 +87,7 @@ function SubscriptionList() {
   ];
   const callback = () => {
     setSliderOpen(false);
+    settype(null)
   };
   const onSearchCallback = (e) => {
     search(e.target.value);
@@ -98,6 +101,7 @@ function SubscriptionList() {
         callback={callback}
         open={slideropen}
         id={id}
+        type={type}
         data={subscritions}
       />
       {/* <Header
@@ -126,6 +130,7 @@ function SubscriptionList() {
           callback={(type, id) => {
             setSliderOpen(true);
             setID(id);
+            settype(type)
           }}
           id={"subscription"}
           isPaginationShow={pagination.pages > 1 && true}

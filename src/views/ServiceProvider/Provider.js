@@ -29,7 +29,6 @@ const Provider = () => {
 
   const handleTabClick = (tabNumber) => {
     localStorage.setItem("customerTab", tabNumber);
-
     setSearch("");
     setActiveTab(tabNumber);
     if (tabNumber == 1) {
@@ -39,7 +38,7 @@ const Provider = () => {
     }
   };
   useEffect(() => {
-    setActiveTab(parseInt(storedTab));
+    setActiveTab(parseInt(storedTab) || 1);
   }, [storedTab]);
   const callback = (e) => {
     setSearch(e.target.value);

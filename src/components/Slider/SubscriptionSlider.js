@@ -8,6 +8,8 @@ import ImageUploadButton from "components/ImageUploader/Imageuploader";
 import Popup from "components/Popup";
 import { verifyProvider } from "Apis/NewSubscription";
 import { useHistory } from "react-router-dom/cjs/react-router-dom";
+import { updateProvider } from "Apis/NewSubscription";
+import Profile from "views/Subscription/Profileimage";
 
 const Container = styled.div`
   display: flex;
@@ -63,9 +65,10 @@ const CloseButton = styled.button`
   }
 `;
 
-const SubscriptionSlider = ({ open, callback, id, data }) => {
+const SubscriptionSlider = ({ open, callback, id, data, type }) => {
   const [isOpen, setIsOpen] = useState(open);
   const [isPopupOpen, setPopupOpen] = useState(false);
+  const [imagePreview, setImagePreview] = useState(null);
 
   const [formValues, setFormValues] = useState({
     name: "",
@@ -80,6 +83,9 @@ const SubscriptionSlider = ({ open, callback, id, data }) => {
     experience: "",
     description: "",
     image: "",
+    type: "",
+    profilePicture: "",
+    backgroundPicture: "",
   });
 
   useEffect(() => {
@@ -98,8 +104,20 @@ const SubscriptionSlider = ({ open, callback, id, data }) => {
           workforce: form.workforce || "",
           experience: form.serviceDetail.yearsOfExperience || "",
           description: form.serviceDetail.serviceDescription || "",
-          image: process.env.REACT_APP_IMAGE_SRC + form.image || "",
+          profilePicture: form.profilePicture
+            ? process.env.REACT_APP_IMAGE_SRC + form.profilePicture
+            : "",
+          backgroundPicture: form.backgroundPicture
+            ? process.env.REACT_APP_IMAGE_SRC + form.backgroundPicture
+            : "",
+          image:
+            process.env.REACT_APP_IMAGE_SRC + form.serviceDetail.idPicture ||
+            "",
+          type: form.serviceDetail.type,
         });
+        setImagePreview(
+          process.env.REACT_APP_IMAGE_SRC + form.serviceDetail.idPicture || ""
+        );
       }
     }
   }, [id, data]);
@@ -124,12 +142,11 @@ const SubscriptionSlider = ({ open, callback, id, data }) => {
   const onClosePopup = () => {
     setPopupOpen(false);
     setIsOpen(false);
-
   };
-  const verify=async()=>{
+  const verify = async () => {
     const res = await verifyProvider(id, {
       status: "APPROVED",
-      reason: '',
+      reason: "",
     });
     if (res.errors === null) {
       toast.success("Status Approved successfully");
@@ -137,11 +154,71 @@ const SubscriptionSlider = ({ open, callback, id, data }) => {
       toast.error("An Error occurend while updating status");
     }
     setIsOpen(false);
-
+  };
+  const handleImageChange = (e) => {
+    setFormValues({ ...formValues, image: e });
+    setImagePreview(URL.createObjectURL(e));
+  };
+  const handleImageDelete = () => {
+    // setImage(null);
+    setImagePreview(null);
+    setFormValues({ ...formValues, image: "" });
+  };
+  function createMappingObject(params) {
+    return {
+      name: formValues.name,
+      mobile: formValues.mobile,
+      city: formValues.city,
+      profilePicture: formValues.profilePicture,
+      backgroundPicture: formValues.backgroundPicture,
+      type: formValues.type,
+      professionId: params.professionId,
+      businessName: formValues.business,
+      projectSize: formValues.business,
+      serviceDescription: formValues.description,
+      yearsOfExperience: formValues.experience,
+      idNumber: formValues.igama,
+      idPicture: formValues.image,
+      whatsapp: formValues.whatsapp,
+      officeNumber: formValues.contactMobile,
+      type: formValues.type,
+      // workforce:formValues.workforce
+    };
   }
+  const upateProvider = async () => {
+    let obj = createMappingObject(formValues);
+    if (!(obj.idPicture instanceof File)) {
+      obj.idPicture = undefined;
+    }
+    if (!(obj.backgroundPicture instanceof File)) {
+      obj.backgroundPicture = undefined;
+    }
+    if (!(obj.profilePicture instanceof File)) {
+      obj.profilePicture = undefined;
+    }
+    const update = await updateProvider(id, obj);
+    if (update.errors === null) {
+      toast.success("Subscription updated successfully");
+      setIsOpen(false);
+      callback();
+    }
+  };
+  const cb = (type, file) => {
+    if (type === "profileImage") {
+      setFormValues({ ...formValues, profilePicture: file });
+    } else {
+      setFormValues({ ...formValues, backgroundPicture: file });
+    }
+  };
+  const isEdit = type === "edit";
   return (
     <>
-      <Popup isOpen={isPopupOpen} onClose={onClosePopup} id={id} comingFrom={'subscriptionList'}/>
+      <Popup
+        isOpen={isPopupOpen}
+        onClose={onClosePopup}
+        id={id}
+        comingFrom={"subscriptionList"}
+      />
 
       <FullScreenWrapper isOpen={isOpen}>
         <CloseButton
@@ -169,21 +246,41 @@ const SubscriptionSlider = ({ open, callback, id, data }) => {
                 </div>
 
                 <div style={styles.container2}>
-                  <div style={styles.cancelButton}>
-                    <button
-                      className="rejectbtn mr-1"
-                      onClick={() => setPopupOpen(true)}
-                    >
-                      {"Reject with Note"}
-                    </button>
-                  </div>
-                  <div style={styles.addButton}>
-                    <button    onClick={() => verify()} className="addaccountBtn">{"Approve"}</button>
-                  </div>
+                  {type === "edit" ? (
+                    <div style={styles.addButton}>
+                      <button
+                        className="addaccountBtn"
+                        onClick={() => upateProvider(true)}
+                      >
+                        {"Update Changes"}
+                      </button>
+                    </div>
+                  ) : (
+                    <>
+                      <div style={styles.cancelButton}>
+                        <button
+                          className="rejectbtn mr-1"
+                          onClick={() => setPopupOpen(true)}
+                        >
+                          {"Reject with Note"}
+                        </button>
+                      </div>
+                      <div style={styles.addButton}>
+                        <button
+                          onClick={() => verify()}
+                          className="addaccountBtn"
+                        >
+                          {"Approve"}
+                        </button>
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
               {/* </Container> */}
               <div>
+                {isEdit && <Profile cb={cb} form={formValues} />}
+
                 <div
                   className="d-flex"
                   style={{
@@ -201,7 +298,7 @@ const SubscriptionSlider = ({ open, callback, id, data }) => {
                       placeholder="Business"
                       value={formValues.business}
                       onChange={handleChange}
-                      disabled
+                      disabled={!isEdit}
                     />
                   </div>
                   <div className="ml-3">
@@ -213,7 +310,7 @@ const SubscriptionSlider = ({ open, callback, id, data }) => {
                       placeholder="14654165456"
                       value={formValues.igama}
                       onChange={handleChange}
-                      disabled
+                      disabled={!isEdit}
                     />
                   </div>
                 </div>
@@ -235,7 +332,7 @@ const SubscriptionSlider = ({ open, callback, id, data }) => {
                       placeholder="City"
                       value={formValues.city}
                       onChange={handleChange}
-                      disabled
+                      disabled={!isEdit}
                     />
                   </div>
                   <div className="ml-3">
@@ -249,7 +346,7 @@ const SubscriptionSlider = ({ open, callback, id, data }) => {
                       placeholder="Contact Mobile Number"
                       value={formValues.contactMobile}
                       onChange={handleChange}
-                      disabled
+                      disabled={!isEdit}
                     />
                   </div>
                 </div>
@@ -266,7 +363,7 @@ const SubscriptionSlider = ({ open, callback, id, data }) => {
                     <input
                       type="text"
                       className="subscription-input"
-                      disabled
+                      disabled={!isEdit}
                       id="whatsapp"
                       placeholder="Whatsapp Contact Number"
                       value={formValues.whatsapp}
@@ -282,7 +379,7 @@ const SubscriptionSlider = ({ open, callback, id, data }) => {
                       placeholder="Work Force Number"
                       value={formValues.workforce}
                       onChange={handleChange}
-                      disabled
+                      disabled={!isEdit}
                     />
                   </div>
                   <div className="ml-3">
@@ -293,7 +390,7 @@ const SubscriptionSlider = ({ open, callback, id, data }) => {
                       id="experience"
                       placeholder="Years of Experience"
                       value={formValues.experience}
-                      disabled
+                      disabled={!isEdit}
                       onChange={handleChange}
                     />
                   </div>
@@ -313,41 +410,44 @@ const SubscriptionSlider = ({ open, callback, id, data }) => {
                       className="workshop-input-textarea"
                       value={formValues.description}
                       placeholder="Enter Description"
-                      // onChange={handleDescriptionChange}
-                      disabled
+                      onChange={handleChange}
+                      disabled={!isEdit}
                     ></textarea>
                   </div>
                 </div>
                 <div
-                  className="d-flex mt-3"
                   style={{
-                    width: "100%",
+                    width: "1500px",
                     marginLeft: "10px",
                     marginRight: "20px",
+                    marginTop: "10px",
                   }}
                 >
                   <div className="">
-                    <label htmlFor="description">Image:</label>{" "}
-                    <div
-                      className="image-viewer-container"
-                      style={{ width: "1190px" }}
-                    >
-                      {formValues.image ? (
+                    <label htmlFor="image">Image:</label>
+                    {imagePreview ? (
+                      <div className="image-preview-container">
                         <img
-                          src={"formValues.image"}
-                          alt="Workshop"
-                          className="workshop-image"
+                          src={imagePreview}
+                          alt="Image Preview"
+                          className="image-preview"
                         />
-                      ) : (
-                        <p>No image available</p>
-                      )}
-                    </div>
+                        <button
+                          type="button"
+                          className="delete-image-button"
+                          disabled={!isEdit}
+                          onClick={handleImageDelete}
+                        >
+                          &#x2715; {/* Unicode for "X" symbol */}
+                        </button>
+                      </div>
+                    ) : (
+                      <ImageUploadButton
+                        className="fileinputcontainer-2"
+                        handleImageChange={handleImageChange}
+                      />
+                    )}
                   </div>
-                  {/* <div className="d-flex">
-                  <div className="">
-                     
-                    </div>
-                  </div> */}
                 </div>
               </div>
             </Content>

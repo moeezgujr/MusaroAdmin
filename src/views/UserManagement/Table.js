@@ -45,7 +45,7 @@ export const TableWithPagination = ({
   }
   const StatusBadge = ({ status }) => {
     const formattedStatus = capitalizeFirstLetterOnly(status);
-  
+
     const commonStyle = {
       marginTop: "10px",
       marginBottom: "10px",
@@ -53,23 +53,37 @@ export const TableWithPagination = ({
       width: "fit-content",
       padding: "5px",
     };
-  
+
     const statusStyles = {
-      "Pending Profile Completion": { color: "#B35309", backgroundColor: "#FFFBEB" },
+      "Pending Profile Completion": {
+        color: "#B35309",
+        backgroundColor: "#FFFBEB",
+      },
       "Pending Payment": { color: "#B35309", backgroundColor: "#FFFBEB" },
-      "Pending ID Verification": { color: "#B35309", backgroundColor: "#ECFDF3" },
-      "Pending Profile Completion": { color: "#B35309", backgroundColor: "#FFFBEB" },
-      "Pending": { color: "#B35309", backgroundColor: "#FFFBEB" },
-      "Active": { color: "#027A48", backgroundColor: "#ECFDF3" },
-      "Published": { color: "#027A48", backgroundColor: "#ECFDF3" },
-      "Blocked": { color: "#842029", backgroundColor: "#f8d7da" },
-      "Rejected": { color: "#B42318", backgroundColor: "#FEF3F2" },
+      "Pending ID Verification": {
+        color: "#B35309",
+        backgroundColor: "#ECFDF3",
+      },
+      "Pending Profile Completion": {
+        color: "#B35309",
+        backgroundColor: "#FFFBEB",
+      },
+      Pending: { color: "#B35309", backgroundColor: "#FFFBEB" },
+      Active: { color: "#027A48", backgroundColor: "#ECFDF3" },
+      Published: { color: "#027A48", backgroundColor: "#ECFDF3" },
+      Blocked: { color: "#842029", backgroundColor: "#f8d7da" },
+      Rejected: { color: "#B42318", backgroundColor: "#FEF3F2" },
     };
-  
+
     const defaultStyle = { color: "#6c757d", backgroundColor: "#e9ecef" };
-  
+
     return (
-      <span style={{ ...commonStyle, ...(statusStyles[formattedStatus] || defaultStyle) }}>
+      <span
+        style={{
+          ...commonStyle,
+          ...(statusStyles[formattedStatus] || defaultStyle),
+        }}
+      >
         {formattedStatus}
       </span>
     );
@@ -124,7 +138,9 @@ export const TableWithPagination = ({
                   <td key={colIndex}>
                     <p
                       className={`
-                        ${header.label == "Role" && "role_td"}  ${header.value === "createdAt"? 'ltr':''}
+                        ${header.label == "Role" && "role_td"}  ${
+                        header.value === "createdAt" ? "ltr" : ""
+                      }
                          table_text`}
                       style={{ marginTop: "10px", marginBottom: "10px" }}
                     >
@@ -137,10 +153,7 @@ export const TableWithPagination = ({
                     </p>
                   </td>
                 ))}
-                {id === "workshop" ||
-                id === "customer" ||
-                id === "provider" ||
-                id === "subscription" ? (
+                {id === "workshop" || id === "customer" || id === "provider" ? (
                   <td key={"actions"}>
                     <span
                       className="table_text"
@@ -152,7 +165,22 @@ export const TableWithPagination = ({
                   </td>
                 ) : (
                   <>
-                    {id != "cancel" && (
+                    {id === "subscription" && (
+                      <td key={"actions"}>
+                       
+                        <span
+                          className="table_text"
+                          onClick={() => callback("detail", item._id)}
+                        >
+                          <Detailicon />
+                        </span>
+                        <EditIcon
+                          style={{ marginLeft: "5px" }}
+                          onClick={() => callback("edit", item._id)}
+                        />
+                      </td>
+                    )}
+                    {id != "cancel" && id !== "subscription" &&(
                       <td key={"actions"}>
                         <EditIcon
                           style={{ marginRight: "5px" }}
