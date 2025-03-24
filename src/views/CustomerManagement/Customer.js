@@ -53,26 +53,26 @@ const Customer = () => {
         onSearch={callback}
       />
       <div className="tabs mt-3">
-        <div
-          className={`tab-1 tab ${activeTab === 1 ? "activeTab" : ""}`}
+        {/* <div
+          className={`tab-1 tab ${"activeTab"}`}
           onClick={() => handleTabClick(1)}
         >
           Customers
-        </div>
-        <div
+        </div> */}
+        {/* <div
           className={`tab ${activeTab === 2 ? "activeTab" : ""}`}
           onClick={() => handleTabClick(2)}
         >
           Service Provider
-        </div>
+        </div> */}
       </div>
 
       <div style={{ width: "98%", height: "100vh" }}>
-        {activeTab === 1 ? (
+        {/* {activeTab === 1 ? ( */}
           <CustomerList search={search} />
-        ) : (
-          <ProviderList search={search} />
-        )}
+        {/* // ) : ( */}
+        {/* //   <ProviderList search={search} /> */}
+        {/* // )} */}
       </div>
     </>
   );

@@ -157,7 +157,7 @@ const dashboardRoutes = [
     icon: "customer",
     component: Provider,
     layout: "/admin",
-    key: "ServiceProvider",
+    key: "ProviderManagement",
   },
   // {
   //   path: "/subscriptions",
