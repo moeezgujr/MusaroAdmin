@@ -54,10 +54,10 @@ const TicketTable = ({ tab }) => {
     setLoading(true);
     const data = await cancelledSubscriptionsList(page, status);
     setData(
-      data.data.users.map((item) => {
+      data.data.users.map((item) => {debugger
         return {
           ...item,
-          type: item.serviceDetail.type ? item.serviceDetail.type : "",
+          type: item?.subscription?.type ? item.subscription.type : "",
           reason: item?.metadata?.reason,
           canceled: "true",
           idNumber: item?.serviceDetail?.idNumber
